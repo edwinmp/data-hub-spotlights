@@ -1,8 +1,6 @@
-import React from 'react'
-import Welcome from '../components/Welcome'
+import React from "react";
+import Welcome from "../components/Welcome";
 
-const Home = () => (
-  <Welcome/>
-)
+const Home = () => <Welcome />;
 
-export default Home
+export default Home;

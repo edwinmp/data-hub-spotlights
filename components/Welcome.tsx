@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
-const Welcome = () => (
-  <div>Welcome to the Spotlights</div>
-)
+const Welcome = () => <div>Welcome to the Spotlights</div>;
 
-export default Welcome
+export default Welcome;
