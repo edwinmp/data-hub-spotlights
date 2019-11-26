@@ -18,7 +18,7 @@ declare namespace ECharts {
 
   interface Series {
     name: string;
-    type: string;
-    data: number[];
+    type: 'line' | 'bar' | 'pie';
+    data: any[]; // FIXME: give a proper type - not sure it's possible
   }
 }
