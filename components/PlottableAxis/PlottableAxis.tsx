@@ -5,6 +5,7 @@ import './styles.css';
 
 interface PlottableAxisProps {
   width?: string;
+  height?: string;
   config: NumericAxisConfig;
 }
 
@@ -21,7 +22,7 @@ const PlottableAxis: SFC<PlottableAxisProps> = (props) => {
   }, []);
 
   return (
-    <div ref={ chartNode } style={ { width: props.width } }/>
+    <div ref={ chartNode } style={ { width: props.width, height: props.height } }/>
   );
 };
 

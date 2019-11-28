@@ -31,7 +31,8 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     const config = new NumericAxisConfig({
       domain: [ 1, 10 ],
       tickInterval: 1,
-      prefix: 'Num '
+      prefix: 'Num ',
+      orientation: 'bottom'
     });
     setAxisConfig(config);
   };
