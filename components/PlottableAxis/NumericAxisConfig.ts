@@ -46,6 +46,8 @@ class NumericAxisConfig {
     if (options.tickInterval) {
       const tickGenerator = Scales.TickGenerators.intervalTickGenerator(options.tickInterval);
       scale.tickGenerator(tickGenerator);
+    } else if (options.data) {
+      scale.tickGenerator(() => (options.data as number[]).sort((a, b) => a - b));
     }
 
     return scale;

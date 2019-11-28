@@ -7,6 +7,7 @@ export interface AxisOptions {
   tickInterval?: number;
   prefix?: string;
   suffix?: string;
+  data?: number[];
 }
 
 export type NumericAxisConfig = NumericAxisConfig;
