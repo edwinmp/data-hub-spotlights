@@ -32,7 +32,9 @@ class NumericAxisConfig {
 
   private createAxis(options: AxisOptions, scale: Linear) {
     const axis = new Axes.Numeric(scale, options.orientation || 'bottom');
-    axis.yAlignment(options.yAlignment || 'center');
+    axis
+      .yAlignment(options.yAlignment || 'center')
+      .showEndTickLabels(options.showEndTickLabels || false);
     if (options.prefix || options.suffix) {
       axis.formatter(data => `${options.prefix || ''}${data}${options.suffix || ''}`);
     }

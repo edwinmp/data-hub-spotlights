@@ -8,6 +8,7 @@ export interface AxisOptions {
   prefix?: string;
   suffix?: string;
   data?: number[];
+  showEndTickLabels?: boolean;
 }
 
 export type NumericAxisConfig = NumericAxisConfig;
