@@ -32,7 +32,9 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       domain: [ 1, 10 ],
       tickInterval: 1,
       prefix: 'Num ',
-      orientation: 'bottom'
+      orientation: 'bottom',
+      // data: [ 1, 3, 4, 5, 7, 9 ],
+      showEndTickLabels: true
     });
     setAxisConfig(config);
   };
