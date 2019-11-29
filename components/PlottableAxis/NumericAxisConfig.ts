@@ -30,6 +30,20 @@ class NumericAxisConfig {
     return this.scale;
   }
 
+  /**
+   * only use when the axis has been rendered to the DOM
+   */
+  getTickMarks() {
+    return this.axis.content().selectAll('.tick-mark');
+  }
+
+  /**
+   * only use when the axis has been rendered to the DOM
+   */
+  getTickLabels() {
+    return this.axis.content().selectAll('.tick-label');
+  }
+
   private createAxis(options: AxisOptions, scale: Linear) {
     const axis = new Axes.Numeric(scale, options.orientation || 'bottom');
     axis
