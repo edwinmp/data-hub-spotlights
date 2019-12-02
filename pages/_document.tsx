@@ -19,7 +19,7 @@ class MyDocument extends Document {
           <script src={ `${ASSETS_SOURCE_URL}assets/js/libs/modernizr.js` }/>
           <link rel="icon" type="image/png" href={ `${ASSETS_SOURCE_URL}assets/favicons/favicon.png` } sizes="16x16"/>
         </Head>
-        <body>
+        <body className="body">
           <Main />
           <NextScript />
           <script src={ `${ASSETS_SOURCE_URL}assets/js/app.bundle.js` }/>
