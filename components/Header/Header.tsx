@@ -7,13 +7,11 @@ interface HeaderProps {
 }
 
 const Header: FunctionComponent<HeaderProps> = ({ navigation }) => {
-  console.log(navigation);
-
   return (
     <header role="banner" className="header">
       <div className="row">
         <a href="/" className="branding">Development Initiatives</a>
-        <PrimaryNavigation/>
+        { navigation ? <PrimaryNavigation items={ navigation.primary }/> : null }
       </div>
     </header>
   );

@@ -8,7 +8,7 @@ export interface Navigation {
   secondary: NavigationItem[];
 }
 
-interface NavigationItem {
+export interface NavigationItem {
   title: string;
   full_url: string;
   active: boolean;
