@@ -1,5 +1,5 @@
-import React, { ReactNode, cloneElement, isValidElement, useEffect, useState } from 'react';
 import { NextComponentType } from 'next';
+import React, { ReactNode, cloneElement, isValidElement, useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import { DefaultLayoutData } from './types';
 
@@ -7,7 +7,7 @@ const DefaultLayout: NextComponentType = ({ children }) => {
   const [ data, setData ] = useState<DefaultLayoutData | null>(null);
 
   useEffect(() => {
-    console.log(data);
+    console.log(data); // TODO: make proper use of the data
   }, [ data ]);
 
   const attachDataProp = (component: ReactNode) => {

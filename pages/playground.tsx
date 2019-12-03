@@ -1,16 +1,17 @@
-import React, { useEffect } from 'react';
 import fetch from 'isomorphic-unfetch';
 import { NextPage } from 'next';
-import { DefaultLayoutData, Navigation } from '../components/DefaultLayout';
+import React, { useEffect } from 'react';
+import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayout';
 
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
   navigation: Navigation;
+  footer: Footer;
 }
-const Playground: NextPage<PlaygroundProps> = ({ navigation, setData }) => {
+const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) => {
   useEffect(() => {
     if (setData) {
-      setData({ navigation });
+      setData({ navigation, footer });
     }
   }, [ setData, navigation ]);
 
@@ -18,10 +19,15 @@ const Playground: NextPage<PlaygroundProps> = ({ navigation, setData }) => {
 };
 
 Playground.getInitialProps = async () => {
-  const res = await fetch(`${process.env.ASSETS_SOURCE_URL}api/spotlights/navigation/`);
-  const data = await res.json();
+  const res_navigation = await fetch(`${process.env.ASSETS_SOURCE_URL}api/spotlights/navigation/`);
+  const navigation = await res_navigation.json();
+  const res_footer = await fetch(`${process.env.ASSETS_SOURCE_URL}api/footer/`);
+  const footer = await res_footer.json();
 
-  return { navigation: data[0] };
+  return {
+    navigation,
+    footer
+  };
 };
 
 export default Playground;
