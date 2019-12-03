@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hero renders correctly 1`] = `
+<section
+  className="hero hero--minor"
+>
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <div
+    className="row row--narrow"
+  >
+    <div
+      className="hero__content"
+    >
+      <h1
+        className="hero__title"
+      >
+        <span>
+          Spotlight
+        </span>
+      </h1>
+      <p
+        className="hero__excerpt"
+      >
+        <span>
+          My Spotlight
+        </span>
+      </p>
+    </div>
+  </div>
+</section>
+`;
+
+exports[`Hero renders without an excerpt when one is not provided 1`] = `
+<section
+  className="hero hero--minor"
+>
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <span
+    className="hero__flourish"
+  />
+  <div
+    className="row row--narrow"
+  >
+    <div
+      className="hero__content"
+    >
+      <h1
+        className="hero__title"
+      >
+        <span>
+          Spotlight
+        </span>
+      </h1>
+    </div>
+  </div>
+</section>
+`;

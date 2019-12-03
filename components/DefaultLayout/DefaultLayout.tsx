@@ -4,6 +4,7 @@ import { ErrorBoundary } from '../ErrorBoundary';
 import { Footer } from '../Footer';
 import Header from '../Header/Header';
 import { DefaultLayoutData } from './types';
+import { Hero } from '../Hero';
 
 const DefaultLayout: NextComponentType = ({ children }) => {
   const [ data, setData ] = useState<DefaultLayoutData | undefined>();
@@ -21,6 +22,7 @@ const DefaultLayout: NextComponentType = ({ children }) => {
       <div className="ui-base">
         <Header navigation={ data && data.navigation }/>
         <main id="pagecontent" className="pagecontent -nofocus" role="main" tabIndex={ -1 }>
+          <Hero title="Spotlight"/>
           { attachDataProp(children) }
         </main>
         { data && data.footer ? <Footer { ...data.footer }/> : null }
