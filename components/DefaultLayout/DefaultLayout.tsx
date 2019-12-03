@@ -1,14 +1,10 @@
 import { NextComponentType } from 'next';
-import React, { ReactNode, cloneElement, isValidElement, useEffect, useState } from 'react';
+import React, { ReactNode, cloneElement, isValidElement, useState } from 'react';
 import Header from '../Header/Header';
 import { DefaultLayoutData } from './types';
 
 const DefaultLayout: NextComponentType = ({ children }) => {
-  const [ data, setData ] = useState<DefaultLayoutData | null>(null);
-
-  useEffect(() => {
-    console.log(data); // TODO: make proper use of the data
-  }, [ data ]);
+  const [ data, setData ] = useState<DefaultLayoutData | undefined>();
 
   const attachDataProp = (component: ReactNode) => {
     if (isValidElement(component)) {
@@ -20,7 +16,7 @@ const DefaultLayout: NextComponentType = ({ children }) => {
 
   return (
     <div className="ui-base">
-      <Header/>
+      <Header navigation={ data && data.navigation }/>
       <main id="pagecontent" className="pagecontent -nofocus" role="main" tabIndex={ -1 }>
         { attachDataProp(children) }
       </main>
