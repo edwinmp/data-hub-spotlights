@@ -1,6 +1,7 @@
 import { NextComponentType } from 'next';
 import React, { ReactNode, cloneElement, isValidElement, useState } from 'react';
 import { ErrorBoundary } from '../ErrorBoundary';
+import { Footer } from '../Footer';
 import Header from '../Header/Header';
 import { DefaultLayoutData } from './types';
 
@@ -22,6 +23,7 @@ const DefaultLayout: NextComponentType = ({ children }) => {
         <main id="pagecontent" className="pagecontent -nofocus" role="main" tabIndex={ -1 }>
           { attachDataProp(children) }
         </main>
+        { data && data.footer ? <Footer { ...data.footer }/> : null }
       </div>
     </ErrorBoundary>
   );

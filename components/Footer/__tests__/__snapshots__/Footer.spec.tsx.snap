@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer renders correctly 1`] = `
+<footer
+  className="footer"
+  role="contentinfo"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="l-footer"
+    >
+      <div
+        className="l-footer__col"
+      >
+        Newsletter Goes Here
+      </div>
+      Footer Sections Go Here
+    </div>
+    <div
+      className="footer__meta"
+    >
+      <div
+        className="footer__meta-copy footer__meta-copy--major"
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "",
+          }
+        }
+      />
+      <div
+        className="footer__meta-copy"
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "",
+          }
+        }
+      />
+    </div>
+  </div>
+</footer>
+`;
