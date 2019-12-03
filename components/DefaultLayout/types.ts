@@ -22,7 +22,7 @@ export interface Footer {
   sections: FooterSection[];
 }
 
-interface Newsletter {
+export interface Newsletter {
   caption: string;
   link_label: string;
   link_url: string;

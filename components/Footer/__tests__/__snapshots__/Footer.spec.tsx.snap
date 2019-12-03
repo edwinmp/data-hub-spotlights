@@ -13,9 +13,7 @@ exports[`Footer renders correctly 1`] = `
     >
       <div
         className="l-footer__col"
-      >
-        Newsletter Goes Here
-      </div>
+      />
       Footer Sections Go Here
     </div>
     <div

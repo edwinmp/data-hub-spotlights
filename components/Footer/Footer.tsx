@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Footer as FooterData } from '../DefaultLayout';
+import { Newsletter } from './Newsletter';
 
 type FooterProps = Partial<FooterData>;
 
@@ -13,7 +14,11 @@ const Footer: FunctionComponent<FooterProps> = (props) => {
       <div className="row">
         <div className="l-footer">
           <div className="l-footer__col">
-            Newsletter Goes Here
+          {
+            props.newsletters
+              ? props.newsletters.map(letter => <Newsletter key={ letter.caption } { ...letter }/>)
+              : null
+          }
           </div>
           Footer Sections Go Here
         </div>

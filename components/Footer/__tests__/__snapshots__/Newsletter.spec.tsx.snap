@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Newsletter renders correctly 1`] = `
+Array [
+  <h4
+    className="footer__title"
+  >
+    Sign up to our newsletter
+  </h4>,
+  <a
+    className="button"
+    href="https://localhost:3000/newsletter"
+  >
+    Sign Up
+  </a>,
+]
+`;
