@@ -1,5 +1,6 @@
 import { NextComponentType } from 'next';
 import React, { ReactNode, cloneElement, isValidElement, useState } from 'react';
+import { ErrorBoundary } from '../ErrorBoundary';
 import Header from '../Header/Header';
 import { DefaultLayoutData } from './types';
 
@@ -15,12 +16,14 @@ const DefaultLayout: NextComponentType = ({ children }) => {
   };
 
   return (
-    <div className="ui-base">
-      <Header navigation={ data && data.navigation }/>
-      <main id="pagecontent" className="pagecontent -nofocus" role="main" tabIndex={ -1 }>
-        { attachDataProp(children) }
-      </main>
-    </div>
+    <ErrorBoundary>
+      <div className="ui-base">
+        <Header navigation={ data && data.navigation }/>
+        <main id="pagecontent" className="pagecontent -nofocus" role="main" tabIndex={ -1 }>
+          { attachDataProp(children) }
+        </main>
+      </div>
+    </ErrorBoundary>
   );
 };
 
