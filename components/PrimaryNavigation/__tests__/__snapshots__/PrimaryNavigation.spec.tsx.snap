@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PrimaryNavigation renders correctly 1`] = `
+Array [
+  <button
+    className="navigation-primary-toggle"
+    id="navigation-primary-toggle"
+    role="button"
+  >
+    <span>
+      Menu
+    </span>
+  </button>,
+  <nav
+    className="navigation-primary"
+    id="navigation-primary"
+    role="navigation"
+  >
+    <ul
+      className="navigation-primary__items"
+      data-testid="navigation-primary-ul"
+    >
+      <li
+        className="navigation-primary__item"
+      >
+        <a
+          href="https://localhost:3000/nav-1"
+        >
+          Nav 1
+        </a>
+      </li>
+      <li
+        className="navigation-primary__item navigation-primary__item--active"
+      >
+        <a
+          href="https://localhost:3000/nav-2"
+        >
+          Nav 2
+        </a>
+      </li>
+    </ul>
+  </nav>,
+]
+`;

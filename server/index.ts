@@ -1,4 +1,6 @@
 // tslint:disable no-console
+import { config } from 'dotenv';
+config();
 import { createServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
@@ -16,8 +18,13 @@ app
       // Be sure to pass `true` as the second argument to `url.parse`.
       // This tells it to parse the query portion of the URL.
       const parsedUrl = parse(req.url as any, true);
+      const { pathname, query } = parsedUrl;
 
-      handle(req, res, parsedUrl);
+      if (pathname === '/') { // FIXME: remove redirect to playground once project officially starts
+        app.render(req, res, '/playground', query);
+      } else {
+        handle(req, res, parsedUrl);
+      }
     });
     server.on('error', (err: any) => {
       if (err.code === 'EADDRINUSE') {

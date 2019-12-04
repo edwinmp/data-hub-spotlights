@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer renders correctly 1`] = `
+<footer
+  className="footer"
+  role="contentinfo"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="l-footer"
+    >
+      <div
+        className="l-footer__col"
+      >
+        <h4
+          className="footer__title"
+        >
+          Sign up for our newsletters
+        </h4>
+        <a
+          className="button"
+          href="http://localhost:3000/newsletter"
+        >
+          Sign up
+        </a>
+      </div>
+      <div
+        className="l-footer__col"
+      >
+        <h4
+          className="footer__title"
+        >
+          More links
+        </h4>
+        <ul
+          className="footer__list"
+        >
+          <li>
+            <a
+              href="https://localhost:3000/nav-1"
+            >
+              Nav 1
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://localhost:3000/nav-2"
+            >
+              Nav 2
+            </a>
+          </li>
+          <li>
+            <a
+              href="http://localhost:3000/contact-us"
+            >
+              Contact us
+            </a>
+          </li>
+        </ul>
+        <ul
+          className="footer__social"
+        >
+          <li>
+            <a
+              href="http://localhost:3000/contact-us"
+            >
+              <img
+                alt="facebook"
+                src="http://localhost:3000/assets/images/image.svg"
+              />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div
+      className="footer__meta"
+    >
+      <div
+        className="footer__meta-copy footer__meta-copy--major"
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "Text Major",
+          }
+        }
+      />
+      <div
+        className="footer__meta-copy"
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "Text Minor",
+          }
+        }
+      />
+    </div>
+  </div>
+</footer>
+`;
