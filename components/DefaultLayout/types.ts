@@ -28,20 +28,20 @@ export interface Newsletter {
   link_url: string;
 }
 
-interface FooterSection {
+export interface FooterSection {
   title: string;
   show_navigation_links: boolean;
   section_links: SectionLink[];
   social_links: SocialLink[];
 }
 
-interface SectionLink {
+export interface SectionLink {
   label: string;
   link_url: string;
   page_url: string;
 }
 
-interface SocialLink {
+export interface SocialLink {
   social_platform: 'facebook' | 'twitter' | 'linkedin' | 'youtube' | 'flicker';
   link_url: string;
   image_url: string;

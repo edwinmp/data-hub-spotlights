@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react';
-import { Footer as FooterData } from '../DefaultLayout';
+import { Footer as FooterData, NavigationItem } from '../DefaultLayout';
 import { Newsletter } from './Newsletter';
+import { FooterSection } from './FooterSection';
 
-type FooterProps = Partial<FooterData>;
+type FooterProps = Partial<FooterData> & { primaryNavigation: NavigationItem[] };
 
 const Footer: FunctionComponent<FooterProps> = (props) => {
   const createMarkup = (html: string) => {
@@ -20,7 +21,11 @@ const Footer: FunctionComponent<FooterProps> = (props) => {
               : null
           }
           </div>
-          Footer Sections Go Here
+          {
+            props.sections && props.sections.map((section, index) =>
+              <FooterSection key={ index } { ...section } primaryNavigation={ props.primaryNavigation }/>
+            )
+          }
         </div>
         <div className="footer__meta">
           <div

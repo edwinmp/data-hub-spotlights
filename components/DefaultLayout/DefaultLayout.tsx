@@ -25,7 +25,11 @@ const DefaultLayout: NextComponentType = ({ children }) => {
           <Hero title="Spotlight"/>
           { attachDataProp(children) }
         </main>
-        { data && data.footer ? <Footer { ...data.footer }/> : null }
+        {
+          data && data.footer
+            ? <Footer { ...data.footer } primaryNavigation={ data.navigation.primary || [] }/>
+            : null
+        }
       </div>
     </ErrorBoundary>
   );
