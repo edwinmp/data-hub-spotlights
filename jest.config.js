@@ -12,4 +12,8 @@ module.exports = {
       'tsConfig': 'tsconfig.jest.json'
     }
   },
+  // The glob patterns Jest uses to detect test files
+  testMatch: [
+    '**/__tests__/*.spec.+(ts|tsx|js)'
+  ],
 };
