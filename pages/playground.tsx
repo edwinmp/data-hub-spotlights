@@ -2,6 +2,7 @@ import fetch from 'isomorphic-unfetch';
 import { NextPage } from 'next';
 import React, { useEffect } from 'react';
 import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayout';
+import { PageSection } from '../components/PageSection';
 
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
@@ -15,7 +16,9 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     }
   }, [ setData, navigation ]);
 
-  return <h1>Visualisation Playground</h1>;
+  return (
+    <PageSection><h1>Visualisation Playground</h1></PageSection>
+  );
 };
 
 Playground.getInitialProps = async () => {
