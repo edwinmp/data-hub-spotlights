@@ -21,7 +21,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
 
   const options: ECharts.Options = {
     title: {
-        text: 'ECharts Example'
+        text: 'Basic Bar Chart'
     },
     tooltip: {},
     legend: {
