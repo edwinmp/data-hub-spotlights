@@ -19,7 +19,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     }
   }, [ setData, navigation ]);
 
-  const options: ECharts.Options = {
+  const options1: ECharts.Options = {
     title: {
         text: 'Basic Bar Chart'
     },
@@ -45,10 +45,38 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     ]
   };
 
+  const options2: ECharts.Options = {
+    title: {
+        text: 'Inverted Bar Chart - Via Dataset'
+    },
+    tooltip: {},
+    legend: {
+        data: [ 'Sales', 'Expenses' ]
+    },
+    xAxis: { type: 'value' },
+    yAxis: { type: 'category' },
+    series: [
+      { type: 'bar' },
+      { type: 'bar' }
+    ],
+    dataset: {
+      source : [
+        [ 'item', 'Sales', 'Expenses' ],
+        [ 'Shirt', 5, 2 ],
+        [ 'Cardigan', 20, 30 ],
+        [ 'Chiffon Shirt', 34, 23 ],
+        [ 'Pants', 56, 12 ],
+        [ 'Heels', 25, 38 ],
+        [ 'Socks', 14, 29 ]
+      ]
+    }
+  };
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
-      <EChartsBaseChart options={ options } width="700px"/>
+      <EChartsBaseChart options={ options1 } width="100%"/>
+      <EChartsBaseChart options={ options2 } width="100%" height="500px"/>
     </PageSection>
   );
 };
