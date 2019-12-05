@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-unfetch';
 import { NextPage } from 'next';
 import React, { useEffect } from 'react';
+import merge from 'deepmerge';
 import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayout';
 import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { PageSection } from '../components/PageSection';
@@ -65,18 +66,25 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
         [ 'Shirt', 5, 2 ],
         [ 'Cardigan', 20, 30 ],
         [ 'Chiffon Shirt', 34, 23 ],
-        [ 'Pants', 56, 12 ],
-        [ 'Heels', 25, 38 ],
-        [ 'Socks', 14, 29 ]
+        [ 'Pants', 56, 12 ]
       ]
     }
   };
 
+  const options3 = merge<ECharts.Options>(options2, {
+    title: {
+      text: 'Bar Chart - Reverse Axis'
+    },
+    xAxis: { inverse: true },
+    yAxis: { position: 'right' }
+  });
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
-      <EChartsBaseChart options={ options1 } width="100%"/>
-      <EChartsBaseChart options={ options2 } width="100%" height="500px"/>
+      <EChartsBaseChart options={ options1 }/>
+      <EChartsBaseChart options={ options2 } height="500px"/>
+      <EChartsBaseChart options={ options3 } height="500px"/>
     </PageSection>
   );
 };
