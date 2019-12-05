@@ -9,11 +9,42 @@ declare namespace ECharts {
     legend?: {
       data: string[];
     }
-    xAxis?: {
-      data: (string | number)[];
-    },
-    yAxis?: any; // FIXME: give a proper type
+    xAxis?: XAxis;
+    yAxis?: YAxis; // FIXME: give a proper type
     series?: Series[];
+    color?: string[];
+  }
+
+  interface Axis {
+    data?: Data[];
+    axisLine?: AxisLine;
+  }
+
+  type YAxis = Axis;
+  type XAxis = Axis;
+
+  interface Data {
+    value: string | number;
+    textStyle?: TextStyle;
+  }
+
+  interface TextStyle {
+    color?: string;
+    fontStyle?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  }
+
+  interface AxisLine {
+    show?: boolean;
+    lineStyle?: AxisLineStyle;
+  }
+
+  interface AxisLineStyle {
+    color?: string;
+    width?: number;
+    type?: 'solid' | 'dashed' | 'dotted';
+    opacity?: number;
   }
 
   interface Series {
