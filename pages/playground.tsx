@@ -79,12 +79,41 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     yAxis: { position: 'right' }
   });
 
+  const options4 = merge<ECharts.Options>(options2, {
+    title: {
+      text: 'Bar Chart Grid v1'
+    },
+    legend: {},
+    xAxis: [
+      { type: 'value', gridIndex: 0 },
+      { type: 'value', gridIndex: 1 }
+    ],
+    yAxis: [
+      { type: 'category', gridIndex: 0 },
+      { type: 'category', gridIndex: 1 }
+    ],
+    grid: [
+        { bottom: '55%' },
+        { top: '55%' }
+    ]
+  });
+  options4.legend = {};
+  options4.series = [
+    { type: 'bar', seriesLayoutBy: 'row' },
+    { type: 'bar', seriesLayoutBy: 'row' },
+    { type: 'bar', seriesLayoutBy: 'row' },
+    { type: 'bar', seriesLayoutBy: 'row' },
+    { type: 'bar', xAxisIndex: 1, yAxisIndex: 1 },
+    { type: 'bar', xAxisIndex: 1, yAxisIndex: 1 }
+  ];
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
       <EChartsBaseChart options={ options1 }/>
       <EChartsBaseChart options={ options2 } height="500px"/>
       <EChartsBaseChart options={ options3 } height="500px"/>
+      <EChartsBaseChart options={ options4 } height="800px"/>
     </PageSection>
   );
 };
