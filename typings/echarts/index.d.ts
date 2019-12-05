@@ -9,22 +9,40 @@ declare namespace ECharts {
     legend?: {
       data: string[];
     }
-    xAxis?: XAxis;
-    yAxis?: YAxis;
+    xAxis?: XAxis | XAxis[];
+    yAxis?: YAxis | YAxis[];
     series?: Series[];
     color?: string[];
     grid?: Grid;
     textStyle?: TextStyle;
+    dataset?: Dataset;
+  }
+
+  type DatasetSource = Array<Array<string|number> | {[key: string]: string | number}> | {[key: string]: Array<string | number>};
+
+  interface DataSet {
+    source: DatasetSource;
   }
 
   interface Axis {
+    name?: string;
     data?: Data[];
     axisLine?: AxisLine;
     splitLine?: SplitLine;
+    type?: AxisType;
+    inverse?: boolean;
+    offset?: number;
   }
 
-  type YAxis = Axis;
-  type XAxis = Axis;
+  type AxisType = 'category' | 'value' | 'time' | 'log';
+
+  interface YAxis extends Axis {
+    position?: 'left' | 'right';
+  };
+
+  interface XAxis extends Axis {
+    position?: 'top' | 'bottom';
+  };
 
   interface Data {
     value: string | number;
@@ -63,8 +81,15 @@ declare namespace ECharts {
   }
 
   interface Series {
-    name: string;
+    name?: string;
     type: 'line' | 'bar' | 'pie';
-    data: any[]; // FIXME: give a proper type - not sure it's possible
+    data?: any[]; // FIXME: give a proper type - not sure it's possible
+    encode?: SeriesEncode;
+  }
+
+  interface SeriesEncode {
+    x?: string | number[];
+    y?: string | number[];
+    tooltip?: string | number[];
   }
 }
