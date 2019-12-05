@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import merge from 'deepmerge';
 import { init } from 'echarts';
+import React, { useEffect, useRef } from 'react';
+import { defaults } from './utils/options';
 
 interface EChartBaseChartProps {
   width?: string;
@@ -12,7 +14,7 @@ const EChartsBaseChart = (props: EChartBaseChartProps) => {
   useEffect(() => {
     if (chartNode) {
       const baseChart = init(chartNode.current);
-      baseChart.setOption(props.options);
+      baseChart.setOption(merge(defaults, props.options));
     }
   }, []);
 

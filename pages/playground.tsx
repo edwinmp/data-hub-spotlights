@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayout';
 import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { PageSection } from '../components/PageSection';
+import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
@@ -24,17 +25,24 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     },
     tooltip: {},
     legend: {
-        data: [ 'Sales' ]
+        data: [ 'Sales', 'Expenses' ]
     },
     xAxis: {
-        data: [ 'shirt', 'cardign', 'chiffon shirt', 'pants', 'heels', 'socks' ]
+        data: toBasicAxisData([ 'Shirt', 'Cardign', 'chiffon shirt', 'Pants', 'Heels', 'Socks' ])
     },
     yAxis: {},
-    series: [ {
+    series: [
+      {
         name: 'Sales',
         type: 'bar',
         data: [ 5, 20, 36, 10, 10, 20 ]
-    } ]
+      },
+      {
+        name: 'Expenses',
+        type: 'bar',
+        data: [ 2, 30, 3, 40, 20, 36 ]
+      }
+    ]
   };
 
   return (
