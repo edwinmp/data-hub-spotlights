@@ -1,2 +1,2 @@
-export const toBasicAxisData = (values: string[]): ECharts.Data[] =>
+export const toBasicAxisData = (values: (string | number)[]): ECharts.Data[] =>
   values.map(value => ({ value }));
