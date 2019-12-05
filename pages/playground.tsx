@@ -28,14 +28,14 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
         data: [ 'Sales', 'Expenses' ]
     },
     xAxis: {
-        data: toBasicAxisData([ 'Shirt', 'Cardign', 'chiffon shirt', 'Pants', 'Heels', 'Socks' ])
+        data: toBasicAxisData([ 'Shirt', 'Cardign', 'Chiffon Shirt', 'Pants', 'Heels', 'Socks' ])
     },
     yAxis: {},
     series: [
       {
         name: 'Sales',
         type: 'bar',
-        data: [ 5, 20, 36, 10, 10, 20 ]
+        data: [ 5, 20, 36, 15, 10, 25 ]
       },
       {
         name: 'Expenses',
@@ -48,7 +48,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
-      <EChartsBaseChart options={ options }/>
+      <EChartsBaseChart options={ options } width="700px"/>
     </PageSection>
   );
 };

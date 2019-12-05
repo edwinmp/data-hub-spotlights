@@ -1,12 +1,11 @@
 const axisDefaults: Partial<ECharts.Axis> = {
   axisLine: {
-    lineStyle: {
-      color: '#443e42'
-    }
+    lineStyle: { color: '#443e42' }
+  },
+  splitLine: {
+    show: false,
+    lineStyle: { color: '#ccc' }
   }
-};
-export const textDefaults: Partial<ECharts.TextStyle> = {
-  fontFamily: 'inherit'
 };
 
 export const defaults: Partial<ECharts.Options> = {
@@ -14,5 +13,8 @@ export const defaults: Partial<ECharts.Options> = {
   yAxis: {
     ...axisDefaults
   },
-  xAxis: axisDefaults
+  xAxis: axisDefaults,
+  textStyle: {
+    fontFamily: 'Geomanist Regular,sans-serif'
+  }
 };

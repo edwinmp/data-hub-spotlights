@@ -10,14 +10,17 @@ declare namespace ECharts {
       data: string[];
     }
     xAxis?: XAxis;
-    yAxis?: YAxis; // FIXME: give a proper type
+    yAxis?: YAxis;
     series?: Series[];
     color?: string[];
+    grid?: Grid;
+    textStyle?: TextStyle;
   }
 
   interface Axis {
     data?: Data[];
     axisLine?: AxisLine;
+    splitLine?: SplitLine;
   }
 
   type YAxis = Axis;
@@ -40,11 +43,23 @@ declare namespace ECharts {
     lineStyle?: AxisLineStyle;
   }
 
-  interface AxisLineStyle {
+  interface SplitLine {
+    show?: boolean;
+    lineStyle?: SplitLineStyle;
+  }
+
+  interface LineStyle {
     color?: string;
     width?: number;
     type?: 'solid' | 'dashed' | 'dotted';
     opacity?: number;
+  }
+
+  type AxisLineStyle = LineStyle;
+  type SplitLineStyle = LineStyle;
+
+  interface Grid {
+    show?: boolean;
   }
 
   interface Series {
