@@ -107,6 +107,55 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     { type: 'bar', xAxisIndex: 1, yAxisIndex: 1 }
   ];
 
+  const options5 = merge<ECharts.Options>(options1, {
+    title: {
+      text: 'Bar Chart Grid - Cool Data Comparison'
+    },
+    xAxis: [
+      {
+        type: 'value',
+        position: 'top'
+      },
+      {
+        type: 'value',
+        gridIndex: 1,
+        position: 'top',
+        inverse: true
+      }
+    ],
+    yAxis: [
+      {
+        show: false,
+        type: 'category',
+        data: toBasicAxisData([ 'Shirt', 'Cardign', 'Chiffon Shirt', 'Pants', 'Heels', 'Socks' ])
+      },
+      {
+        type: 'category',
+        gridIndex: 1,
+        data: toBasicAxisData([ 'Shirt', 'Cardign', 'Chiffon Shirt', 'Pants', 'Heels', 'Socks' ]),
+        offset: 20,
+        axisTick: { show: false }
+      }
+    ],
+    grid: [
+        { left: '50%' },
+        { right: '50%' }
+    ]
+  });
+  options5.legend = {};
+  options5.series = [
+    {
+      type: 'bar',
+      data: toBasicAxisData([ 5, 20, 36, 15, 10, 25 ])
+    },
+    {
+      type: 'bar',
+      data: toBasicAxisData([ 2, 30, 3, 40, 20, 36 ]),
+      xAxisIndex: 1,
+      yAxisIndex: 1
+    }
+  ];
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
@@ -114,6 +163,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       <EChartsBaseChart options={ options2 } height="500px"/>
       <EChartsBaseChart options={ options3 } height="500px"/>
       <EChartsBaseChart options={ options4 } height="800px"/>
+      <EChartsBaseChart options={ options5 } height="800px"/>
     </PageSection>
   );
 };
