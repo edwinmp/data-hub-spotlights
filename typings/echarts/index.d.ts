@@ -7,13 +7,14 @@ declare namespace ECharts {
     };
     tooltip?: any; // FIXME: give a proper type
     legend?: {
-      data: string[];
+      show?: boolean;
+      data?: string[];
     }
     xAxis?: XAxis | XAxis[];
     yAxis?: YAxis | YAxis[];
     series?: Series[];
     color?: string[];
-    grid?: Grid;
+    grid?: Grid | Grid[];
     textStyle?: TextStyle;
     dataset?: Dataset;
   }
@@ -32,6 +33,7 @@ declare namespace ECharts {
     type?: AxisType;
     inverse?: boolean;
     offset?: number;
+    gridIndex?: number;
   }
 
   type AxisType = 'category' | 'value' | 'time' | 'log';
@@ -78,6 +80,10 @@ declare namespace ECharts {
 
   interface Grid {
     show?: boolean;
+    left?: string | number;
+    top?: string | number;
+    right?: string | number;
+    bottom?: string | number;
   }
 
   interface Series {
@@ -85,6 +91,9 @@ declare namespace ECharts {
     type: 'line' | 'bar' | 'pie';
     data?: any[]; // FIXME: give a proper type - not sure it's possible
     encode?: SeriesEncode;
+    seriesLayoutBy?: 'column' | 'row';
+    xAxisIndex?: number;
+    yAxisIndex?: number;
   }
 
   interface SeriesEncode {
