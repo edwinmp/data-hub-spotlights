@@ -1,4 +1,4 @@
-const axisDefaults: Partial<ECharts.Axis> = {
+export const axisDefaults: Partial<ECharts.Axis> = {
   axisLine: {
     lineStyle: { color: '#443e42' }
   },
