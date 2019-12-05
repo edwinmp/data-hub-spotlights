@@ -1,11 +1,9 @@
 import fetch from 'isomorphic-unfetch';
 import { NextPage } from 'next';
-import dynamic from 'next/dynamic';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayout';
 import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { PageSection } from '../components/PageSection';
-import { NumericAxisConfig as AxisConfig } from '../components/PlottableAxis/types';
 
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
@@ -13,35 +11,12 @@ interface PlaygroundProps {
   footer: Footer;
 }
 
-const PlottableAxis = dynamic(
-  () => import('../components/PlottableAxis').then(mod => mod.PlottableAxis),
-  { ssr: false }
-);
-
 const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) => {
   useEffect(() => {
     if (setData) {
       setData({ navigation, footer });
     }
   }, [ setData, navigation ]);
-  const [ axisConfig, setAxisConfig ] = useState<AxisConfig | undefined>();
-  const configureAxis = async () => {
-    const NumericAxisConfig = await import('../components/PlottableAxis/NumericAxisConfig')
-      .then(mod => mod.NumericAxisConfig);
-    const config = new NumericAxisConfig({
-      domain: [ 1, 10 ],
-      tickInterval: 1,
-      prefix: 'Num ',
-      orientation: 'bottom',
-      // data: [ 1, 3, 4, 5, 7, 9 ],
-      showEndTickLabels: true
-    });
-    setAxisConfig(config);
-  };
-  // trigger configureAxis on initial component mount
-  useEffect(() => {
-    configureAxis();
-  }, []);
 
   const options: ECharts.Options = {
     title: {
@@ -66,7 +41,6 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     <PageSection>
       <h1>Visualisation Playground</h1>
       <EChartsBaseChart options={ options }/>
-      { axisConfig ? <PlottableAxis config={ axisConfig }/> : null }
     </PageSection>
   );
 };
