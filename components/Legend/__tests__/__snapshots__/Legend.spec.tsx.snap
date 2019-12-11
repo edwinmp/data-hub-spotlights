@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Legend renders only LegendItem children 1`] = `
+<div
+  className="spotlight-legend"
+  data-testid="spotlight-legend"
+>
+  <span
+    data-testid="spotlight-legend-item"
+  />
+  <span
+    data-testid="spotlight-legend-item"
+  />
+</div>
+`;
