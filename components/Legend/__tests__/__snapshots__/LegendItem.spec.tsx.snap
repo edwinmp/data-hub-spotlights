@@ -9,7 +9,7 @@ exports[`LegendItem renders correctly 1`] = `
   >
     
       span {
-        background-color: inherit;
+        background-color: #f3f3f3;
         color: inherit;
       }
     
@@ -27,7 +27,7 @@ exports[`LegendItem renders with the specified children 1`] = `
   <style>
     
       span {
-        background-color: inherit;
+        background-color: #f3f3f3;
         color: inherit;
       }
     
