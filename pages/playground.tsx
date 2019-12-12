@@ -6,7 +6,7 @@ import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayo
 import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { PageSection } from '../components/PageSection';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
-import { Legend, LegendItem, StyledLegendItem } from '../components/Legend';
+import { Legend, LegendItem } from '../components/Legend';
 import { Select } from '../components/Select';
 
 interface PlaygroundProps {
@@ -177,11 +177,11 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       </div>
       <div style={ { width: '400px', backgroundColor: '#fff', padding: '20px' } }>
         <Legend>
-          <StyledLegendItem bgColor="#fad1c9">{ '<30%' }</StyledLegendItem>
-          <StyledLegendItem bgColor="#f5aa9b">{ '30% - 50%' }</StyledLegendItem>
-          <StyledLegendItem bgColor="#f0826d">{ '50% - 70%' }</StyledLegendItem>
-          <StyledLegendItem bgColor="#e84439">{ '70% - 90%' }</StyledLegendItem>
-          <StyledLegendItem bgColor="#8f1b13" textColor="#fff">{ '>90%' }</StyledLegendItem>
+          <LegendItem bgColor="#fad1c9"><span>{ '<30%' }</span></LegendItem>
+          <LegendItem bgColor="#f5aa9b">{ '30% - 50%' }</LegendItem>
+          <LegendItem bgColor="#f0826d">{ '50% - 70%' }</LegendItem>
+          <LegendItem bgColor="#e84439">{ '70% - 90%' }</LegendItem>
+          <LegendItem bgColor="#8f1b13" textColor="#fff">{ '>90%' }</LegendItem>
           <LegendItem>no data / not applicable</LegendItem>
         </Legend>
       </div>

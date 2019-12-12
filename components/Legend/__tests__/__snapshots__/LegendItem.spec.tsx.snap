@@ -2,7 +2,35 @@
 
 exports[`LegendItem renders correctly 1`] = `
 <span
-  className="sc-bdVaJa jCmhFT"
   data-testid="spotlight-legend-item"
-/>
+>
+  <style
+    jsx={true}
+  >
+    
+      span {
+        background-color: inherit;
+        color: inherit;
+      }
+    
+  </style>
+</span>
+`;
+
+exports[`LegendItem renders with the specified children 1`] = `
+<span
+  data-testid="spotlight-legend-item"
+>
+  <span>
+    30%
+  </span>
+  <style>
+    
+      span {
+        background-color: inherit;
+        color: inherit;
+      }
+    
+  </style>
+</span>
 `;

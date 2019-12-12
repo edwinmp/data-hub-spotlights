@@ -5,11 +5,11 @@ import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import * as TestRenderer from 'react-test-renderer';
 import { render } from '@testing-library/react';
-import { LegendItem, StyledLegendItem } from '../LegendItem';
+import { LegendItem } from '../LegendItem';
 
 describe('LegendItem', () => {
   test('renders correctly', () => {
-    const renderer = TestRenderer.create(<StyledLegendItem />).toJSON();
+    const renderer = TestRenderer.create(<LegendItem />).toJSON();
 
     expect(renderer).toMatchSnapshot();
   });
@@ -27,14 +27,6 @@ describe('LegendItem', () => {
       </LegendItem>
     );
 
-    expect(container.firstChild).toMatchInlineSnapshot(`
-      <span
-        data-testid="spotlight-legend-item"
-      >
-        <span>
-          30%
-        </span>
-      </span>
-    `);
+    expect(container.firstChild).toMatchSnapshot();
   });
 });

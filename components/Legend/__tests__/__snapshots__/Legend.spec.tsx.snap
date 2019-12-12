@@ -7,9 +7,31 @@ exports[`Legend renders only LegendItem children 1`] = `
 >
   <span
     data-testid="spotlight-legend-item"
-  />
+  >
+    <style
+      jsx={true}
+    >
+      
+      span {
+        background-color: inherit;
+        color: inherit;
+      }
+    
+    </style>
+  </span>
   <span
     data-testid="spotlight-legend-item"
-  />
+  >
+    <style
+      jsx={true}
+    >
+      
+      span {
+        background-color: inherit;
+        color: inherit;
+      }
+    
+    </style>
+  </span>
 </div>
 `;
