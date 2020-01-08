@@ -6,6 +6,7 @@ import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayo
 import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { PageSection } from '../components/PageSection';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
+import { Select } from '../components/Select';
 
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
@@ -156,6 +157,12 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     }
   ];
 
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ];
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
@@ -164,6 +171,9 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       <EChartsBaseChart options={ options3 } height="500px"/>
       <EChartsBaseChart options={ options4 } height="800px"/>
       <EChartsBaseChart options={ options5 } height="800px"/>
+      <div>
+        <Select options={ options }/>
+      </div>
     </PageSection>
   );
 };
