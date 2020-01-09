@@ -24,11 +24,7 @@ const Select: FunctionComponent<SelectProps> = (props) => {
     })
   };
 
-  return (
-    <>
-      <ReactSelect { ...props } styles={ { ...styles, ...props.styles } } />
-    </>
-  );
+  return <ReactSelect { ...props } styles={ { ...styles, ...props.styles } } />;
 };
 
 export { Select };
