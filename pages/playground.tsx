@@ -172,7 +172,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       <EChartsBaseChart options={ options3 } height="500px"/>
       <EChartsBaseChart options={ options4 } height="800px"/>
       <EChartsBaseChart options={ options5 } height="800px"/>
-      <div>
+      <div style={ { paddingBottom: '20px' } }>
         <Select options={ options }/>
       </div>
       <div style={ { width: '400px', backgroundColor: '#fff', padding: '20px' } }>
