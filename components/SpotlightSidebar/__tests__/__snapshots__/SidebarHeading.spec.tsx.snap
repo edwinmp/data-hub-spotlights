@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SidebarHeading renders correctly 1`] = `
+<h2
+  className="spotlight__heading"
+>
+  <button
+    className="button button--minor"
+    id="spotlight-menu-trigger"
+    type="button"
+  >
+    <i
+      aria-hidden="true"
+      className="ico ico--20 ico-arrow-down-blank"
+      role="presentation"
+    />
+  </button>
+</h2>
+`;
