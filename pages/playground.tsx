@@ -1,19 +1,24 @@
-import fetch from 'isomorphic-unfetch';
 import { NextPage } from 'next';
-import React, { useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { EChartsBaseChart } from '../components/EChartsBaseChart';
+import React, { useEffect, useState } from 'react';
 import merge from 'deepmerge';
 import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayout';
-import { EChartsBaseChart } from '../components/EChartsBaseChart';
+import fetch from 'isomorphic-unfetch';
 import { PageSection } from '../components/PageSection';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 import { Legend, LegendItem } from '../components/Legend';
 import { Select } from '../components/Select';
+import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
+import { SpotlightMenuItem } from '../components/SpotlightMenu';
 
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
   navigation: Navigation;
   footer: Footer;
 }
+
+const SpotlightMenu = dynamic(() => import('../components/SpotlightMenu').then(mod => mod.SpotlightMenu));
 
 const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) => {
   useEffect(() => {
@@ -164,6 +169,43 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     { value: 'vanilla', label: 'Vanilla' }
   ];
 
+  const [ sidebarActive, setSidebarActive ] = useState(false);
+
+  const onSidebarHeaderClick = () => {
+    setSidebarActive(!sidebarActive);
+  };
+  const sidebarItems: SpotlightMenuItem[] = [
+    {
+      title: 'Level 1',
+      children: [
+        {
+          title: 'Level 1.1'
+        },
+        {
+          title: 'Level 1.2'
+        },
+        {
+          title: 'Level 1.3'
+        }
+      ]
+    },
+    {
+      title: 'Level 2'
+    },
+    {
+      title: 'Level 3',
+      children: [
+        {
+          title: 'Level 3.1'
+        },
+        {
+          title: 'Level 3.2',
+          url: 'https://google.com'
+        }
+      ]
+    }
+  ];
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
@@ -172,10 +214,10 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       <EChartsBaseChart options={ options3 } height="500px"/>
       <EChartsBaseChart options={ options4 } height="800px"/>
       <EChartsBaseChart options={ options5 } height="800px"/>
-      <div style={ { paddingBottom: '20px' } }>
+      <div style={ { marginBottom: '20px' } }>
         <Select options={ options }/>
       </div>
-      <div style={ { width: '400px', backgroundColor: '#fff', padding: '20px' } }>
+      <div style={ { width: '400px', backgroundColor: '#fff', padding: '20px', marginBottom: '20px' } }>
         <Legend>
           <LegendItem bgColor="#fad1c9"><span>{ '<30%' }</span></LegendItem>
           <LegendItem bgColor="#f5aa9b">{ '30% - 50%' }</LegendItem>
@@ -184,6 +226,14 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
           <LegendItem bgColor="#8f1b13" textColor="#fff">{ '>90%' }</LegendItem>
           <LegendItem>no data / not applicable</LegendItem>
         </Legend>
+      </div>
+      <div>
+        <SpotlightSidebar>
+          <SidebarHeading heading="Uganda" onClick={ onSidebarHeaderClick }/>
+          <SidebarContent height="300px">
+            <SpotlightMenu active={ sidebarActive } items={ sidebarItems }/>
+          </SidebarContent>
+        </SpotlightSidebar>
       </div>
     </PageSection>
   );
