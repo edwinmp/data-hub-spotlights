@@ -1,12 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SidebarHeading renders correctly 1`] = `
+exports[`SidebarHeading renders correctly with a heading 1`] = `
 <h2
   className="spotlight__heading"
 >
+  My Heading
   <button
     className="button button--minor"
-    id="spotlight-menu-trigger"
+    data-testid="spotlight-menu-trigger"
     type="button"
   >
     <i
