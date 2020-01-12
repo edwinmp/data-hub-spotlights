@@ -1,8 +1,12 @@
 import React, { FunctionComponent } from 'react';
 
-const SidebarContent: FunctionComponent = ({ children }) => {
+interface SidebarContentProps {
+  height?: string;
+}
+
+const SidebarContent: FunctionComponent<SidebarContentProps> = ({ children, height }) => {
   return (
-    <div className="spotlight__content">
+    <div className="spotlight__content" style={ { height } }>
       { children }
     </div>
   );
