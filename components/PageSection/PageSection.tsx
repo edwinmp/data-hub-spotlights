@@ -1,9 +1,15 @@
+import classNames from 'classnames';
 import React, { FunctionComponent } from 'react';
 
-const PageSection: FunctionComponent = ({ children }) => {
+interface PageSectionProps {
+  narrow?: boolean;
+  wide?: boolean;
+}
+
+const PageSection: FunctionComponent<PageSectionProps> = ({ children, narrow, wide }) => {
   return (
     <section className="section">
-      <div className="row row--narrow">
+      <div className={ classNames('row', { 'row--narrow': narrow, 'row--wide': wide }) }>
         { children }
       </div>
     </section>

@@ -12,4 +12,16 @@ describe('PageSection', () => {
 
     expect(renderer).toMatchSnapshot();
   });
+
+  test('renders the appropriate class when narrow', () => {
+    const renderer = TestRenderer.create(<PageSection narrow/>).toJSON();
+
+    expect(renderer).toMatchSnapshot();
+  });
+
+  test('renders the appropriate class when wide', () => {
+    const renderer = TestRenderer.create(<PageSection wide/>).toJSON();
+
+    expect(renderer).toMatchSnapshot();
+  });
 });
