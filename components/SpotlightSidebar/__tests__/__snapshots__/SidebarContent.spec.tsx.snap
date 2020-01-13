@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SidebarContent renders children correctly 1`] = `
+<div
+  className="spotlight__content"
+  style={
+    Object {
+      "height": "400px",
+    }
+  }
+>
+  <div>
+    My Child
+  </div>
+</div>
+`;
+
+exports[`SidebarContent renders correctly with the specified height style 1`] = `
+<div
+  className="spotlight__content"
+  style={
+    Object {
+      "height": "300px",
+    }
+  }
+/>
+`;
