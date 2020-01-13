@@ -11,6 +11,10 @@ import { Legend, LegendItem } from '../components/Legend';
 import { Select } from '../components/Select';
 import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
 import { SpotlightMenuItem } from '../components/SpotlightMenu';
+import { SpotlightTab } from '../components/SpotlightTab';
+import { TabContainer } from '../components/SpotlightTab/TabContainer';
+import { TabContent } from '../components/SpotlightTab/TabContent';
+import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
@@ -229,13 +233,29 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
           <LegendItem>no data / not applicable</LegendItem>
         </Legend>
       </div>
-      <div>
+      <div style={ { marginBottom: '20px', display: 'flex' } }>
         <SpotlightSidebar>
           <SidebarHeading heading="Uganda" onClick={ onSidebarHeaderClick }/>
           <SidebarContent height="300px">
             <SpotlightMenu active={ sidebarActive } items={ sidebarItems }/>
           </SidebarContent>
         </SpotlightSidebar>
+      </div>
+      <div style={ { marginBottom: '20px' } }>
+        <SpotlightTab>
+          <TabContainer id="1" label="Tab 1" active>
+            <TabContent>
+              <TabContentHeader>Tab 1 Content</TabContentHeader>
+              <div>Other Content 1</div>
+            </TabContent>
+          </TabContainer>
+          <TabContainer id="2" label="Tab 2">
+            <TabContent>
+              <TabContentHeader>Tab 2 Content</TabContentHeader>
+              <div>Other Content 2</div>
+            </TabContent>
+          </TabContainer>
+        </SpotlightTab>
       </div>
     </PageSection>
   );
