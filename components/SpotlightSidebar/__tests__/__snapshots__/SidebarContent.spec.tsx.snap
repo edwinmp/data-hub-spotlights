@@ -3,6 +3,11 @@
 exports[`SidebarContent renders children correctly 1`] = `
 <div
   className="spotlight__content"
+  style={
+    Object {
+      "height": "400px",
+    }
+  }
 >
   <div>
     My Child
@@ -10,8 +15,13 @@ exports[`SidebarContent renders children correctly 1`] = `
 </div>
 `;
 
-exports[`SidebarContent renders correctly 1`] = `
+exports[`SidebarContent renders correctly with the specified height style 1`] = `
 <div
   className="spotlight__content"
+  style={
+    Object {
+      "height": "300px",
+    }
+  }
 />
 `;
