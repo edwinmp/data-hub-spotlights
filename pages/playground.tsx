@@ -18,7 +18,9 @@ interface PlaygroundProps {
   footer: Footer;
 }
 
-const SpotlightMenu = dynamic(() => import('../components/SpotlightMenu').then(mod => mod.SpotlightMenu));
+const SpotlightMenu = dynamic(
+  () => import('../components/SpotlightMenu').then(mod => mod.SpotlightMenu),
+  { ssr: false });
 
 const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) => {
   useEffect(() => {
