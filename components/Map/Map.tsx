@@ -1,22 +1,12 @@
 import React from 'react';
-import { connect } from "react-redux";
-import { getDistrictsAction } from "../../store/actions/getDistrictsAction";
+import ugandaDistricts from '../../geoJSON/ugandadistricts.json';
 
 const style = {
   width: "100%",
   height: "600px"
 };
 
-interface MapProps {
-  districts: [];
-}
-
-interface State {
-  districts: [];
-}
-
-
-class Map extends React.Component<MapProps> {
+class Map extends React.Component {
   state = {
     L: {},
     map: {},
@@ -24,6 +14,10 @@ class Map extends React.Component<MapProps> {
 
   componentDidMount() {
     let L = require('leaflet');
+
+    let d = ugandaDistricts;
+
+    console.log(d);
 
     // create map
     let map = L.map('map', {
@@ -36,7 +30,7 @@ class Map extends React.Component<MapProps> {
       ]
     });
 
-    var layer = L.geoJson(this.props.districts, {
+    var layer = L.geoJson(ugandaDistricts, {
       style: {
         "color": "#ff7800",
         "weight": 5,
@@ -54,13 +48,4 @@ class Map extends React.Component<MapProps> {
   }
 }
 
-const mapStateToProps = (state: State) => ({
-  ...state
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getDistrictsAction: () => dispatch(getDistrictsAction),
-});
-
-let ConnectedMap = connect<State, {}>(mapStateToProps, mapDispatchToProps)(Map);
-export { ConnectedMap };
+export { Map };
