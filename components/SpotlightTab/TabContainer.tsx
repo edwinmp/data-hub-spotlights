@@ -17,7 +17,7 @@ const TabContainer: FunctionComponent<TabContainerProps> = ({ id, active, label,
 
   return (
     <section className="tabs__container" id={ id }>
-      <input className="tabs__input" type="radio" name="sections" id={ `${id}-option` } checked={ active }/>
+      <input className="tabs__input" type="radio" name="sections" id={ `${id}-option` } defaultChecked={ active }/>
       <label className="tabs__label" htmlFor={ `${id}-option` }>{ label }</label>
       { renderContent() }
     </section>
