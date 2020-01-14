@@ -169,11 +169,22 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     }
   ];
 
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ];
+  const options = loadDistrictSelect(ugandaDistricts);
+
+  function loadDistrictSelect(districts:any) {
+    const options = [];
+    for(const district in districts.features){
+      options.push({
+        value: districts.features[district].properties.DNAME2014,
+        label: districts.features[district].properties.DNAME2014
+      });
+    }
+    return options;
+  }
+
+  function handleChange(selectedOption: any) {
+    console.log("Option selected:", selectedOption.value);
+  };
 
   const [ sidebarActive, setSidebarActive ] = useState(false);
 
