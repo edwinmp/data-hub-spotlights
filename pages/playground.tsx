@@ -8,7 +8,6 @@ import fetch from 'isomorphic-unfetch';
 import { PageSection } from '../components/PageSection';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 import { Legend, LegendItem } from '../components/Legend';
-import { Select } from '../components/Select';
 import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
 import { SpotlightMenuItem } from '../components/SpotlightMenu';
 import { SpotlightTab } from '../components/SpotlightTab';
@@ -171,23 +170,6 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     }
   ];
 
-  const options = loadDistrictSelect(ugandaDistricts);
-
-  function loadDistrictSelect(districts:any) {
-    const options = [];
-    for(const district in districts.features){
-      options.push({
-        value: districts.features[district].properties.DNAME2014,
-        label: districts.features[district].properties.DNAME2014
-      });
-    }
-    return options;
-  }
-
-  function handleChange(selectedOption: any) {
-    console.log("Option selected:", selectedOption.value);
-  };
-
   const [ sidebarActive, setSidebarActive ] = useState(false);
 
   const onSidebarHeaderClick = () => {
@@ -233,9 +215,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       <EChartsBaseChart options={ options3 } height="500px"/>
       <EChartsBaseChart options={ options4 } height="800px"/>
       <EChartsBaseChart options={ options5 } height="800px"/>
-      <div style={ { marginBottom: '20px' } }>
-        <Select options={ options }/>
-      </div>
+
       <div style={ { width: '400px', backgroundColor: '#fff', padding: '20px', marginBottom: '20px' } }>
         <Legend>
           <LegendItem bgColor="#fad1c9"><span>{ '<30%' }</span></LegendItem>
