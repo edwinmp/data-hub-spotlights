@@ -1,8 +1,6 @@
 import React from 'react';
 import ugandaDistricts from '../../geoJSON/ugandadistricts.json';
-import ugandaSubcounties from '../../geoJSON/ubos_subcounties_features.json';
 import * as turf from '@turf/turf';
-let distance = require('jaro-winkler');
 
 
 const style = {
@@ -12,7 +10,9 @@ const style = {
 
 interface MapProps {
   district: string,
-  boundaryType: string
+  subcounty: string,
+  boundaryType: string,
+  findSubcounties: Function
 }
 
 interface State {
@@ -91,7 +91,7 @@ class Map extends React.Component<MapProps, State> {
   }
 
   showOneUgandaDistrict(L: any, map: any) {
-    let districtSubcounties = this.findSelectedDistrictSubcounties(this.props.district);
+    let districtSubcounties = this.props.findSubcounties(this.props.district);
     this.clean_map(L, map);
     for (const key in districtSubcounties) {
       this.redrawMap(L, map, districtSubcounties[key]);
@@ -113,19 +113,6 @@ class Map extends React.Component<MapProps, State> {
     console.log(points);
     var features = turf.featureCollection(points);
     return turf.center(features);
-  }
-
-  findSelectedDistrictSubcounties(district: string) {
-    var selectedGeometry = [],
-      subcounties = ugandaSubcounties.features;
-    for (var subcounty in subcounties) {
-      var current_district = subcounties[subcounty].properties.DName2016;
-      var similarity = distance(district.toLowerCase(), current_district.toLowerCase());
-      if (similarity > 0.9) {
-        selectedGeometry.push(subcounties[subcounty]);
-      }
-    }
-    return selectedGeometry;
   }
 
   render() {
