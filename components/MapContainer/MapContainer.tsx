@@ -46,7 +46,7 @@ class MapContainer extends React.Component<{}, State> {
 
   render() {
     return (
-      <div>
+      <div style={ { padding: '20px' } }>
         <div>
         <Select options={ this.loadDistrictSelect(ugandaDistricts) } onChange={this.handleChange.bind(this)}/>
         </div>

@@ -251,7 +251,10 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
         </SpotlightTab>
       </div>
 
-      <MapContainer />
+      <div style={ { display: 'block', float: 'left', width: '100%' } }>
+        <MapContainer />
+      </div>
+
 
     </PageSection>
   );
