@@ -79,7 +79,7 @@ class Map extends React.Component<MapProps, State> {
     var layer = L.geoJson(featureCollection, {
       style: {
         "color": "#00008b",
-        "weight": 5,
+        "weight": 1,
         "opacity": 0.65
       }
     });
