@@ -21,21 +21,21 @@ const FooterSection: FunctionComponent<FooterSectionProps> = props => {
       <h4 className="footer__title">{ props.title }</h4>
       <ul className="footer__list">
         {
-          props.primaryNavigation.map(({ full_url, title }) =>
-            <FooterSectionLink key={ title } url={ full_url } label={ title }/>
+          props.primaryNavigation.map(({ full_url, title }, index) =>
+            <FooterSectionLink key={ `${title} ${index}` } url={ full_url } label={ title }/>
           )
         }
         {
-          props.section_links.map(({ link_url, page_url, label }) =>
-            <FooterSectionLink key={ label } url={ link_url || page_url } label={ label }/>
+          props.section_links.map(({ link_url, page_url, label }, index) =>
+            <FooterSectionLink key={ `${label} ${index}` } url={ link_url || page_url } label={ label }/>
           )
         }
       </ul>
       <ul className="footer__social">
         {
-          props.social_links.map(({ link_url, social_platform, image_url }) =>
+          props.social_links.map(({ link_url, social_platform, image_url }, index) =>
             <FooterSocialLink
-              key={ social_platform }
+              key={ `${social_platform} ${index}` }
               link_url={ link_url }
               image_url={ image_url }
               social_platform={ social_platform }
