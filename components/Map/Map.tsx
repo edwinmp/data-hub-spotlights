@@ -1,6 +1,7 @@
 import React from 'react';
 import ugandaDistricts from '../../geoJSON/ugandadistricts.json';
 import * as turf from '@turf/turf';
+let distance = require('jaro-winkler');
 
 
 const style = {
@@ -49,7 +50,9 @@ class Map extends React.Component<MapProps, State> {
   }
 
   componentDidUpdate(prevProps:MapProps) {
-    if (prevProps.boundaryType !== this.props.boundaryType || prevProps.district !== this.props.district) {
+    if (prevProps.boundaryType !== this.props.boundaryType ||
+      prevProps.district !== this.props.district ||
+      prevProps.subcounty !== this.props.subcounty) {
       this.addLayer(this.state.leaflet, this.state.map);
     }
   }
@@ -61,6 +64,9 @@ class Map extends React.Component<MapProps, State> {
         break;
       case 'district':
         this.showOneUgandaDistrict(L, map);
+        break;
+      case 'subcounty':
+        this.showUgandaDistrictSubcounties(L, map);
         break;
       default:
         break;
@@ -102,6 +108,22 @@ class Map extends React.Component<MapProps, State> {
     map.flyTo([lon, lat], 10);
   }
 
+  showUgandaDistrictSubcounties(L: any, map: any) {
+    let districtSubcounties = this.props.findSubcounties(this.props.district);
+    this.clean_map(L, map);
+
+    for(const subcounty in districtSubcounties){
+      var similarity = distance(this.props.subcounty.toLowerCase(), districtSubcounties[subcounty].properties.SName2016.toLowerCase());
+      if (similarity > 0.9) {
+        this.redrawMap(L, map, districtSubcounties[subcounty]);
+        let center:any = this.getCenterOfSubcountyFeatureCollection(districtSubcounties[subcounty]);
+        let lon = center.geometry.coordinates[1];
+        let lat = center.geometry.coordinates[0];
+        map.flyTo([lon, lat], 11);
+      }
+    }
+  }
+
   getCenterOfFeatureCollection(districtSubcounties:any){
     var points = [];
     for (const key in districtSubcounties) {
@@ -111,6 +133,16 @@ class Map extends React.Component<MapProps, State> {
       }
     }
     console.log(points);
+    var features = turf.featureCollection(points);
+    return turf.center(features);
+  }
+
+  getCenterOfSubcountyFeatureCollection(districtSubcounties:any){
+    var points = [];
+    var coords = districtSubcounties.geometry.coordinates[0][0];
+    for (const item in coords) {
+      points.push(turf.point(coords[item]));
+    }
     var features = turf.featureCollection(points);
     return turf.center(features);
   }
