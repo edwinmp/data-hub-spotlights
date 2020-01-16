@@ -16,7 +16,6 @@ import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { MapContainer } from '../components/MapContainer';
 
-
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
   navigation: Navigation;
@@ -254,7 +253,6 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       <div style={ { display: 'block', float: 'left', width: '100%' } }>
         <MapContainer />
       </div>
-
 
     </PageSection>
   );

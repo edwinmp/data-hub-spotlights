@@ -1,12 +1,12 @@
 import React from 'react';
-import ugandaDistricts from '../../geoJSON/ugandadistricts.json';
+import districtJson from '../../geoJSON/district.json';
+import subcountyJson from '../../geoJSON/subcounty.json';
 import * as turf from '@turf/turf';
-let distance = require('jaro-winkler');
-
+import * as distance from 'jaro-winkler';
 
 const style = {
-  width: "100%",
-  height: "600px"
+  width: '100%',
+  height: '600px'
 };
 
 interface MapProps {
@@ -18,7 +18,7 @@ interface MapProps {
 
 interface State {
   leaflet: {};
-  map: {}
+  map: {};
 }
 
 class Map extends React.Component<MapProps, State> {
@@ -31,22 +31,22 @@ class Map extends React.Component<MapProps, State> {
   }
 
   componentDidMount() {
-    let L = require('leaflet');
+    const L = require('leaflet');
 
     // create map
-    let map = L.map('map', {
-      center: [0.6976, 32.5825],
+    const map = L.map('map', {
+      center: [ 0.6976, 32.5825 ],
       zoom: 7,
       layers: [
         L.tileLayer('https://api.mapbox.com/styles/v1/davidserene/ck56hj7h10o861clbgsqu7h88/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGF2aWRzZXJlbmUiLCJhIjoiUkJkd1hGWSJ9.SCxMvCeeovv99ZDnpfpNwA', {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }),
+        })
       ]
     });
 
-    this.addLayer(L, map)
+    this.addLayer(L, map);
     this.setState({ leaflet: L });
-    this.setState({ map: map });
+    this.setState({ map });
   }
 
   componentDidUpdate(prevProps:MapProps) {
@@ -74,7 +74,7 @@ class Map extends React.Component<MapProps, State> {
   }
 
   clean_map(L: any, map: any) {
-    map.eachLayer(function (layer: any) {
+    map.eachLayer((layer: any) => {
       if (layer instanceof L.GeoJSON) {
         map.removeLayer(layer);
       }
@@ -82,30 +82,33 @@ class Map extends React.Component<MapProps, State> {
   }
 
   redrawMap(L: any, map: any, featureCollection: any) {
-    var layer = L.geoJson(featureCollection, {
+    const layer = L.geoJson(featureCollection, {
       style: {
-        "color": "#00008b",
-        "weight": 1,
-        "opacity": 0.65
+        color: '#00008b',
+        weight: 1,
+        opacity: 0.65
       }
     });
     layer.addTo(map);
   }
 
   showAllUgandaDistricts(L: any, map: any) {
-    this.redrawMap(L, map, ugandaDistricts);
+    this.redrawMap(L, map, districtJson);
   }
 
   showOneUgandaDistrict(L: any, map: any) {
     let districtSubcounties = this.props.findSubcounties(this.props.district);
     this.clean_map(L, map);
     for (const key in districtSubcounties) {
-      this.redrawMap(L, map, districtSubcounties[key]);
+      if (districtSubcounties[key]) {
+        this.redrawMap(L, map, districtSubcounties[key]);
+      }
     }
-    let center:any = this.getCenterOfFeatureCollection(districtSubcounties);
-    let lon = center.geometry.coordinates[1];
-    let lat = center.geometry.coordinates[0];
-    map.flyTo([lon, lat], 10);
+    const center: any = this.getCenterOfFeatureCollection(districtSubcounties);
+    map.flyTo([
+      center.geometry.coordinates[1],
+      center.geometry.coordinates[0]
+    ], 10);
   }
 
   showUgandaDistrictSubcounties(L: any, map: any) {
@@ -127,14 +130,16 @@ class Map extends React.Component<MapProps, State> {
   getCenterOfFeatureCollection(districtSubcounties:any){
     var points = [];
     for (const key in districtSubcounties) {
-      var coords = districtSubcounties[key].geometry.coordinates[0][0];
-      for (const item in coords) {
-        points.push(turf.point(coords[item]));
+      if (districtSubcounties[key]) {
+        for (const item in districtSubcounties[key].geometry.coordinates[0][0]) {
+          if (districtSubcounties[key].geometry.coordinates[0][0]) {
+            points.push(turf.point(districtSubcounties[key].geometry.coordinates[0][0][item]));
+          }
+        }
       }
     }
-    console.log(points);
-    var features = turf.featureCollection(points);
-    return turf.center(features);
+
+    return turf.center(turf.featureCollection(points));
   }
 
   getCenterOfSubcountyFeatureCollection(districtSubcounties:any){
@@ -148,7 +153,7 @@ class Map extends React.Component<MapProps, State> {
   }
 
   render() {
-    return <div id="map" style={style}></div>
+    return <div id="map" style={ style } />;
   }
 }
 

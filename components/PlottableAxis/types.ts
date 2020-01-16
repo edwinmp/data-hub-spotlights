@@ -1,5 +1,3 @@
-import { NumericAxisConfig } from './PlottableAxis';
-
 export interface AxisOptions {
   domain: number[];
   orientation?: 'left' | 'right' | 'top' | 'bottom';
@@ -10,5 +8,3 @@ export interface AxisOptions {
   data?: number[];
   showEndTickLabels?: boolean;
 }
-
-export type NumericAxisConfig = NumericAxisConfig;

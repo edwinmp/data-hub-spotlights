@@ -1,13 +1,10 @@
 import React from 'react';
 import { Select } from '../Select';
 import { Map } from '../Map';
-import ugandaDistricts from '../../geoJSON/ugandadistricts.json';
-import ugandasubcounties from '../../geoJSON/ubos_subcounties_features.json';
-let distance = require('jaro-winkler');
-
+import ugandaDistricts from '../../geoJSON/district.json';
 
 const mapContainerStyle = {
-  padding: "50px"
+  padding: '50px'
 };
 
 interface State {
@@ -20,7 +17,7 @@ interface State {
 }
 
 class MapContainer extends React.Component<{}, State> {
-  constructor(props:any) {
+  constructor(props: any) {
     super(props);
     this.state = {
       leaflet: {},
@@ -30,16 +27,20 @@ class MapContainer extends React.Component<{}, State> {
       boundaryType: "all",
       subcountyDropdownOptions: []
     };
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  loadDistrictSelect(districts:any) {
+  loadDistrictSelect(districts: any) {
     const options = [];
-    for(const district in districts.features){
-      options.push({
-        value: districts.features[district].properties.DNAME2014,
-        label: districts.features[district].properties.DNAME2014
-      });
+    for (const district in districts.features) {
+      if (districts.features) {
+        options.push({
+          value: districts.features[district].properties.DNAME2014,
+          label: districts.features[district].properties.DNAME2014
+        });
+      }
     }
+
     return options;
   }
 
@@ -63,7 +64,7 @@ class MapContainer extends React.Component<{}, State> {
       boundaryType : "district",
       subcountyDropdownOptions: subcountyOptions
     });
-  };
+  }
 
   handleSubcountyChange(selectedOption: any) {
     this.setState({
@@ -103,7 +104,7 @@ class MapContainer extends React.Component<{}, State> {
           />
         </div>
       </div>
-    )
+    );
   }
 }
 
