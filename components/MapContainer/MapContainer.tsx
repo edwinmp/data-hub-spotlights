@@ -2,6 +2,8 @@ import React from 'react';
 import { Select } from '../Select';
 import { Map } from '../Map';
 import ugandaDistricts from '../../geoJSON/district.json';
+import ugandasubcounties from '../../geoJSON/subcounty.json';
+import * as distance from 'jaro-winkler';
 
 const mapContainerStyle = {
   padding: '50px'
@@ -9,11 +11,11 @@ const mapContainerStyle = {
 
 interface State {
   leaflet: {};
-  map: {},
-  selectedDistrict: string,
-  boundaryType: string,
-  subcountyDropdownOptions: any[],
-  selectedSubcounty: string
+  map: {};
+  selectedDistrict: string;
+  boundaryType: string;
+  subcountyDropdownOptions: any[];
+  selectedSubcounty: string;
 }
 
 class MapContainer extends React.Component<{}, State> {
@@ -22,12 +24,13 @@ class MapContainer extends React.Component<{}, State> {
     this.state = {
       leaflet: {},
       map: {},
-      selectedDistrict: "",
-      selectedSubcounty: "",
-      boundaryType: "all",
+      selectedDistrict: '',
+      selectedSubcounty: '',
+      boundaryType: 'all',
       subcountyDropdownOptions: []
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.handleSubcountyChange = this.handleSubcountyChange.bind(this);
+    this.handleDistrictChange = this.handleDistrictChange.bind(this);
   }
 
   loadDistrictSelect(districts: any) {
@@ -44,24 +47,27 @@ class MapContainer extends React.Component<{}, State> {
     return options;
   }
 
-  loadSubcountySelect(subcounties:any) {
+  loadSubcountySelect(subcounties: any) {
     const options = [];
-    for(const subcounty in subcounties){
-      options.push({
-        value: subcounties[subcounty].properties.SName2016,
-        label: subcounties[subcounty].properties.SName2016
-      });
+    for (const subcounty in subcounties) {
+      if (subcounties[subcounty]) {
+        options.push({
+          value: subcounties[subcounty].properties.SName2016,
+          label: subcounties[subcounty].properties.SName2016
+        });
+      }
     }
+
     return options;
   }
 
   handleDistrictChange(selectedOption: any) {
-    let districtSubcounties = this.findSelectedDistrictSubcounties(selectedOption.value);
-    let subcountyOptions = this.loadSubcountySelect(districtSubcounties);
+    const districtSubcounties = this.findSelectedDistrictSubcounties(selectedOption.value, ugandasubcounties);
+    const subcountyOptions = this.loadSubcountySelect(districtSubcounties);
 
     this.setState({
       selectedDistrict : selectedOption.value,
-      boundaryType : "district",
+      boundaryType : 'district',
       subcountyDropdownOptions: subcountyOptions
     });
   }
@@ -69,20 +75,23 @@ class MapContainer extends React.Component<{}, State> {
   handleSubcountyChange(selectedOption: any) {
     this.setState({
       selectedSubcounty : selectedOption.value,
-      boundaryType : "subcounty"
+      boundaryType : 'subcounty'
     });
   };
 
-  findSelectedDistrictSubcounties(district: string) {
-    var selectedGeometry = [],
-    subcounties = ugandasubcounties.features;
-    for (var subcounty in subcounties) {
-      var current_district = subcounties[subcounty].properties.DName2016;
-      var similarity = distance(district.toLowerCase(), current_district.toLowerCase());
-      if (similarity > 0.9) {
-        selectedGeometry.push(subcounties[subcounty]);
+  findSelectedDistrictSubcounties(district: string, allSubcounties: any) {
+    const selectedGeometry = [];
+    const subcounties = allSubcounties.features;
+    for (const subcounty in subcounties) {
+      if (subcounties[subcounty]) {
+        const current_district = subcounties[subcounty].properties.DName2016;
+        const similarity = distance(district.toLowerCase(), current_district.toLowerCase());
+        if (similarity > 0.9) {
+          selectedGeometry.push(subcounties[subcounty]);
+        }
       }
     }
+
     return selectedGeometry;
   }
 
@@ -90,17 +99,17 @@ class MapContainer extends React.Component<{}, State> {
     return (
       <div style={ { padding: '20px' } }>
         <div style={ { margin: '10px' } }>
-        <Select options={ this.loadDistrictSelect(ugandaDistricts) } onChange={this.handleDistrictChange.bind(this)}/>
+        <Select options={ this.loadDistrictSelect(ugandaDistricts) } onChange={ this.handleDistrictChange }/>
         </div>
         <div style={ { margin: '10px' } }>
-        <Select options={ this.state.subcountyDropdownOptions } onChange={this.handleSubcountyChange.bind(this)}/>
+        <Select options={ this.state.subcountyDropdownOptions } onChange={ this.handleSubcountyChange }/>
         </div>
-        <div style = {mapContainerStyle}>
+        <div style={ mapContainerStyle }>
           <Map
-            district={this.state.selectedDistrict}
-            subcounty={this.state.selectedSubcounty}
-            boundaryType={this.state.boundaryType}
-            findSubcounties={this.findSelectedDistrictSubcounties}
+            district={ this.state.selectedDistrict }
+            subcounty={ this.state.selectedSubcounty }
+            boundaryType={ this.state.boundaryType }
+            findSubcounties={ this.findSelectedDistrictSubcounties }
           />
         </div>
       </div>

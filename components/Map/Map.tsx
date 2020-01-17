@@ -1,6 +1,6 @@
 import React from 'react';
 import districtJson from '../../geoJSON/district.json';
-import subcountyJson from '../../geoJSON/subcounty.json';
+import ugandasubcounties from '../../geoJSON/subcounty.json';
 import * as turf from '@turf/turf';
 import * as distance from 'jaro-winkler';
 
@@ -10,10 +10,10 @@ const style = {
 };
 
 interface MapProps {
-  district: string,
-  subcounty: string,
-  boundaryType: string,
-  findSubcounties: Function
+  district: string;
+  subcounty: string;
+  boundaryType: string;
+  findSubcounties: (arg0: string, arg1: any) => any[];
 }
 
 interface State {
@@ -49,7 +49,7 @@ class Map extends React.Component<MapProps, State> {
     this.setState({ map });
   }
 
-  componentDidUpdate(prevProps:MapProps) {
+  componentDidUpdate(prevProps: MapProps) {
     if (prevProps.boundaryType !== this.props.boundaryType ||
       prevProps.district !== this.props.district ||
       prevProps.subcounty !== this.props.subcounty) {
@@ -97,7 +97,7 @@ class Map extends React.Component<MapProps, State> {
   }
 
   showOneUgandaDistrict(L: any, map: any) {
-    let districtSubcounties = this.props.findSubcounties(this.props.district);
+    const districtSubcounties = this.props.findSubcounties(this.props.district, ugandasubcounties);
     this.clean_map(L, map);
     for (const key in districtSubcounties) {
       if (districtSubcounties[key]) {
@@ -112,23 +112,29 @@ class Map extends React.Component<MapProps, State> {
   }
 
   showUgandaDistrictSubcounties(L: any, map: any) {
-    let districtSubcounties = this.props.findSubcounties(this.props.district);
+    const districtSubcounties = this.props.findSubcounties(this.props.district, ugandasubcounties);
     this.clean_map(L, map);
 
-    for(const subcounty in districtSubcounties){
-      var similarity = distance(this.props.subcounty.toLowerCase(), districtSubcounties[subcounty].properties.SName2016.toLowerCase());
-      if (similarity > 0.9) {
-        this.redrawMap(L, map, districtSubcounties[subcounty]);
-        let center:any = this.getCenterOfSubcountyFeatureCollection(districtSubcounties[subcounty]);
-        let lon = center.geometry.coordinates[1];
-        let lat = center.geometry.coordinates[0];
-        map.flyTo([lon, lat], 11);
+    for (const subcounty in districtSubcounties) {
+      if (districtSubcounties[subcounty]) {
+        const similarity = distance(
+          this.props.subcounty.toLowerCase(),
+          districtSubcounties[subcounty].properties.SName2016.toLowerCase()
+        );
+        if (similarity > 0.9) {
+          this.redrawMap(L, map, districtSubcounties[subcounty]);
+          const center: any = this.getCenterOfSubcountyFeatureCollection(districtSubcounties[subcounty]);
+          map.flyTo([
+            center.geometry.coordinates[1],
+            center.geometry.coordinates[0]
+          ], 11);
+        }
       }
     }
   }
 
-  getCenterOfFeatureCollection(districtSubcounties:any){
-    var points = [];
+  getCenterOfFeatureCollection(districtSubcounties: any) {
+    const points = [];
     for (const key in districtSubcounties) {
       if (districtSubcounties[key]) {
         for (const item in districtSubcounties[key].geometry.coordinates[0][0]) {
@@ -142,13 +148,16 @@ class Map extends React.Component<MapProps, State> {
     return turf.center(turf.featureCollection(points));
   }
 
-  getCenterOfSubcountyFeatureCollection(districtSubcounties:any){
-    var points = [];
-    var coords = districtSubcounties.geometry.coordinates[0][0];
+  getCenterOfSubcountyFeatureCollection(districtSubcounties: any) {
+    const points = [];
+    const coords = districtSubcounties.geometry.coordinates[0][0];
     for (const item in coords) {
-      points.push(turf.point(coords[item]));
+      if (coords[item]) {
+        points.push(turf.point(coords[item]));
+      }
     }
-    var features = turf.featureCollection(points);
+    const features = turf.featureCollection(points);
+
     return turf.center(features);
   }
 
