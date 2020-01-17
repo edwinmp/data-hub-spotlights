@@ -77,7 +77,7 @@ class MapContainer extends React.Component<{}, State> {
       selectedSubcounty : selectedOption.value,
       boundaryType : 'subcounty'
     });
-  };
+  }
 
   findSelectedDistrictSubcounties(district: string, allSubcounties: any) {
     const selectedGeometry = [];
