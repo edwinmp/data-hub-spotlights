@@ -1,8 +1,8 @@
 import React from 'react';
 import { Select } from '../Select';
 import { Map } from '../Map';
-import ugandaDistricts from '../../geoJSON/district.json';
-import ugandasubcounties from '../../geoJSON/subcounty.json';
+import ugandaDistricts from './geoJSON/district.json';
+import ugandasubcounties from './geoJSON/subcounty.json';
 import * as distance from 'jaro-winkler';
 import * as turf from '@turf/turf';
 
