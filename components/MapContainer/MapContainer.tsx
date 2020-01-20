@@ -6,9 +6,9 @@ import ugandasubcounties from './geoJSON/subcounty.json';
 import * as distance from 'jaro-winkler';
 import * as turf from '@turf/turf';
 
-const mapContainerStyle = {
-  padding: '50px'
-};
+interface MapContainerProps {
+  padding?: string;
+}
 
 interface State {
   leaflet: any;
@@ -19,8 +19,9 @@ interface State {
   selectedSubcounty: string;
 }
 
-class MapContainer extends React.Component<{}, State> {
-  constructor(props: any) {
+class MapContainer extends React.Component<MapContainerProps, State> {
+  static defaultProps: MapContainerProps;
+  constructor(props: MapContainerProps) {
     super(props);
     this.state = {
       leaflet: {},
@@ -220,7 +221,7 @@ class MapContainer extends React.Component<{}, State> {
         <div style={ { margin: '10px' } }>
         <Select options={ this.state.subcountyDropdownOptions } onChange={ this.handleSubcountyChange }/>
         </div>
-        <div style={ mapContainerStyle }>
+        <div style={ { padding: this.props.padding } }>
           <Map saveMapState={ this.initialiseMapState } />
         </div>
       </div>
@@ -228,4 +229,8 @@ class MapContainer extends React.Component<{}, State> {
   }
 }
 
-export { MapContainer };
+MapContainer.defaultProps = {
+  padding: '50px'
+};
+
+export { MapContainer as default, MapContainer };

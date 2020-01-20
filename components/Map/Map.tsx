@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
 
-const style = {
-  width: '100%',
-  height: '600px'
-};
-
 interface MapProps {
   saveMapState: (arg0: any, arg1: any) => void;
+  width: string;
+  height: string;
 }
 
-const Map = ({ saveMapState }: MapProps) => {
+const Map = ({ saveMapState, width, height }: MapProps) => {
   useEffect(() => {
     const L = require('leaflet');
 
@@ -26,7 +23,12 @@ const Map = ({ saveMapState }: MapProps) => {
     saveMapState(L, map);
   }, []);
 
-  return <div id="map" style={ style } />;
+  return <div id="map" style={ { width, height } } />;
+};
+
+Map.defaultProps = {
+  width: '100%',
+  height: '600px'
 };
 
 export { Map };
