@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import L from 'leaflet';
 
 interface MapProps {
   saveMapState: (arg0: any, arg1: any) => void;
@@ -8,7 +9,6 @@ interface MapProps {
 
 const Map = ({ saveMapState, width, height }: MapProps) => {
   useEffect(() => {
-    const L = require('leaflet');
 
     // create map
     const map = L.map('map', {

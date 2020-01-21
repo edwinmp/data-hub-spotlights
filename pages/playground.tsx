@@ -14,7 +14,6 @@ import { SpotlightTab } from '../components/SpotlightTab';
 import { TabContainer } from '../components/SpotlightTab/TabContainer';
 import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
-import { MapContainer } from '../components/MapContainer';
 
 interface PlaygroundProps {
   setData?: (data: DefaultLayoutData) => void;
@@ -25,6 +24,10 @@ interface PlaygroundProps {
 const SpotlightMenu = dynamic(
   () => import('../components/SpotlightMenu').then(mod => mod.SpotlightMenu),
   { ssr: false });
+
+const MapContainerWithoutSSR = dynamic(
+    () => import('../components/MapContainer').then(mod => mod.MapContainer),
+    { ssr: false });
 
 const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) => {
   useEffect(() => {
@@ -251,7 +254,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       </div>
 
       <div style={ { display: 'block', float: 'left', width: '100%' } }>
-        <MapContainer />
+        <MapContainerWithoutSSR />
       </div>
 
     </PageSection>
