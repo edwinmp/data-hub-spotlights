@@ -26,7 +26,7 @@ const SpotlightMenu = dynamic(
   { ssr: false });
 
 const MapContainerWithoutSSR = dynamic(
-    () => import('../components/MapContainer').then(mod => mod.MapContainer),
+    () => import('../components/UgandaContainer').then(mod => mod.UgandaContainer),
     { ssr: false });
 
 const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) => {

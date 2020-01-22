@@ -22,7 +22,7 @@ interface State {
   layer: string;
 }
 
-const MapContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
+const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
   const [ state, setState ] = useState<State>({
     leaflet: {},
     map: {},
@@ -247,8 +247,8 @@ const MapContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
   );
 };
 
-MapContainer.defaultProps = {
+UgandaContainer.defaultProps = {
   padding: '50px'
 };
 
-export { MapContainer };
+export { UgandaContainer };
