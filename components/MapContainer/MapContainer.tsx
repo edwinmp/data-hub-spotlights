@@ -17,6 +17,9 @@ interface State {
   boundaryType: string;
   subcountyDropdownOptions: any[];
   selectedSubcounty: string;
+  mapCenter: {};
+  zoom: number;
+  layer: string;
 }
 
 const MapContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
@@ -24,9 +27,12 @@ const MapContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
     leaflet: {},
     map: {},
     selectedDistrict: '',
-    selectedSubcounty: '',
     boundaryType: 'all',
-    subcountyDropdownOptions: []
+    subcountyDropdownOptions: [],
+    selectedSubcounty: '',
+    mapCenter: [ 0.6976, 32.5825 ],
+    zoom: 7,
+    layer: 'https://api.mapbox.com/styles/v1/davidserene/ck56hj7h10o861clbgsqu7h88/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGF2aWRzZXJlbmUiLCJhIjoiUkJkd1hGWSJ9.SCxMvCeeovv99ZDnpfpNwA'
   });
 
   useEffect(() => {
@@ -230,7 +236,12 @@ const MapContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
         <Select options={ state.subcountyDropdownOptions } onChange={ handleSubcountyChange } />
       </div>
       <div style={ { padding } }>
-        <Map saveMapState={ initialiseMapState } />
+        <Map
+          saveMapState={ initialiseMapState }
+          mapCenter={ state.mapCenter }
+          zoom={ state.zoom }
+          layer={ state.layer }
+        />
       </div>
     </div>
   );
