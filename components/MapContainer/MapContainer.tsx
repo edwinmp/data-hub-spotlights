@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Select } from '../Select';
-import { Map } from '../Map';
+import { Map } from '../Map/Map';
 import ugandaDistricts from './geoJSON/district.json';
 import ugandasubcounties from './geoJSON/subcounty.json';
 import * as distance from 'jaro-winkler';
@@ -19,30 +19,31 @@ interface State {
   selectedSubcounty: string;
 }
 
-class MapContainer extends React.Component<MapContainerProps, State> {
-  static defaultProps: MapContainerProps;
-  constructor(props: MapContainerProps) {
-    super(props);
-    this.state = {
-      leaflet: {},
-      map: {},
-      selectedDistrict: '',
-      selectedSubcounty: '',
-      boundaryType: 'all',
-      subcountyDropdownOptions: []
-    };
-    this.handleSubcountyChange = this.handleSubcountyChange.bind(this);
-    this.handleDistrictChange = this.handleDistrictChange.bind(this);
-    this.initialiseMapState = this.initialiseMapState.bind(this);
-  }
+const MapContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
+  const [ state, setState ] = useState<State>({
+    leaflet: {},
+    map: {},
+    selectedDistrict: '',
+    selectedSubcounty: '',
+    boundaryType: 'all',
+    subcountyDropdownOptions: []
+  });
 
-  initialiseMapState(L: any, map: any) {
-    this.setState({ leaflet: L, map }, () => {
-      this.addLayer();
+  useEffect(() => {
+    addLayer();
+  }, [ state ]);
+
+  function initialiseMapState(L: any, map: any) {
+    setState(prevState => {
+      return {
+        ...prevState,
+        leaflet: L, map
+      };
     });
+    addLayer();
   }
 
-  loadDistrictSelect(districts: any) {
+  function loadDistrictSelect(districts: any) {
     const options = [];
     for (const district in districts.features) {
       if (districts.features) {
@@ -56,7 +57,7 @@ class MapContainer extends React.Component<MapContainerProps, State> {
     return options;
   }
 
-  loadSubcountySelect(subcounties: any) {
+  function loadSubcountySelect(subcounties: any) {
     const options = [];
     for (const subcounty in subcounties) {
       if (subcounties[subcounty]) {
@@ -70,96 +71,104 @@ class MapContainer extends React.Component<MapContainerProps, State> {
     return options;
   }
 
-  handleDistrictChange(selectedOption: any) {
-    const districtSubcounties = this.findSelectedDistrictSubcounties(selectedOption.value, ugandasubcounties);
-    const subcountyOptions = this.loadSubcountySelect(districtSubcounties);
+  function handleDistrictChange(selectedOption: any) {
+    const districtSubcounties = findSelectedDistrictSubcounties(selectedOption.value, ugandasubcounties);
+    const subcountyOptions = loadSubcountySelect(districtSubcounties);
 
-    this.setState({
-      selectedDistrict : selectedOption.value,
-      boundaryType : 'district',
-      subcountyDropdownOptions: subcountyOptions
-    }, () => {
-      this.addLayer();
+    setState(prevState => {
+      return {
+        ...prevState,
+        selectedDistrict: selectedOption.value,
+        boundaryType: 'district',
+        subcountyDropdownOptions: subcountyOptions
+      };
     });
+
+    addLayer();
   }
 
-  handleSubcountyChange(selectedOption: any) {
-    this.setState({
-      selectedSubcounty : selectedOption.value,
-      boundaryType : 'subcounty'
-    }, () => {
-      this.addLayer();
+  function handleSubcountyChange(selectedOption: any) {
+    setState(prevState => {
+      return {
+        ...prevState,
+        selectedSubcounty: selectedOption.value,
+        boundaryType: 'subcounty'
+      };
     });
+    addLayer();
   }
 
-  addLayer() {
-    switch (this.state.boundaryType) {
+  function addLayer() {
+    switch (state.boundaryType) {
       case 'all':
-        this.showAllUgandaDistricts();
+        showAllUgandaDistricts();
         break;
       case 'district':
-        this.showOneUgandaDistrict();
+        showOneUgandaDistrict();
         break;
       case 'subcounty':
-        this.showUgandaDistrictSubcounties();
+        showUgandaDistrictSubcounties();
         break;
       default:
         break;
     }
   }
 
-  clean_map() {
-    this.state.map.eachLayer((layer: any) => {
-      if (layer instanceof this.state.leaflet.GeoJSON) {
-        this.state.map.removeLayer(layer);
+  function clean_map() {
+    state.map.eachLayer((layer: any) => {
+      if (layer instanceof state.leaflet.GeoJSON) {
+        state.map.removeLayer(layer);
       }
     });
   }
 
-  redrawMap(featureCollection: any) {
-    const layer = this.state.leaflet.geoJson(featureCollection, {
-      style: {
-        color: '#00008b',
-        weight: 1,
-        opacity: 0.65
-      }
-    });
-    layer.addTo(this.state.map);
+  function redrawMap(featureCollection: any) {
+    console.log('Inside redraw ' + JSON.stringify(state.leaflet));
+    if (Object.keys(state.leaflet).length > 0) {
+      const layer = state.leaflet.geoJson(featureCollection, {
+        style: {
+          color: '#00008b',
+          weight: 1,
+          opacity: 0.65
+        }
+      });
+      layer.addTo(state.map);
+    }
   }
 
-  showAllUgandaDistricts() {
-    this.redrawMap(ugandaDistricts);
+  function showAllUgandaDistricts() {
+    redrawMap(ugandaDistricts);
   }
 
-  showOneUgandaDistrict() {
-    const districtSubcounties = this.findSelectedDistrictSubcounties(this.state.selectedDistrict, ugandasubcounties);
-    this.clean_map();
+  function showOneUgandaDistrict() {
+    const districtSubcounties = findSelectedDistrictSubcounties(state.selectedDistrict, ugandasubcounties);
+    clean_map();
     for (const key in districtSubcounties) {
       if (districtSubcounties[key]) {
-        this.redrawMap(districtSubcounties[key]);
+        redrawMap(districtSubcounties[key]);
       }
     }
-    const center: any = this.getCenterOfFeatureCollection(districtSubcounties);
-    this.state.map.flyTo([
+    const center: any = getCenterOfFeatureCollection(districtSubcounties);
+    state.map.flyTo([
       center.geometry.coordinates[1],
       center.geometry.coordinates[0]
     ], 10);
   }
 
-  showUgandaDistrictSubcounties() {
-    const districtSubcounties = this.findSelectedDistrictSubcounties(this.state.selectedDistrict, ugandasubcounties);
-    this.clean_map();
+  function showUgandaDistrictSubcounties() {
+    const districtSubcounties = findSelectedDistrictSubcounties(state.selectedDistrict, ugandasubcounties);
+    clean_map();
 
     for (const subcounty in districtSubcounties) {
       if (districtSubcounties[subcounty]) {
         const similarity = distance(
-          this.state.selectedSubcounty.toLowerCase(),
+          state.selectedSubcounty.toLowerCase(),
           districtSubcounties[subcounty].properties.SName2016.toLowerCase()
         );
         if (similarity > 0.9) {
-          this.redrawMap(districtSubcounties[subcounty]);
-          const center: any = this.getCenterOfSubcountyFeatureCollection(districtSubcounties[subcounty]);
-          this.state.map.flyTo([
+          redrawMap(districtSubcounties[subcounty]);
+          const center: any = getCenterOfSubcountyFeatureCollection(districtSubcounties[subcounty]);
+          state.map.flyTo([
             center.geometry.coordinates[1],
             center.geometry.coordinates[0]
           ], 11);
@@ -168,7 +177,7 @@ class MapContainer extends React.Component<MapContainerProps, State> {
     }
   }
 
-  findSelectedDistrictSubcounties(district: string, allSubcounties: any) {
+  function findSelectedDistrictSubcounties(district: string, allSubcounties: any) {
     const selectedGeometry = [];
     const subcounties = allSubcounties.features;
     for (const subcounty in subcounties) {
@@ -184,7 +193,7 @@ class MapContainer extends React.Component<MapContainerProps, State> {
     return selectedGeometry;
   }
 
-  getCenterOfFeatureCollection(districtSubcounties: any) {
+  function getCenterOfFeatureCollection(districtSubcounties: any) {
     const points = [];
     for (const key in districtSubcounties) {
       if (districtSubcounties[key]) {
@@ -199,7 +208,7 @@ class MapContainer extends React.Component<MapContainerProps, State> {
     return turf.center(turf.featureCollection(points));
   }
 
-  getCenterOfSubcountyFeatureCollection(districtSubcounties: any) {
+  function getCenterOfSubcountyFeatureCollection(districtSubcounties: any) {
     const points = [];
     const coords = districtSubcounties.geometry.coordinates[0][0];
     for (const item in coords) {
@@ -212,25 +221,23 @@ class MapContainer extends React.Component<MapContainerProps, State> {
     return turf.center(features);
   }
 
-  render() {
-    return (
-      <div style={ { padding: '20px' } }>
-        <div style={ { margin: '10px' } }>
-        <Select options={ this.loadDistrictSelect(ugandaDistricts) } onChange={ this.handleDistrictChange }/>
-        </div>
-        <div style={ { margin: '10px' } }>
-        <Select options={ this.state.subcountyDropdownOptions } onChange={ this.handleSubcountyChange }/>
-        </div>
-        <div style={ { padding: this.props.padding } }>
-          <Map saveMapState={ this.initialiseMapState } />
-        </div>
+  return (
+    <div style={ { padding: '20px' } }>
+      <div style={ { margin: '10px' } }>
+        <Select options={ loadDistrictSelect(ugandaDistricts) } onChange={ handleDistrictChange } />
       </div>
-    );
-  }
-}
+      <div style={ { margin: '10px' } }>
+        <Select options={ state.subcountyDropdownOptions } onChange={ handleSubcountyChange } />
+      </div>
+      <div style={ { padding } }>
+        <Map saveMapState={ initialiseMapState } />
+      </div>
+    </div>
+  );
+};
 
 MapContainer.defaultProps = {
   padding: '50px'
 };
 
-export { MapContainer as default, MapContainer };
+export { MapContainer };
