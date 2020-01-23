@@ -5,6 +5,7 @@ import ugandaDistricts from './geoJSON/district.json';
 import ugandasubcounties from './geoJSON/subcounty.json';
 import * as distance from 'jaro-winkler';
 import * as turf from '@turf/turf';
+import L from 'leaflet';
 
 interface MapContainerProps {
   padding?: string;
@@ -12,12 +13,12 @@ interface MapContainerProps {
 
 interface State {
   leaflet: any;
-  map: any;
+  map?: L.Map;
   selectedDistrict: string;
   boundaryType: string;
   subcountyDropdownOptions: any[];
   selectedSubcounty: string;
-  mapCenter: {};
+  mapCenter?: L.LatLng;
   zoom: number;
   layer: string;
 }
@@ -25,12 +26,11 @@ interface State {
 const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
   const [ state, setState ] = useState<State>({
     leaflet: {},
-    map: {},
     selectedDistrict: '',
     boundaryType: 'all',
     subcountyDropdownOptions: [],
     selectedSubcounty: '',
-    mapCenter: [ 0.6976, 32.5825 ],
+    mapCenter: new L.LatLng(0.6976, 32.5825),
     zoom: 7,
     layer: 'https://api.mapbox.com/styles/v1/davidserene/ck56hj7h10o861clbgsqu7h88/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGF2aWRzZXJlbmUiLCJhIjoiUkJkd1hGWSJ9.SCxMvCeeovv99ZDnpfpNwA'
   });
@@ -39,11 +39,12 @@ const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
     addLayer();
   }, [ state ]);
 
-  function initialiseMapState(L: any, map: any) {
+  function initialiseMapState(leaflet: any, map: any) {
     setState(prevState => {
       return {
         ...prevState,
-        leaflet: L, map
+        leaflet,
+        map
       };
     });
     addLayer();
@@ -121,15 +122,17 @@ const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
   }
 
   function clean_map() {
-    state.map.eachLayer((layer: any) => {
-      if (layer instanceof state.leaflet.GeoJSON) {
-        state.map.removeLayer(layer);
-      }
-    });
+    if (state.map) {
+      const map = state.map;
+      map.eachLayer((layer: any) => {
+        if (layer instanceof state.leaflet.GeoJSON) {
+          map.removeLayer(layer);
+        }
+      });
+    }
   }
 
   function redrawMap(featureCollection: any) {
-    console.log('Inside redraw ' + JSON.stringify(state.leaflet));
     if (Object.keys(state.leaflet).length > 0) {
       const layer = state.leaflet.geoJson(featureCollection, {
         style: {
@@ -155,10 +158,13 @@ const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
       }
     }
     const center: any = getCenterOfFeatureCollection(districtSubcounties);
-    state.map.flyTo([
-      center.geometry.coordinates[1],
-      center.geometry.coordinates[0]
-    ], 10);
+    if (state.map) {
+      const map = state.map;
+      map.flyTo([
+        center.geometry.coordinates[1],
+        center.geometry.coordinates[0]
+      ], 10);
+    }
   }
 
   function showUgandaDistrictSubcounties() {
@@ -174,10 +180,13 @@ const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
         if (similarity > 0.9) {
           redrawMap(districtSubcounties[subcounty]);
           const center: any = getCenterOfSubcountyFeatureCollection(districtSubcounties[subcounty]);
-          state.map.flyTo([
-            center.geometry.coordinates[1],
-            center.geometry.coordinates[0]
-          ], 11);
+          if (state.map) {
+            const map = state.map;
+            map.flyTo([
+              center.geometry.coordinates[1],
+              center.geometry.coordinates[0]
+            ], 11);
+          }
         }
       }
     }

@@ -12,7 +12,6 @@ interface MapProps {
 
 const Map = ({ saveMapState, width, height, layer, mapCenter, zoom }: MapProps) => {
   useEffect(() => {
-
     // create map
     const map = L.map('map', {
       center: mapCenter,
