@@ -106,18 +106,13 @@ const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
   }
 
   function addLayer() {
-    switch (state.boundaryType) {
-      case 'all':
-        showAllUgandaDistricts();
-        break;
-      case 'district':
-        showOneUgandaDistrict();
-        break;
-      case 'subcounty':
-        showUgandaDistrictSubcounties();
-        break;
-      default:
-        break;
+    const flag = state.boundaryType;
+    if (flag === 'all') {
+      showAllUgandaDistricts();
+    } else if (flag === 'district') {
+      showOneUgandaDistrict();
+    } else if (flag === 'subcounty') {
+      showUgandaDistrictSubcounties();
     }
   }
 
