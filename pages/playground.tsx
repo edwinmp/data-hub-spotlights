@@ -8,7 +8,6 @@ import fetch from 'isomorphic-unfetch';
 import { PageSection } from '../components/PageSection';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 import { Legend, LegendItem } from '../components/Legend';
-import { Select } from '../components/Select';
 import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
 import { SpotlightMenuItem } from '../components/SpotlightMenu';
 import { SpotlightTab } from '../components/SpotlightTab';
@@ -25,6 +24,10 @@ interface PlaygroundProps {
 const SpotlightMenu = dynamic(
   () => import('../components/SpotlightMenu').then(mod => mod.SpotlightMenu),
   { ssr: false });
+
+const MapContainerWithoutSSR = dynamic(
+    () => import('../components/UgandaContainer').then(mod => mod.UgandaContainer),
+    { ssr: false });
 
 const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) => {
   useEffect(() => {
@@ -169,12 +172,6 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
     }
   ];
 
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ];
-
   const [ sidebarActive, setSidebarActive ] = useState(false);
 
   const onSidebarHeaderClick = () => {
@@ -220,9 +217,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       <EChartsBaseChart options={ options3 } height="500px"/>
       <EChartsBaseChart options={ options4 } height="800px"/>
       <EChartsBaseChart options={ options5 } height="800px"/>
-      <div style={ { marginBottom: '20px' } }>
-        <Select options={ options }/>
-      </div>
+
       <div style={ { width: '400px', backgroundColor: '#fff', padding: '20px', marginBottom: '20px' } }>
         <Legend>
           <LegendItem bgColor="#fad1c9"><span>{ '<30%' }</span></LegendItem>
@@ -257,6 +252,11 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
           </TabContainer>
         </SpotlightTab>
       </div>
+
+      <div style={ { display: 'block', float: 'left', width: '100%' } }>
+        <MapContainerWithoutSSR />
+      </div>
+
     </PageSection>
   );
 };

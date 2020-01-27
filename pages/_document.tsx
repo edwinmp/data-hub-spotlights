@@ -25,6 +25,7 @@ class MyDocument extends Document {
           <noscript><link href={ `${ASSETS_SOURCE_URL}assets/icons/icon.fallback.css` } rel="stylesheet"/></noscript>
           <script src={ `${ASSETS_SOURCE_URL}assets/js/libs/modernizr.js` }/>
           <link rel="icon" type="image/png" href={ `${ASSETS_SOURCE_URL}assets/favicons/favicon.png` } sizes="16x16"/>
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
         </Head>
         <body className="body">
           <Main />
