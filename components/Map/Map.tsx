@@ -2,25 +2,21 @@ import React, { useEffect } from 'react';
 import L from 'leaflet';
 
 interface MapProps {
-  saveMapState: (arg0: any, arg1: any) => void;
-  width: string;
-  height: string;
-  mapCenter: any;
-  zoom: number;
-  layer: string;
+  saveMapState: (leafletObject: any, map: L.Map) => void;
+  width?: string;
+  height?: string;
+  mapCenter?: L.LatLng;
+  zoom?: number;
+  layers: L.TileLayer[];
 }
 
-const Map = ({ saveMapState, width, height, layer, mapCenter, zoom }: MapProps) => {
+const Map = ({ saveMapState, width, height, layers, mapCenter, zoom }: MapProps) => {
   useEffect(() => {
     // create map
     const map = L.map('map', {
       center: mapCenter,
       zoom,
-      layers: [
-        L.tileLayer(layer, {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        })
-      ]
+      layers
     });
     saveMapState(L, map);
   }, []);
@@ -30,7 +26,8 @@ const Map = ({ saveMapState, width, height, layer, mapCenter, zoom }: MapProps) 
 
 Map.defaultProps = {
   width: '100%',
-  height: '600px'
+  height: '600px',
+  zoom: 7
 };
 
 export { Map };

@@ -19,8 +19,8 @@ interface State {
   subcountyDropdownOptions: any[];
   selectedSubcounty: string;
   mapCenter?: L.LatLng;
-  zoom: number;
-  layer: string;
+  zoom?: number;
+  layers: L.TileLayer[];
 }
 
 const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
@@ -30,9 +30,12 @@ const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
     boundaryType: 'all',
     subcountyDropdownOptions: [],
     selectedSubcounty: '',
-    mapCenter: new L.LatLng(0.6976, 32.5825),
-    zoom: 7,
-    layer: 'https://api.mapbox.com/styles/v1/davidserene/ck56hj7h10o861clbgsqu7h88/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGF2aWRzZXJlbmUiLCJhIjoiUkJkd1hGWSJ9.SCxMvCeeovv99ZDnpfpNwA'
+    mapCenter: new L.LatLng(0.6976, 33.5825),
+    layers: [
+      L.tileLayer('https://api.mapbox.com/styles/v1/davidserene/ck56hj7h10o861clbgsqu7h88/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGF2aWRzZXJlbmUiLCJhIjoiUkJkd1hGWSJ9.SCxMvCeeovv99ZDnpfpNwA', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      })
+    ]
   });
 
   useEffect(() => {
@@ -244,7 +247,7 @@ const UgandaContainer: FunctionComponent<MapContainerProps> = ({ padding }) => {
           saveMapState={ initialiseMapState }
           mapCenter={ state.mapCenter }
           zoom={ state.zoom }
-          layer={ state.layer }
+          layers={ state.layers }
         />
       </div>
     </div>
