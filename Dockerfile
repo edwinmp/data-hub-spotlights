@@ -2,9 +2,12 @@ FROM node:10
 
 WORKDIR /usr/src/app
 
-RUN npm install -g yarn
+ARG ASSETS_SOURCE_URL
+
+ENV ASSETS_SOURCE_URL=$ASSETS_SOURCE_URL
 
 COPY package*.json ./
+
 COPY yarn.lock ./
 
 RUN yarn install
