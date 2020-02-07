@@ -4,7 +4,7 @@ import { HttpLink } from 'apollo-link-http';
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
-  uri: 'http://127.0.0.1:8000/graphql' // FIXME: replace with server URL
+  uri: 'http://212.111.41.68:8000/graphql'
 });
 
 export const graphClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
