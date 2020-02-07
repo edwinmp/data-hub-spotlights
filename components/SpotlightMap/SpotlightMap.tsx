@@ -55,7 +55,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = React.memo(props => {
 
   return (
     <Loading active={ loading || !!props.dataLoading }>
-      <Map center={ center && new LatLng(center[0], center[1]) } zoom={ zoom || 6.8 } height="100%" minZoom={ 6.5 }>
+      <Map center={ center && new LatLng(center[0], center[1]) } zoom={ zoom || 7 } height="100%" minZoom={ 6.5 }>
         <GeoJSONLayer
           geojson={ geojson.filtered || geojson.all }
           style={ styleMap }
