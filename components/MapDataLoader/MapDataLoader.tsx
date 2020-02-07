@@ -10,7 +10,7 @@ interface MapDataLoaderProps {
 
 const MapDataLoader: FunctionComponent<MapDataLoaderProps> = ({ children, indicator, geocode, year }) => {
   const renderMap = (dataLoading: boolean, mapData?: any) => Children.map(children, child =>
-    isValidElement(child) ? cloneElement(child, { data: mapData, loading: dataLoading }) : null
+    isValidElement(child) ? cloneElement(child, { data: mapData, dataLoading }) : null
   );
 
   if (!indicator) {

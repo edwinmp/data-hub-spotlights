@@ -21,11 +21,11 @@ const DynamicMapDataLoader = dynamic(
 const renderLegendItems = (range?: string[], colours?: string[]) => {
   if (range && colours) {
     return range.map((rnge, index) =>
-      <LegendItem bgColor={ colours[index] } key={ 0 }>
+      <LegendItem bgColor={ colours[index] } key={ index }>
         { index === 0 ? `< ${range[0]}` : `${range[index - 1]}-${rnge}` }
       </LegendItem>
     ).concat([
-      <LegendItem bgColor={ colours[colours.length - 1] } key={ 0 }>
+      <LegendItem bgColor={ colours[colours.length - 1] } key={ range.length }>
         { `> ${range[range.length - 1]}` }
       </LegendItem>
     ]);

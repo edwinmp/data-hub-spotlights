@@ -6,7 +6,7 @@ export interface SpotlightMapProps {
   zoom?: number;
   countryCode: string;
   levels?: number[];
-  loading?: boolean;
+  dataLoading?: boolean;
   data?: LocationIndicatorData;
   range?: string[];
   colours?: string[];
