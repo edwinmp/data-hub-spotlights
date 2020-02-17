@@ -1,6 +1,12 @@
 name: Node CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - fix/docker-build
+  pull_request:
+    branches:
+      - fix/docker-build
 
 jobs:
   test:
@@ -37,7 +43,7 @@ jobs:
         yarn build
     - name: Bundling
       run: |
-        mkdir build && mv .next build/ && mv dist/* build/ && mv package.json build/ && mv yarn.lock build/ && mv Dockerfile build/
+        mkdir build && mv .next build/ && mv dist/* build/ && mv package.json build/ && mv yarn.lock build/ && mv Dockerfile build/ && mv docker-compose.yml build/ && mv nginx/ build/
         zip -q -r build.zip build
     - name: Upload build Artifacts
       uses: actions/upload-artifact@v1
