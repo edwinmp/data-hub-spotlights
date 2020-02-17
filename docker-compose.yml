@@ -1,0 +1,25 @@
+version: '2'
+services:
+    server:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+            args:
+              ASSETS_SOURCE_URL: "http://178.128.102.213/"
+        command: node index.js
+        ports:
+        - "3000:3000"
+        environment:
+            PORT: 3000
+            NODE_ENV: production
+        restart: always
+    nginx:
+        build:
+            context: ./
+            dockerfile: ./nginx/nginx.dockerfile
+        command: tail -f /dev/null
+        depends_on:
+            - server
+        ports:
+            - "8000:80"
+        restart: always
