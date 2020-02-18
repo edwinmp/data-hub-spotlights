@@ -1,24 +1,24 @@
+import chroma, { scale } from 'chroma-js';
+import merge from 'deepmerge';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
-import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import React, { useEffect, useState } from 'react';
-import merge from 'deepmerge';
-import { DefaultLayoutData, Footer, Navigation } from '../components/DefaultLayout';
-import fetch from 'isomorphic-unfetch';
-import { PageSection } from '../components/PageSection';
+import { PageScaffoldData } from '../components/DefaultLayout';
+import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 import { Legend, LegendItem } from '../components/Legend';
-import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
+import { PageSection } from '../components/PageSection';
 import { SpotlightMenuItem } from '../components/SpotlightMenu';
+import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
 import { SpotlightTab } from '../components/SpotlightTab';
 import { TabContainer } from '../components/SpotlightTab/TabContainer';
 import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
+import { fetchScaffoldData } from '../utils';
 
 interface PlaygroundProps {
-  setData?: (data: DefaultLayoutData) => void;
-  navigation: Navigation;
-  footer: Footer;
+  setData?: (data: PageScaffoldData) => void;
+  scaffold: PageScaffoldData;
 }
 
 const SpotlightMenu = dynamic(
@@ -29,12 +29,12 @@ const MapContainerWithoutSSR = dynamic(
     () => import('../components/UgandaContainer').then(mod => mod.UgandaContainer),
     { ssr: false });
 
-const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) => {
+const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   useEffect(() => {
     if (setData) {
-      setData({ navigation, footer });
+      setData({ ...scaffold });
     }
-  }, [ setData, navigation ]);
+  }, [ setData, scaffold ]);
 
   const options1: ECharts.Options = {
     title: {
@@ -208,6 +208,14 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
       ]
     }
   ];
+  const renderLegendItems = () => {
+    const ranges = [ '<30%', '30% - 50%', '50% - 70%', '70% - 90%', '>90%' ];
+    const colour = '#8f1b13';
+    const lighter = chroma(colour).brighten(3);
+
+    return scale([ lighter, colour ]).colors(5).map(
+      (color, index) => <LegendItem bgColor={ color } key={ index }>{ ranges[index] }</LegendItem>);
+  };
 
   return (
     <PageSection>
@@ -220,11 +228,7 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
 
       <div style={ { width: '400px', backgroundColor: '#fff', padding: '20px', marginBottom: '20px' } }>
         <Legend>
-          <LegendItem bgColor="#fad1c9"><span>{ '<30%' }</span></LegendItem>
-          <LegendItem bgColor="#f5aa9b">{ '30% - 50%' }</LegendItem>
-          <LegendItem bgColor="#f0826d">{ '50% - 70%' }</LegendItem>
-          <LegendItem bgColor="#e84439">{ '70% - 90%' }</LegendItem>
-          <LegendItem bgColor="#8f1b13" textColor="#fff">{ '>90%' }</LegendItem>
+          { renderLegendItems() }
           <LegendItem>no data / not applicable</LegendItem>
         </Legend>
       </div>
@@ -262,15 +266,9 @@ const Playground: NextPage<PlaygroundProps> = ({ footer, navigation, setData }) 
 };
 
 Playground.getInitialProps = async () => {
-  const res_navigation = await fetch(`${process.env.ASSETS_SOURCE_URL}api/spotlights/navigation/`);
-  const navigation = await res_navigation.json();
-  const res_footer = await fetch(`${process.env.ASSETS_SOURCE_URL}api/footer/`);
-  const footer = await res_footer.json();
+  const scaffold = await fetchScaffoldData();
 
-  return {
-    navigation,
-    footer
-  };
+  return { scaffold };
 };
 
 export default Playground;
