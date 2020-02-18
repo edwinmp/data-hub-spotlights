@@ -20,6 +20,8 @@ services:
         command: tail -f /dev/null
         depends_on:
             - server
+        links:
+            - api
         ports:
             - "8000:80"
         restart: always
