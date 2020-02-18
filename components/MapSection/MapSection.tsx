@@ -7,7 +7,6 @@ import { MapSectionHeader } from '../MapSectionHeader';
 import { PageSection } from '../PageSection';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { SpotlightIndicatorInfo } from '../SpotlightIndicatorInfo';
-import { MapLocations } from '../SpotlightMap';
 import { SidebarContent, SpotlightSidebar } from '../SpotlightSidebar';
 import { MapSectionProps, SpotlightOptions, getIndicatorColours, parseIndicator, splitByComma } from './utils';
 
@@ -35,19 +34,15 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: themeData }) => {
   const [options, setOptions] = useState<SpotlightOptions>({});
   const onOptionsChange = (optns: SpotlightOptions): void => setOptions(optns);
-  const [locations, setLocations] = useState<MapLocations | undefined>(undefined);
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(undefined);
   const onSelectLocation = (location: SpotlightLocation): void => setActiveLocation(location);
 
-  const onMapLoad = (formattedData: MapLocations): void => {
-    setLocations(formattedData);
-  };
   const range = options.indicator && splitByComma(options.indicator.range);
   const colours = getIndicatorColours(options.indicator, range);
 
   return (
     <PageSection>
-      <MapSectionHeader onSelectLocation={onSelectLocation} locations={locations} />
+      <MapSectionHeader onSelectLocation={onSelectLocation} countryCode={countryCode} />
 
       <MapSectionBody>
         <SpotlightSidebar>
@@ -73,7 +68,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: t
             <DynamicMap
               center={[1.344666, 32.655221]}
               countryCode={countryCode}
-              onLoad={onMapLoad}
               range={range}
               colours={colours}
               dataPrefix={options.indicator && options.indicator.value_prefix}
