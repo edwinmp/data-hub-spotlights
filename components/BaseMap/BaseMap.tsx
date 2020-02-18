@@ -1,6 +1,16 @@
-import React, { FunctionComponent, useEffect, useRef } from 'react';
-import mapbox from 'mapbox-gl';
+import React, {
+  FunctionComponent,
+  useEffect,
+  useRef,
+  Children,
+  ReactNode,
+  isValidElement,
+  cloneElement,
+  useState
+} from 'react';
+import mapbox, { Map } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { BaseMapLayer } from './BaseMapLayer';
 
 export interface CoreMapProps {
   accessToken: string;
@@ -17,6 +27,7 @@ interface BaseMapProps extends CoreMapProps {
 const BaseMap: FunctionComponent<BaseMapProps> = props => {
   mapbox.accessToken = props.accessToken;
   const mapNode = useRef<HTMLDivElement>(null);
+  const [baseMap, setBaseMap] = useState<Map | undefined>(undefined);
 
   useEffect(() => {
     if (mapNode && mapNode.current) {
@@ -30,6 +41,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
       }
 
       map.on('load', event => {
+        setBaseMap(map);
         if (props.onLoad) {
           props.onLoad(map, event);
         }
@@ -37,8 +49,17 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
     }
   }, []);
 
+  const renderLayers = (): ReactNode => {
+    return Children.map(props.children, child => {
+      if (isValidElement(child) && child.type === BaseMapLayer) {
+        return cloneElement(child, { map: baseMap });
+      }
+    });
+  };
+
   return (
     <div ref={mapNode} style={{ width: props.width, height: props.height }}>
+      {renderLayers()}
       <style jsx>{`
         background: ${props.background};
       `}</style>
