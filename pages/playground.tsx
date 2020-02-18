@@ -215,23 +215,24 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   };
 
   const baseMapOptions: Partial<MapboxOptions> = {
-    style: 'mapbox://styles/edwinmp/ck42rrx240t8p1cqpkhgy2g0m',
+    style: 'mapbox://styles/edwinmp/ck6an0ra90nob1ikvysfmbg15/draft',
     center: [32.655221, 1.344666],
     minZoom: 6,
-    zoom: 6.1
+    zoom: 6.1,
+    maxZoom: 7
   };
 
   const onMapLoad = (map: Map): void => {
     map.addLayer({
       id: 'highlight',
       source: 'composite',
-      'source-layer': 'uga_admbnda_adm1_ubos_v2-aa9ehp',
+      'source-layer': 'uganda_districts_2019_i-9qg3nj',
       maxzoom: 7,
       type: 'fill',
       // filter: ['==', 'ADM1_EN', 'KOTIDO'],
       paint: {
         'fill-color': {
-          property: 'ADM1_EN',
+          property: 'DName2019',
           type: 'categorical',
           default: '#b3adad',
           stops: [
