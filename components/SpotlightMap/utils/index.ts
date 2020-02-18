@@ -4,6 +4,7 @@ import { GeoJSONProperties, MapLocations, SpotlightFC } from './types';
 import { LocationData } from '../../../utils';
 
 export * from './types';
+export * from './config';
 
 export const filterGeoJSONByLevel = (geojson: SpotlightFC, levels: number[]): SpotlightFC => ({
   ...geojson,
@@ -34,7 +35,7 @@ export const defaultMapStyle = {
   fillColor: '#D0CCCF'
 };
 
-export const getLocationIDFromGeoCode = (geocode: string) => {
+export const getLocationIDFromGeoCode = (geocode: string): string => {
   const geocodeArray = geocode.split('.');
 
   return geocodeArray.length > 1 ? geocodeArray[geocodeArray.length - 1] : geocodeArray[0];
