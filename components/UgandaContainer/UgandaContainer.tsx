@@ -3,7 +3,7 @@ import { FeatureCollection } from 'geojson';
 import * as distance from 'jaro-winkler';
 import { GeoJSON, LatLng, Map as LeafletMap } from 'leaflet';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { GeoJSONLayer, Map, TileLayer } from '../Map';
+import { GeoJSONLayer, LeafletMap as Map, TileLayer } from '../LeafletMap';
 import { Select } from '../Select';
 import ugandaDistricts from './geoJSON/district.json';
 import ugandasubcounties from './geoJSON/subcounty.json';

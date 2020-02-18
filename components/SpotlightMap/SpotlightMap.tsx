@@ -1,16 +1,15 @@
-import { Feature, Geometry } from 'geojson';
-import { LatLng } from 'leaflet';
+import { LatLng, StyleFunction } from 'leaflet';
 import React, { FunctionComponent, useEffect, useState } from 'react';
+import { GeoJSONLayer, LeafletMap as Map } from '../LeafletMap';
 import { Loading } from '../Loading';
-import { GeoJSONLayer, Map } from '../Map';
 import {
-  GeoJSONProperties,
-  SpotlightMapGeoJSON,
-  SpotlightMapProps,
   defaultMapStyle,
   extractLocationsFromGeoJSON,
   filterGeoJSONByLevel,
-  getFillColor
+  GeoJSONProperties,
+  getFillColor,
+  SpotlightMapGeoJSON,
+  SpotlightMapProps
 } from './utils';
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = React.memo(props => {
@@ -40,7 +39,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = React.memo(props => {
     }
   }, [levels]);
 
-  const styleMap = (feature: Feature<Geometry, GeoJSONProperties> | undefined) => {
+  const styleMap: StyleFunction<GeoJSONProperties> = feature => {
     if (feature && feature.properties) {
       const { properties } = feature;
 

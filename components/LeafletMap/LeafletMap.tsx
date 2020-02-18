@@ -1,18 +1,27 @@
-import { Map as LeafletMap, MapOptions, map as leafletMap } from 'leaflet';
-import React, { Children, FunctionComponent, cloneElement, isValidElement, useEffect, useRef, useState } from 'react';
+import { Map, MapOptions, map as leafletMap } from 'leaflet';
+import React, {
+  Children,
+  FunctionComponent,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode
+} from 'react';
 import { GeoJSONLayer } from './GeoJSONLayer';
 import { TileLayer } from './TileLayer';
 
 interface MapProps extends MapOptions {
-  onCreate?: (map: LeafletMap) => void;
+  onCreate?: (map: Map) => void;
   width?: string;
   height?: string;
 }
 
-const Map: FunctionComponent<MapProps> = ({ children, onCreate, width, height, ...mapOptions }) => {
-  const [map, setMap] = useState<LeafletMap | undefined>(undefined);
+const LeafletMap: FunctionComponent<MapProps> = ({ children, onCreate, width, height, ...mapOptions }) => {
+  const [map, setMap] = useState<Map | undefined>(undefined);
   const mapRef = useRef<HTMLDivElement>(null);
-  const renderLayers = () => {
+  const renderLayers = (): ReactNode => {
     return Children.map(children, child => {
       if (isValidElement(child) && (child.type === TileLayer || child.type === GeoJSONLayer)) {
         return cloneElement(child, { map });
@@ -36,10 +45,10 @@ const Map: FunctionComponent<MapProps> = ({ children, onCreate, width, height, .
   );
 };
 
-Map.defaultProps = {
+LeafletMap.defaultProps = {
   width: '100%',
   height: '600px',
   zoom: 7
 };
 
-export { Map };
+export { LeafletMap };
