@@ -1,5 +1,6 @@
 import chroma, { scale } from 'chroma-js';
 import merge from 'deepmerge';
+import { Map, MapboxOptions } from 'mapbox-gl';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
@@ -25,7 +26,7 @@ const SpotlightMenu = dynamic(() => import('../components/SpotlightMenu').then(m
   ssr: false
 });
 
-const MapContainerWithoutSSR = dynamic(() => import('../components/UgandaContainer').then(mod => mod.UgandaContainer), {
+const BaseMap = dynamic(() => import('../components/BaseMap').then(mod => mod.BaseMap), {
   ssr: false
 });
 
@@ -213,9 +214,49 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
       ));
   };
 
+  const baseMapOptions: Partial<MapboxOptions> = {
+    style: 'mapbox://styles/edwinmp/ck42rrx240t8p1cqpkhgy2g0m',
+    center: [32.655221, 1.344666],
+    minZoom: 6,
+    zoom: 6.1
+  };
+
+  const onMapLoad = (map: Map): void => {
+    map.addLayer({
+      id: 'highlight',
+      source: 'composite',
+      'source-layer': 'uga_admbnda_adm1_ubos_v2-aa9ehp',
+      maxzoom: 7,
+      type: 'fill',
+      // filter: ['==', 'ADM1_EN', 'KOTIDO'],
+      paint: {
+        'fill-color': {
+          property: 'ADM1_EN',
+          type: 'categorical',
+          default: '#b3adad',
+          stops: [
+            ['KOTIDO', '#8f1b13'],
+            ['KALANGALA', '#333']
+          ]
+        },
+        'fill-opacity': 0.75,
+        'fill-outline-color': '#ffffff'
+      }
+    });
+  };
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
+
+      <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
+        <BaseMap
+          accessToken="pk.eyJ1IjoiZWR3aW5tcCIsImEiOiJjazFsdHVtcG0wOG9mM2RueWJscHhmcXZqIn0.cDR43UvfMaOY9cNJsEKsvg"
+          options={baseMapOptions}
+          onLoad={onMapLoad}
+          width="100%"
+        />
+      </div>
       <EChartsBaseChart options={options1} />
       <EChartsBaseChart options={options2} height="500px" />
       <EChartsBaseChart options={options3} height="500px" />
@@ -251,10 +292,6 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
             </TabContent>
           </TabContainer>
         </SpotlightTab>
-      </div>
-
-      <div style={{ display: 'block', float: 'left', width: '100%' }}>
-        <MapContainerWithoutSSR />
       </div>
     </PageSection>
   );
