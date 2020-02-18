@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, ReactNode } from 'react';
 import { SpotlightLocation } from '../../utils';
 import { Legend, LegendItem } from '../Legend';
 import { MapSectionBody, MapSectionBodyMain } from '../MapSectionBody';
@@ -14,7 +14,7 @@ import { MapSectionProps, SpotlightOptions, getIndicatorColours, parseIndicator,
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../MapDataLoader').then(mod => mod.MapDataLoader), { ssr: false });
 
-const renderLegendItems = (range?: string[], colours?: string[]) => {
+const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
   if (range && colours) {
     return range
       .map((rnge, index) => (
@@ -34,12 +34,12 @@ const renderLegendItems = (range?: string[], colours?: string[]) => {
 
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: themeData }) => {
   const [options, setOptions] = useState<SpotlightOptions>({});
-  const onOptionsChange = (optns: SpotlightOptions) => setOptions(optns);
+  const onOptionsChange = (optns: SpotlightOptions): void => setOptions(optns);
   const [locations, setLocations] = useState<MapLocations | undefined>(undefined);
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(undefined);
-  const onSelectLocation = (location: SpotlightLocation) => setActiveLocation(location);
+  const onSelectLocation = (location: SpotlightLocation): void => setActiveLocation(location);
 
-  const onMapLoad = (formattedData: MapLocations) => {
+  const onMapLoad = (formattedData: MapLocations): void => {
     setLocations(formattedData);
   };
   const range = options.indicator && splitByComma(options.indicator.range);
