@@ -6,7 +6,6 @@ services:
             dockerfile: ./Dockerfile
             args:
               ASSETS_SOURCE_URL: "http://178.128.102.213/"
-        image: nodejs
         container_name: nodejs
         restart: unless-stopped
         networks:
