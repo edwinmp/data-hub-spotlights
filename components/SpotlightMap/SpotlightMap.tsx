@@ -20,7 +20,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           id="highlight"
           source="composite"
           source-layer={options.source}
-          maxzoom={options.maxZoom}
+          maxzoom={options.maxZoom && options.maxZoom + 1}
           type="fill"
           paint={{
             'fill-color': {
