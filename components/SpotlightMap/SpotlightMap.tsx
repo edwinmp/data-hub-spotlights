@@ -24,10 +24,10 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           type="fill"
           paint={{
             'fill-color': {
-              property: options.codeProperty,
+              property: options.nameProperty,
               type: 'categorical',
               default: '#b3adad',
-              stops: getLocationStyles(data.data, range, colours)
+              stops: getLocationStyles(data.data, range, colours, options.format)
             },
             'fill-opacity': 0.75,
             'fill-outline-color': '#ffffff'

@@ -7,7 +7,8 @@ export interface LayerConfig {
   minZoom?: number;
   maxZoom?: number;
   nameProperty: string; // the data property on the layer that corresponds to the location's name
-  codeProperty: string; // the data property on the layer that corresponds to the location's code
+  codeProperty: string; // the data property on the layer that corresponds to the location's code,
+  format?: (value: string) => string | number; // when there's a mismatch between API data & map data, this aligns them
 }
 
 interface MapConfig {
@@ -26,7 +27,8 @@ export const config: { [key: string]: MapConfig } = {
         minZoom: 6,
         maxZoom: 7,
         nameProperty: 'DName2019',
-        codeProperty: 'dc2018'
+        codeProperty: 'dc2018',
+        format: (value: string): string => value.toUpperCase()
       }
     ]
   },
