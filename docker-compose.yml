@@ -11,7 +11,9 @@ services:
         ports:
             - "3000:3000"
     webserver:
-        build: nginx/
+        build:
+            context: nginx/
+            dockerfile: nginx.dockerfile
         container_name: webserver
         restart: always
         ports:
