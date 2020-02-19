@@ -3,7 +3,7 @@ services:
     nodejs:
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: ./Dockerfile
             args:
               ASSETS_SOURCE_URL: "http://178.128.102.213/"
         container_name: nodejs
