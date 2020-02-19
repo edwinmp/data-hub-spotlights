@@ -7,6 +7,9 @@ interface BaseMapLayerProps extends Layer {
 
 const BaseMapLayer: FunctionComponent<BaseMapLayerProps> = ({ map, ...options }) => {
   if (map) {
+    if (map.getLayer(options.id)) {
+      map.removeLayer(options.id);
+    }
     map.addLayer(options);
   }
 
