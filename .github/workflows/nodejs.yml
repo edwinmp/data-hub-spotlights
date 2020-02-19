@@ -1,8 +1,5 @@
 name: Node CI
 
-<<<<<<< HEAD
-on: [push]
-=======
 on:
   push:
     branches:
@@ -10,7 +7,6 @@ on:
   pull_request:
     branches:
       - fix/docker-build
->>>>>>> e90b49103a2e5eb6201120f48b91f5b0ef18dbcd
 
 jobs:
   test:
@@ -47,11 +43,7 @@ jobs:
         yarn build
     - name: Bundling
       run: |
-<<<<<<< HEAD
-        mkdir build && mv .next build/ && mv dist/* build/ && mv package.json build/ && mv yarn.lock build/ && mv Dockerfile build/
-=======
         mkdir build && mv .next build/ && mv dist/* build/ && mv package.json build/ && mv yarn.lock build/ && mv Dockerfile build/ && mv docker-compose.yml build/ && mv nginx/ build/
->>>>>>> e90b49103a2e5eb6201120f48b91f5b0ef18dbcd
         zip -q -r build.zip build
     - name: Upload build Artifacts
       uses: actions/upload-artifact@v1
@@ -82,11 +74,7 @@ jobs:
       with:
         name: build
         path: ./build.zip
-<<<<<<< HEAD
-    - name: copy deploy_file via ssh password
-=======
     - name: copy deploy_file via ssh
->>>>>>> e90b49103a2e5eb6201120f48b91f5b0ef18dbcd
       uses: appleboy/scp-action@master
       env:
         HOST: ${{ secrets.HOST }}
@@ -96,15 +84,10 @@ jobs:
       with:
         source: "./deploy_script.sh,./build.zip"
         target: "deploy_spotlights"
-<<<<<<< HEAD
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
-=======
     - name: executing remote ssh commands using ssh
       uses: appleboy/ssh-action@master
       env:
         ASSETS_SOURCE_URL: ${{ secrets.ASSETS_SOURCE_URL }}
->>>>>>> e90b49103a2e5eb6201120f48b91f5b0ef18dbcd
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
