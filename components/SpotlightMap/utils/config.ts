@@ -20,7 +20,7 @@ export const config: { [key: string]: MapConfig } = {
     layers: [
       {
         type: 'shapefile',
-        style: 'mapbox://styles/edwinmp/ck6an0ra90nob1ikvysfmbg15/draft',
+        style: 'mapbox://styles/edwinmp/ck6an0ra90nob1ikvysfmbg15',
         source: 'uganda_districts_2019_i-9qg3nj',
         center: [32.655221, 1.344666],
         zoom: 6.1,
@@ -36,7 +36,7 @@ export const config: { [key: string]: MapConfig } = {
     layers: [
       {
         type: 'shapefile',
-        style: 'mapbox://styles/edwinmp/ck6rgk8bs5sfd1it4z0jjqtd7/draft',
+        style: 'mapbox://styles/edwinmp/ck6rgk8bs5sfd1it4z0jjqtd7',
         source: 'ken_admbnda_adm1_iebc_2018060-1lmh46',
         center: [37.703, 0.482],
         zoom: 5.6,
