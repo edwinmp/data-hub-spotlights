@@ -8,6 +8,8 @@ services:
               ASSETS_SOURCE_URL: "http://178.128.102.213/"
         container_name: nodejs
         restart: unless-stopped
+        ports:
+            - "3000:3000"
         volumes:
             - .:/usr/src/app/
             - /usr/src/app/node_modules
