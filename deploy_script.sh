@@ -17,7 +17,7 @@ if [ ! "$(docker ps -q -f name=datahub-spotlights)" ]; then
         docker rmi datahub-spotlights-image
     fi
     # run container
-   # docker-compose build
+    docker-compose build
     docker-compose up
 fi
 #docker run -d -p 3000:3000 --name datahub-spotlights -e ASSETS_SOURCE_URL="$ASSETS_SOURCE_URL" datahub-spotlights-image:latest
