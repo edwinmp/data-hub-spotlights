@@ -66,7 +66,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: t
             year={options.year ? options.year : options.indicator && options.indicator.start_year}
           >
             <DynamicMap
-              center={[1.344666, 32.655221]}
               countryCode={countryCode}
               range={range}
               colours={colours}
