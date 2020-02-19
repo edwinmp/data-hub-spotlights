@@ -70,7 +70,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
 BaseMap.defaultProps = {
   width: '940px', // spotlights default
   height: '596px', // spotlights default
-  background: '#D3E0F4', // spotlights default
+  background: '#F3F3F3', // spotlights default
   options: {
     minZoom: 6,
     zoom: 6.1
