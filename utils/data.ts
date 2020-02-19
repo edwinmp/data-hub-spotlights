@@ -56,24 +56,38 @@ export interface LocationIndicatorData {
 }
 
 export const fetchScaffoldData = async (): Promise<PageScaffoldData> => {
-  const res_navigation = await fetch(`${process.env.ASSETS_SOURCE_URL}api/spotlights/navigation/`);
+  const res_navigation = await fetch(`${process.env.CMS_URL}api/spotlights/navigation/`);
   const navigation = await res_navigation.json();
-  const res_footer = await fetch(`${process.env.ASSETS_SOURCE_URL}api/footer/`);
+  const res_footer = await fetch(`${process.env.CMS_URL}api/footer/`);
   const footer = await res_footer.json();
 
   return { navigation, footer };
 };
 
 export const fetchSpotlightPage = async (slug: string): Promise<SpotlightPage> => {
-  const response = await fetch(`${process.env.ASSETS_SOURCE_URL}api/spotlights/page/${slug}/`);
+  const response = await fetch(`${process.env.CMS_URL}api/spotlights/page/${slug}/`);
   const data = await response.json();
 
   return data;
 };
 
 export const GET_INDICATOR_DATA = gql`
-  query GetIndicatorData($indicators: [String]!, $geocodes: [String] = [], $startYear: Int = 0, $endYear: Int = 9999, $limit: Int = 100, $page: Int = 0) {
-    data(indicators:$indicators, geocodes:$geocodes, startYear:$startYear, endYear:$endYear, limit:$limit, page:$page) {
+  query GetIndicatorData(
+    $indicators: [String]!
+    $geocodes: [String] = []
+    $startYear: Int = 0
+    $endYear: Int = 9999
+    $limit: Int = 100
+    $page: Int = 0
+  ) {
+    data(
+      indicators: $indicators
+      geocodes: $geocodes
+      startYear: $startYear
+      endYear: $endYear
+      limit: $limit
+      page: $page
+    ) {
       indicator
       data {
         geocode
