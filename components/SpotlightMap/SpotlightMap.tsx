@@ -1,68 +1,39 @@
-import { LatLng, StyleFunction } from 'leaflet';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { GeoJSONLayer, LeafletMap as Map } from '../LeafletMap';
 import { Loading } from '../Loading';
-import {
-  defaultMapStyle,
-  extractLocationsFromGeoJSON,
-  filterGeoJSONByLevel,
-  GeoJSONProperties,
-  getFillColor,
-  SpotlightMapGeoJSON,
-  SpotlightMapProps
-} from './utils';
+import { SpotlightMapProps } from './utils';
+import { BaseMap } from '../BaseMap';
+import { config } from './utils';
 
-const SpotlightMap: FunctionComponent<SpotlightMapProps> = React.memo(props => {
-  const { countryCode, center, levels, zoom, onLoad, data, colours, range } = props;
+const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
+  const { countryCode, level } = props;
+  const { layers } = config[countryCode];
+  const options = level && level <= layers.length ? layers[level] : layers[0];
   const [loading, setLoading] = useState<boolean>(false);
-  const [geojson, setGeoJSON] = useState<SpotlightMapGeoJSON>({});
 
   useEffect(() => {
-    setLoading(true);
-    import(`./geojson/${countryCode}`)
-      .then(all => {
-        setGeoJSON({ all, filtered: filterGeoJSONByLevel(all, levels || []) });
-        setLoading(false);
-        if (onLoad) {
-          onLoad(extractLocationsFromGeoJSON(all.features));
-        }
-      })
-      .catch(error => {
-        console.log(error);
-        setLoading(false);
-      });
+    setLoading(false);
   }, [countryCode]);
-
-  useEffect(() => {
-    if (geojson.all) {
-      setGeoJSON({ ...geojson, filtered: filterGeoJSONByLevel(geojson.all, levels || []) });
-    }
-  }, [levels]);
-
-  const styleMap: StyleFunction<GeoJSONProperties> = feature => {
-    if (feature && feature.properties) {
-      const { properties } = feature;
-
-      return {
-        ...defaultMapStyle,
-        fillColor: getFillColor(properties.geocode, data && data.data, range, colours)
-      };
-    }
-
-    return defaultMapStyle;
-  };
 
   return (
     <Loading active={loading || !!props.dataLoading}>
-      <Map center={center && new LatLng(center[0], center[1])} zoom={zoom || 7} height="100%" minZoom={6.5}>
-        <GeoJSONLayer geojson={geojson.filtered || geojson.all} style={styleMap} />
-      </Map>
+      <BaseMap
+        accessToken="pk.eyJ1IjoiZWR3aW5tcCIsImEiOiJjazFsdHVtcG0wOG9mM2RueWJscHhmcXZqIn0.cDR43UvfMaOY9cNJsEKsvg"
+        options={{
+          style: options.style,
+          center: options.center,
+          minZoom: options.minZoom || 6,
+          zoom: options.zoom || 6.1,
+          maxZoom: options.maxZoom || 7
+        }}
+        width="100%"
+        height="100%"
+      />
     </Loading>
   );
-});
+};
 
 SpotlightMap.defaultProps = {
-  levels: [1],
+  level: 0,
   dataLoading: false
 };
 
