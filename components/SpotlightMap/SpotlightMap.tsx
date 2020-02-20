@@ -14,7 +14,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   }, [countryCode]);
 
   const renderLayers = (): ReactNode => {
-    if (!dataLoading && data) {
+    if (!dataLoading && data && data.data.length) {
       return (
         <BaseMapLayer
           id="highlight"
@@ -36,7 +36,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       );
     }
 
-    return null;
+    return <BaseMapLayer id="highlight" show={false} />;
   };
 
   return (
