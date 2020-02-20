@@ -39,8 +39,8 @@ export const config: { [key: string]: MapConfig } = {
         style: 'mapbox://styles/edwinmp/ck6rgk8bs5sfd1it4z0jjqtd7',
         source: 'ken_admbnda_adm1_iebc_2018060-1lmh46',
         center: [37.703, 0.482],
-        zoom: 5.6,
-        minZoom: 5.4,
+        zoom: 5.3,
+        minZoom: 5.0,
         maxZoom: 6,
         nameProperty: 'ADM1_EN',
         codeProperty: 'ADM1_PCODE'
