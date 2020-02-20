@@ -22,7 +22,7 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = props => {
 
   useEffect(() => props.onOptionsChange(selected), [selected]);
 
-  const onSelectTheme = (option?: SelectOption) => {
+  const onSelectTheme = (option?: SelectOption): void => {
     if (option) {
       const selectedTheme = props.themes.find(theme => theme.slug === option.value);
       if (selectedTheme) {
@@ -36,7 +36,7 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = props => {
     }
   };
 
-  const onSelectIndicator = (option?: SelectOption) => {
+  const onSelectIndicator = (option?: SelectOption): void => {
     if (option && activeTheme) {
       const selectedIndicator = activeTheme.indicators.find(indicator => indicator.ddw_id === option.value);
       const yearOptions = selectedIndicator ? createYearOptionsFromIndicator(selectedIndicator) : undefined;
@@ -52,7 +52,7 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = props => {
     }
   };
 
-  const onSelectYear = (option?: SelectOption) => {
+  const onSelectYear = (option?: SelectOption): void => {
     if (option && option.value) {
       setSelected({ ...selected, year: parseInt(option.value, 10) });
     } else {

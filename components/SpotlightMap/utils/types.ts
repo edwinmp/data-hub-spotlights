@@ -5,7 +5,7 @@ export interface SpotlightMapProps {
   center?: number[];
   zoom?: number;
   countryCode: string;
-  levels?: number[];
+  level?: number;
   dataLoading?: boolean;
   data?: LocationIndicatorData;
   range?: string[];
@@ -32,4 +32,9 @@ export interface MapLocations {
     [key: string]: SpotlightLocation[];
   };
   other: SpotlightLocation[];
+}
+
+export interface SpotlightBoundary extends SpotlightLocation {
+  code: string;
+  children: SpotlightBoundary;
 }

@@ -8,7 +8,7 @@ Contains re-designed spotlights on Uganda and Kenya, perhaps others
 
       yarn install
 
-- Create a `.env` file and add ASSETS_SOURCE_URL, setting it to the most updated version of the DI Website. Defaults to `http://devinit.org/`.
+- Create a `.env` file and add CMS_URL, setting it to the most updated version of the DI Website. Defaults to `http://devinit.org/`.
 If the dependent spotlights code has not been pushed to the live website, defer to either the dev server `http://178.128.102.213/` or your own local copy on the `develop` branch
 
 - When pointing to your local copy of the website, spotlight assets must be imported from the [DataHub CMS](https://github.com/devinit/datahub-cms) repo.
@@ -34,7 +34,7 @@ This requires two commands:
 
 - Run the app container basing on the image created above using:
 
-      docker run -p <host_port>:3000 --name <container_name> -e ASSETS_SOURCE_URL="<host_url>" <image_name>
+      docker run -p <host_port>:3000 --name <container_name> -e CMS_URL="<host_url>" <image_name>
 
    replace the:
 

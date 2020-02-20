@@ -2,36 +2,36 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { SpotlightLocation } from '../../utils';
 import { Select, SelectOption, SelectOptions } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBannerMain } from '../SpotlightBanner';
-import { MapLocations } from '../SpotlightMap';
+import { SpotlightBoundary } from '../SpotlightMap';
 
 interface MapSectionHeaderProps {
-  locations?: MapLocations;
+  countryCode: string;
   onSelectLocation: (location: SpotlightLocation) => void;
 }
 
 // TODO: this is temporary - replace with correct location handler
-const createLocationOptions = (locations: MapLocations): SelectOptions => {
-  let regionalContent: SelectOption[] = [];
-  Object.keys(locations.regional).forEach(region => {
-    const options = locations.regional[region].map(content => ({
-      label: content.name,
-      value: content.geocode
-    }));
-    regionalContent = regionalContent.concat(options);
+const createLocationOptions = (locations: SpotlightBoundary[]): SelectOptions => {
+  let districts: SpotlightBoundary[] = [];
+  locations.forEach(location => {
+    districts = districts.concat(location.children);
   });
+  const options: SelectOption[] = districts.map(content => ({
+    label: content.name,
+    value: content.geocode
+  }));
 
-  return regionalContent;
+  return options;
 };
 
 const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
   const [options, setOptions] = useState<SelectOptions>([]);
   useEffect(() => {
-    if (props.locations) {
-      setOptions(createLocationOptions(props.locations));
-    }
-  }, [props.locations]);
+    import(`../../boundaries/${props.countryCode}`).then(({ default: boundaries }) => {
+      setOptions(createLocationOptions(boundaries));
+    });
+  }, [props.countryCode]);
 
-  const onSelectLocation = (option: SelectOption) => {
+  const onSelectLocation = (option: SelectOption): void => {
     if (option.value) {
       props.onSelectLocation({ geocode: option.value, name: option.label });
     }
@@ -44,7 +44,7 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
           options={options}
           onChange={onSelectLocation}
           placeholder="Select Location"
-          isLoading={!props.locations}
+          isLoading={!(options && options.length)}
         />
       </SpotlightBannerAside>
       <SpotlightBannerMain>

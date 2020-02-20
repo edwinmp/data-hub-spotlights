@@ -45,6 +45,11 @@ const IndicatorFilterForm: FunctionComponent<FormProps> = ({
       <button type="button" className="button">
         Update
       </button>
+      <style jsx>{`
+        button.button {
+          display: none;
+        }
+      `}</style>
     </FormField>
   </>
 );
