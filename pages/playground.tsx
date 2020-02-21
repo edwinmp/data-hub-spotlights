@@ -15,7 +15,21 @@ import { SpotlightTab } from '../components/SpotlightTab';
 import { TabContainer } from '../components/SpotlightTab/TabContainer';
 import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
+import { SearchSelect } from '../components/SearchSelect';
 import { fetchScaffoldData } from '../utils';
+import { colourOptions, groupedOptions } from '../components/SearchSelect/data';
+
+const groupStyles = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between'
+};
+
+const formatGroupLabel = (data: any) => (
+  <div style={groupStyles}>
+    <span>{data.label}</span>
+  </div>
+);
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -249,6 +263,10 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
+
+      <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
+        <SearchSelect defaultValue={colourOptions[1]} options={groupedOptions} formatGroupLabel={formatGroupLabel} />
+      </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
         <BaseMap
