@@ -17,4 +17,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "yarn", "start"]
+CMD ./node_modules/.bin/cross-env NODE_ENV=production node index.js
