@@ -1,6 +1,6 @@
 FROM node:10
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/
 
 ARG CMS_URL
 
