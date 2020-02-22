@@ -9,12 +9,12 @@ unzip -o build.zip
 cd build || exit
 
 # Build the docker image
-if [ ! "$(docker ps -q -f name=datahub-spotlights)" ]; then
-    if [ "$(docker ps -aq -f status=exited -f name=datahub-spotlights)" ]; then
+if [ ! "$(docker ps -q -f name=nodejs)" ]; then
+    if [ "$(docker ps -aq -f status=exited -f name=nodejs)" ]; then
         # cleanup
-        docker stop datahub-spotlights
-        docker rm datahub-spotlights
-        docker rmi datahub-spotlights-image
+        docker stop nodejs
+        docker rm nodejs
+        docker rmi build_nodejs
     fi
     # run container
     docker-compose build
