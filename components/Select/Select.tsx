@@ -11,7 +11,10 @@ export interface SelectOption {
 const Select: FunctionComponent<SelectProps> = props => {
   const borderColor = '#8f1b13';
   const styles: Styles = {
-    container: provided => ({ ...provided, fontSize: '1.6rem' }),
+    container: provided => ({
+      ...provided,
+      fontSize: '1.6rem'
+    }),
     control: provided => ({
       ...provided,
       ':hover': { borderColor },
@@ -22,6 +25,8 @@ const Select: FunctionComponent<SelectProps> = props => {
     }),
     menu: provided => ({
       ...provided,
+      backgroundColor: props.chooseTheme === 'dark' ? '#443e42' : '#FFFFFF',
+      color: props.menuTextColor,
       'z-index': 15000
     }),
     option: (provided, state) => ({

@@ -15,21 +15,8 @@ import { SpotlightTab } from '../components/SpotlightTab';
 import { TabContainer } from '../components/SpotlightTab/TabContainer';
 import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
-import { SearchSelect } from '../components/SearchSelect';
+import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
-import { colourOptions, groupedOptions } from '../components/SearchSelect/data';
-
-const groupStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between'
-};
-
-const formatGroupLabel = (data: any) => (
-  <div style={groupStyles}>
-    <span>{data.label}</span>
-  </div>
-);
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -260,12 +247,66 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     });
   };
 
+  const colourOptions = [
+    { value: 'ocean', label: 'Ocean', color: '#00B8D9' },
+    { value: 'blue', label: 'Blue', color: '#0052CC' },
+    { value: 'purple', label: 'Purple', color: '#5243AA' },
+    { value: 'red', label: 'Red', color: '#FF5630' },
+    { value: 'orange', label: 'Orange', color: '#FF8B00' },
+    { value: 'yellow', label: 'Yellow', color: '#FFC400' },
+    { value: 'green', label: 'Green', color: '#36B37E' },
+    { value: 'forest', label: 'Forest', color: '#00875A' },
+    { value: 'slate', label: 'Slate', color: '#253858' },
+    { value: 'silver', label: 'Silver', color: '#666666' }
+  ];
+
+  const flavourOptions = [
+    { value: 'vanilla', label: 'Vanilla', rating: 'safe' },
+    { value: 'chocolate', label: 'Chocolate', rating: 'good' },
+    { value: 'strawberry', label: 'Strawberry', rating: 'wild' },
+    { value: 'salted-caramel', label: 'Salted Caramel', rating: 'crazy' }
+  ];
+
+  const groupedOptions = [
+    {
+      label: 'Colours',
+      options: colourOptions
+    },
+    {
+      label: 'Flavours',
+      options: flavourOptions
+    }
+  ];
+
+  const groupStyles: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    padding: '0.75rem 0',
+    color: '#f3f3f3',
+    fontFamily: 'Geomanist Bold, sans-serif'
+  };
+
+  const formatGroupLabel = (data: any) => (
+    <div style={groupStyles}>
+      <span>{data.label}</span>
+    </div>
+  );
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <SearchSelect defaultValue={colourOptions[1]} options={groupedOptions} formatGroupLabel={formatGroupLabel} />
+        <Select
+          defaultValue={colourOptions[1]}
+          options={groupedOptions}
+          formatGroupLabel={formatGroupLabel}
+          chooseTheme={'dark'}
+          menuTextColor={'#FFFF00'}
+        />
       </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
