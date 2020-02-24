@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import chroma, { scale } from 'chroma-js';
 import merge from 'deepmerge';
 import { Map, MapboxOptions } from 'mapbox-gl';
@@ -290,12 +291,18 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     fontFamily: 'Geomanist Bold, sans-serif'
   };
 
-  const optionStyles: React.CSSProperties = {
-    padding: '0.5rem 1rem',
-    background: 'rgba(143, 27, 19, 0.5)',
-    color: '#fff',
-    marginLeft: '30px'
-  };
+  const Span = styled.span`
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 7px;
+    padding-left: 7px;
+    background: rgba(143, 27, 19, 0.5);
+    color: #fff;
+    margin-left: 30px;
+    :hover {
+      background: rgba(188, 58, 50, 0.5);
+    }
+  `;
 
   const formatGroupLabel = (data: any) => (
     <div style={groupStyles}>
@@ -307,7 +314,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     return (
       <components.Option {...props}>
         <a href={props.data.url}>
-          <span style={optionStyles}>{props.children}</span>
+          <Span>{props.children}</Span>
         </a>
       </components.Option>
     );
