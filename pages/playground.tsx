@@ -327,6 +327,10 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
       </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
+        <Select options={flavourOptions} chooseTheme={'light'} />
+      </div>
+
+      <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
         <BaseMap
           accessToken="pk.eyJ1IjoiZWR3aW5tcCIsImEiOiJjazFsdHVtcG0wOG9mM2RueWJscHhmcXZqIn0.cDR43UvfMaOY9cNJsEKsvg"
           options={baseMapOptions}
