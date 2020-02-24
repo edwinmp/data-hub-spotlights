@@ -249,23 +249,23 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   };
 
   const colourOptions = [
-    { value: 'ocean', label: 'Ocean', color: '#00B8D9' },
-    { value: 'blue', label: 'Blue', color: '#0052CC' },
-    { value: 'purple', label: 'Purple', color: '#5243AA' },
-    { value: 'red', label: 'Red', color: '#FF5630' },
-    { value: 'orange', label: 'Orange', color: '#FF8B00' },
-    { value: 'yellow', label: 'Yellow', color: '#FFC400' },
-    { value: 'green', label: 'Green', color: '#36B37E' },
-    { value: 'forest', label: 'Forest', color: '#00875A' },
-    { value: 'slate', label: 'Slate', color: '#253858' },
-    { value: 'silver', label: 'Silver', color: '#666666' }
+    { value: 'ocean', label: 'Ocean', url: '#' },
+    { value: 'blue', label: 'Blue', url: '#' },
+    { value: 'purple', label: 'Purple', url: '#' },
+    { value: 'red', label: 'Red', url: '#' },
+    { value: 'orange', label: 'Orange', url: '#' },
+    { value: 'yellow', label: 'Yellow', url: '#' },
+    { value: 'green', label: 'Green', url: '#' },
+    { value: 'forest', label: 'Forest', url: '#' },
+    { value: 'slate', label: 'Slate', url: '#' },
+    { value: 'silver', label: 'Silver', url: '#' }
   ];
 
   const flavourOptions = [
-    { value: 'vanilla', label: 'Vanilla', rating: 'safe' },
-    { value: 'chocolate', label: 'Chocolate', rating: 'good' },
-    { value: 'strawberry', label: 'Strawberry', rating: 'wild' },
-    { value: 'salted-caramel', label: 'Salted Caramel', rating: 'crazy' }
+    { value: 'vanilla', label: 'Vanilla', url: '#' },
+    { value: 'chocolate', label: 'Chocolate', url: '#' },
+    { value: 'strawberry', label: 'Strawberry', url: '#' },
+    { value: 'salted-caramel', label: 'Salted Caramel', url: '#' }
   ];
 
   const groupedOptions = [
@@ -306,7 +306,9 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   const Option = (props: any) => {
     return (
       <components.Option {...props}>
-        <span style={optionStyles}>{props.children}</span>
+        <a href={props.data.url}>
+          <span style={optionStyles}>{props.children}</span>
+        </a>
       </components.Option>
     );
   };
@@ -318,12 +320,9 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
         <Select
           components={{ Option }}
-          defaultValue={colourOptions[1]}
           options={groupedOptions}
           formatGroupLabel={formatGroupLabel}
           chooseTheme={'dark'}
-          menuTextColor={'#FFFF00'}
-          closeMenuOnSelect={false}
         />
       </div>
 
