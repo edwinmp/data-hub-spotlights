@@ -25,14 +25,15 @@ const Select: FunctionComponent<SelectProps> = props => {
     }),
     menu: provided => ({
       ...provided,
+      color: '#fff',
       backgroundColor: props.chooseTheme === 'dark' ? '#443e42' : '#FFFFFF',
-      color: props.menuTextColor,
       'z-index': 15000
     }),
     option: (provided, state) => ({
       ...provided,
-      ':hover': { backgroundColor: '#f0826d' },
-      backgroundColor: state.isSelected ? borderColor : 'transparent'
+      padding: '0.75rem 0',
+      ':hover': props.chooseTheme === 'dark' ? { cursor: 'pointer' } : { backgroundColor: '#f0826d' },
+      backgroundColor: state.isSelected && props.chooseTheme !== 'dark' ? borderColor : 'transparent'
     })
   };
 

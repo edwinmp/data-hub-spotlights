@@ -17,6 +17,7 @@ import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
+import { components } from 'react-select';
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -289,11 +290,26 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     fontFamily: 'Geomanist Bold, sans-serif'
   };
 
+  const optionStyles: React.CSSProperties = {
+    padding: '0.5rem 1rem',
+    background: 'rgba(143, 27, 19, 0.5)',
+    color: '#fff',
+    marginLeft: '30px'
+  };
+
   const formatGroupLabel = (data: any) => (
     <div style={groupStyles}>
       <span>{data.label}</span>
     </div>
   );
+
+  const Option = (props: any) => {
+    return (
+      <components.Option {...props}>
+        <span style={optionStyles}>{props.children}</span>
+      </components.Option>
+    );
+  };
 
   return (
     <PageSection>
@@ -301,11 +317,13 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
         <Select
+          components={{ Option }}
           defaultValue={colourOptions[1]}
           options={groupedOptions}
           formatGroupLabel={formatGroupLabel}
           chooseTheme={'dark'}
           menuTextColor={'#FFFF00'}
+          closeMenuOnSelect={false}
         />
       </div>
 
