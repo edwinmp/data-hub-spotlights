@@ -15,6 +15,7 @@ import { SpotlightTab } from '../components/SpotlightTab';
 import { TabContainer } from '../components/SpotlightTab/TabContainer';
 import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
+import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
 
 interface PlaygroundProps {
@@ -246,9 +247,48 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     });
   };
 
+  const colourOptions = [
+    { value: 'ocean', label: 'Ocean', url: '#' },
+    { value: 'blue', label: 'Blue', url: '#' },
+    { value: 'purple', label: 'Purple', url: '#' },
+    { value: 'red', label: 'Red', url: '#' },
+    { value: 'orange', label: 'Orange', url: '#' },
+    { value: 'yellow', label: 'Yellow', url: '#' },
+    { value: 'green', label: 'Green', url: '#' },
+    { value: 'forest', label: 'Forest', url: '#' },
+    { value: 'slate', label: 'Slate', url: '#' },
+    { value: 'silver', label: 'Silver', url: '#' }
+  ];
+
+  const flavourOptions = [
+    { value: 'vanilla', label: 'Vanilla', url: '#' },
+    { value: 'chocolate', label: 'Chocolate', url: '#' },
+    { value: 'strawberry', label: 'Strawberry', url: '#' },
+    { value: 'salted-caramel', label: 'Salted Caramel', url: '#' }
+  ];
+
+  const groupedOptions = [
+    {
+      label: 'Colours',
+      options: colourOptions
+    },
+    {
+      label: 'Flavours',
+      options: flavourOptions
+    }
+  ];
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
+
+      <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
+        <Select options={groupedOptions} chooseTheme="dark" placeholder="Select Dark" />
+      </div>
+
+      <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
+        <Select options={flavourOptions} chooseTheme={'light'} placeholder="Select Light" />
+      </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
         <BaseMap
