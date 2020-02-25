@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import chroma, { scale } from 'chroma-js';
 import merge from 'deepmerge';
 import { Map, MapboxOptions } from 'mapbox-gl';
@@ -18,7 +17,6 @@ import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
-import { components } from 'react-select';
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -280,61 +278,16 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     }
   ];
 
-  const groupStyles: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    padding: '0.75rem 0',
-    color: '#f3f3f3',
-    fontFamily: 'Geomanist Bold, sans-serif'
-  };
-
-  const Span = styled.span`
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-right: 7px;
-    padding-left: 7px;
-    background: rgba(143, 27, 19, 0.5);
-    color: #fff;
-    margin-left: 30px;
-    :hover {
-      background: rgba(188, 58, 50, 0.5);
-    }
-  `;
-
-  const formatGroupLabel = (data: any) => (
-    <div style={groupStyles}>
-      <span>{data.label}</span>
-    </div>
-  );
-
-  const Option = (props: any) => {
-    return (
-      <components.Option {...props}>
-        <a href={props.data.url}>
-          <Span>{props.children}</Span>
-        </a>
-      </components.Option>
-    );
-  };
-
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <Select
-          components={{ Option }}
-          options={groupedOptions}
-          formatGroupLabel={formatGroupLabel}
-          chooseTheme={'dark'}
-        />
+        <Select options={groupedOptions} chooseTheme="dark" placeholder="Select Dark" />
       </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <Select options={flavourOptions} chooseTheme={'light'} />
+        <Select options={flavourOptions} chooseTheme={'light'} placeholder="Select Light" />
       </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
