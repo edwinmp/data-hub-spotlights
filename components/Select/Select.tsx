@@ -8,7 +8,13 @@ export interface SelectOption {
   value: string;
 }
 
-const Select: FunctionComponent<SelectProps> = props => {
+type chooseThemeType = 'light' | 'dark';
+
+interface ExtendedSelectProps extends SelectProps {
+  chooseTheme: chooseThemeType;
+}
+
+const Select: FunctionComponent<ExtendedSelectProps> = props => {
   const borderColor = '#8f1b13';
   const styles: Styles = {
     container: provided => ({
@@ -42,6 +48,10 @@ const Select: FunctionComponent<SelectProps> = props => {
   };
 
   return <ReactSelect {...props} styles={{ ...styles, ...props.styles }} />;
+};
+
+Select.defaultProps = {
+  chooseTheme: 'light'
 };
 
 export { Select };
