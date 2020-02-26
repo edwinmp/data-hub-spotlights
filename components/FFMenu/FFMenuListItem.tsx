@@ -47,7 +47,11 @@ const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, childre
           }
         `}</style>
       </a>
-      <a className="countries-menu__profile countries-menu__link js-profile-item" onClick={onView}>
+      <a
+        className="countries-menu__profile countries-menu__link js-profile-item"
+        onClick={onView}
+        title={`View ${title}`}
+      >
         View
       </a>
       {Children.map(children, child => isValidElement(child) && cloneElement(child, { active }))}
