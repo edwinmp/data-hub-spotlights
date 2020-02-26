@@ -31,12 +31,10 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
         <div className="l-2up-3up__col">
           {contentOptions.map(({ stat, chart }, index) => {
             if (stat) {
-              const heading = stat.title || indicator.name;
-
               return (
                 <IndicatorStat
                   key={index}
-                  heading={processTemplateString(heading, templateOptions)}
+                  heading={processTemplateString(stat.title || '', templateOptions)}
                   meta={stat.meta || { description: indicator.description, source: indicator.source }}
                 >
                   <DynamicDataLoader
@@ -63,12 +61,10 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
               );
             }
             if (chart) {
-              const heading = chart.title || indicator.name;
-
               return (
                 <IndicatorStat
                   key={index}
-                  heading={processTemplateString(heading, templateOptions)}
+                  heading={processTemplateString(chart.title || '', templateOptions)}
                   meta={chart.meta || { description: indicator.description, source: indicator.source }}
                 >
                   <DynamicDataLoader
