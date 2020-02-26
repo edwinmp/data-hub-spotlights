@@ -17,7 +17,7 @@ import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
-import { FFMenu } from '../components/FFMenu';
+import { FFMenu, FFMenuList, FFMenuListItem } from '../components/FFMenu';
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -283,7 +283,24 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     <PageSection>
       <h1>Visualisation Playground</h1>
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <FFMenu title="kenya" />
+        <FFMenu title="kenya">
+          <FFMenuList classNames="countries-menu-list__content">
+            <FFMenuListItem title="Kampala">
+              <FFMenuList>
+                <FFMenuListItem title="Ntinda">
+                  <FFMenuList>
+                    <FFMenuListItem title="Zone 1" />
+                    <FFMenuListItem title="Zone 2" />
+                  </FFMenuList>
+                </FFMenuListItem>
+                <FFMenuListItem title="Wandegz" />
+                <FFMenuListItem title="Nakawa" />
+              </FFMenuList>
+            </FFMenuListItem>
+            <FFMenuListItem title="Mpigi" />
+            <FFMenuListItem title="Wakiso" />
+          </FFMenuList>
+        </FFMenu>
       </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, Children, isValidElement, cloneElement } from 'react';
 
 interface FFMenuProps {
   title?: string;
@@ -8,6 +8,7 @@ interface FFMenuProps {
 const FFMenu: FunctionComponent<FFMenuProps> = props => {
   const [active, setActive] = useState(false);
   const toggleMenu = (_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
+    // TODO: use event object or remove
     setActive(!active);
   };
 
@@ -36,7 +37,7 @@ const FFMenu: FunctionComponent<FFMenuProps> = props => {
         >
           View
         </a>
-        Children Go Here
+        {Children.map(props.children, child => isValidElement(child) && cloneElement(child, { active }))}
       </nav>
     </div>
   );
