@@ -3,13 +3,19 @@ import React, { Children, FunctionComponent, useState, cloneElement, isValidElem
 
 interface FFMenuListItemProps {
   title?: string;
+  onView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, title?: string) => void;
 }
 
-const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, children }) => {
+const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, children, onView: onViewProp }) => {
   const [active, setActive] = useState(false);
-  const toggleActive = (_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
-    // TODO: use event object or remove
+  const toggleActive = (): void => {
     setActive(!active);
+  };
+  const onView = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
+    event.stopPropagation();
+    if (onViewProp) {
+      onViewProp(event, title);
+    }
   };
 
   return (
@@ -23,7 +29,9 @@ const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, childre
       >
         {title}
       </a>
-      <a className="countries-menu__profile countries-menu__link js-profile-item">View</a>
+      <a className="countries-menu__profile countries-menu__link js-profile-item" onClick={onView}>
+        View
+      </a>
       {Children.map(children, child => isValidElement(child) && cloneElement(child, { active }))}
     </li>
   );

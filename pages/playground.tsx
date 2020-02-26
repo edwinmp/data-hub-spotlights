@@ -18,6 +18,7 @@ import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
 import { FFMenu, FFMenuList, FFMenuListItem } from '../components/FFMenu';
+import ugBoundaries from '../boundaries/UG.json';
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -279,27 +280,25 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     }
   ];
 
+  console.log(ugBoundaries);
+  const renderMenuItems = (data: any) => {
+    return data.map((location: any, index: number) => {
+      const onView = (_event: any, title: string) => console.log(title);
+
+      return (
+        <FFMenuListItem key={index} title={location.name} onView={onView}>
+          {location.children ? <FFMenuList>{renderMenuItems(location.children)}</FFMenuList> : null}
+        </FFMenuListItem>
+      );
+    });
+  };
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <FFMenu title="kenya">
-          <FFMenuList classNames="countries-menu-list__content">
-            <FFMenuListItem title="Kampala">
-              <FFMenuList>
-                <FFMenuListItem title="Ntinda">
-                  <FFMenuList>
-                    <FFMenuListItem title="Zone 1" />
-                    <FFMenuListItem title="Zone 2" />
-                  </FFMenuList>
-                </FFMenuListItem>
-                <FFMenuListItem title="Wandegz" />
-                <FFMenuListItem title="Nakawa" />
-              </FFMenuList>
-            </FFMenuListItem>
-            <FFMenuListItem title="Mpigi" />
-            <FFMenuListItem title="Wakiso" />
-          </FFMenuList>
+        <FFMenu title="Uganda">
+          <FFMenuList classNames="countries-menu-list__content">{renderMenuItems(ugBoundaries)}</FFMenuList>
         </FFMenu>
       </div>
 

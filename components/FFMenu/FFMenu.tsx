@@ -7,8 +7,7 @@ interface FFMenuProps {
 
 const FFMenu: FunctionComponent<FFMenuProps> = props => {
   const [active, setActive] = useState(false);
-  const toggleMenu = (_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
-    // TODO: use event object or remove
+  const toggleMenu = (): void => {
     setActive(!active);
   };
 
