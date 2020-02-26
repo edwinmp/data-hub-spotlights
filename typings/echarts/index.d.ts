@@ -5,11 +5,11 @@ declare namespace ECharts {
     title?: {
       text: string;
     };
-    tooltip?: any; // FIXME: give a proper type
-    legend?: {
-      show?: boolean;
-      data?: string[];
-    }
+    tooltip?: {
+      trigger?: 'item' | 'axis' | 'none';
+      formatter?: string;
+    };
+    legend?: Legend;
     xAxis?: XAxis | XAxis[];
     yAxis?: YAxis | YAxis[];
     series?: Series[];
@@ -19,10 +19,17 @@ declare namespace ECharts {
     dataset?: Dataset;
   }
 
-  type DatasetSource = Array<Array<string|number> | {[key: string]: string | number}> | {[key: string]: Array<string | number>};
+  type DatasetSource =
+    | Array<Array<string | number> | { [key: string]: string | number }>
+    | { [key: string]: Array<string | number> };
 
   interface DataSet {
     source: DatasetSource;
+  }
+
+  interface Legend {
+    show?: boolean;
+    data?: string[];
   }
 
   interface Axis {
@@ -30,6 +37,7 @@ declare namespace ECharts {
     show?: boolean;
     data?: Data[];
     axisLine?: AxisLine;
+    axisLabel?: AxisLabel;
     axisTick?: AxisTick;
     splitLine?: SplitLine;
     type?: AxisType;
@@ -42,11 +50,11 @@ declare namespace ECharts {
 
   interface YAxis extends Axis {
     position?: 'left' | 'right';
-  };
+  }
 
   interface XAxis extends Axis {
     position?: 'top' | 'bottom';
-  };
+  }
 
   interface Data {
     value: string | number;
@@ -63,6 +71,10 @@ declare namespace ECharts {
   interface AxisLine {
     show?: boolean;
     lineStyle?: AxisLineStyle;
+  }
+
+  interface AxisLabel {
+    formatter?: ((value: string | number, index: number) => void) | string;
   }
 
   interface AxisTick {
@@ -105,6 +117,15 @@ declare namespace ECharts {
     seriesLayoutBy?: 'column' | 'row';
     xAxisIndex?: number;
     yAxisIndex?: number;
+    label?: SeriesLabel;
+  }
+
+  interface SeriesLabel {
+    normal?: {
+      show?: boolean;
+      position?: 'inside' | 'outside' | 'center';
+      formatter?: string;
+    };
   }
 
   interface SeriesEncode {

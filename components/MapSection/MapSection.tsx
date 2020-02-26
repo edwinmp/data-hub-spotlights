@@ -11,7 +11,7 @@ import { SidebarContent, SpotlightSidebar } from '../SpotlightSidebar';
 import { MapSectionProps, SpotlightOptions, getIndicatorColours, parseIndicator, splitByComma } from './utils';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
-const DynamicMapDataLoader = dynamic(() => import('../MapDataLoader').then(mod => mod.MapDataLoader), { ssr: false });
+const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
 
 const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
   if (range && colours) {
@@ -31,14 +31,20 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
   return null;
 };
 
-const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: themeData }) => {
+const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: themeData, onChangeLocation }) => {
   const [options, setOptions] = useState<SpotlightOptions>({});
   const onOptionsChange = (optns: SpotlightOptions): void => setOptions(optns);
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(undefined);
-  const onSelectLocation = (location: SpotlightLocation): void => setActiveLocation(location);
+  const onSelectLocation = (location?: SpotlightLocation): void => {
+    setActiveLocation(location);
+    if (onChangeLocation) {
+      onChangeLocation(location);
+    }
+  };
 
   const range = options.indicator && splitByComma(options.indicator.range);
   const colours = getIndicatorColours(options.indicator, range);
+  const indicatorID = options.indicator && parseIndicator(options.indicator);
 
   return (
     <PageSection>
@@ -61,9 +67,10 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: t
 
         <MapSectionBodyMain>
           <DynamicMapDataLoader
-            indicator={options.indicator && parseIndicator(options.indicator)}
+            indicators={indicatorID ? [indicatorID] : undefined}
             geocode={activeLocation && activeLocation.geocode}
             year={options.year ? options.year : options.indicator && options.indicator.start_year}
+            limit={10000}
           >
             <DynamicMap
               countryCode={countryCode}

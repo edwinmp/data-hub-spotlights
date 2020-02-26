@@ -7,14 +7,18 @@ export interface SpotlightPage {
   full_url: string;
   relative_url: string;
   country_code: string;
+  currency_code: string;
   themes: SpotlightTheme[];
 }
 
 export interface SpotlightTheme {
   name: string;
   slug: string;
+  section: string | null;
   indicators: SpotlightIndicator[];
 }
+
+export type DataFormat = 'plain' | 'currency' | 'percent';
 
 export interface SpotlightIndicator {
   ddw_id: string;
@@ -22,12 +26,64 @@ export interface SpotlightIndicator {
   description?: string;
   start_year?: number;
   end_year?: number;
+  data_format: DataFormat;
   range?: string;
   value_prefix?: string;
   value_suffix?: string;
   tooltip_template?: string;
+  content_template: string | null; // this is a JSON string in the format of SpotlightIndicatorContent
   colour?: string;
   source?: string;
+}
+
+export interface ContentMeta {
+  description?: string;
+  source?: string;
+}
+
+export interface ContentNote {
+  content?: string;
+  meta?: ContentMeta;
+}
+
+export type Aggregation = 'SUM' | 'AVG' | 'PERCENT' | 'POSN ASC' | 'POSN DESC';
+
+interface SharedIndicatorContentProps {
+  indicators: string[];
+  startYear?: number;
+  endYear?: number;
+  title?: string;
+  meta?: ContentMeta;
+  fetchAll?: boolean;
+  aggregation?: Aggregation; // this allows for simple operations on the data for more complex stats
+}
+
+export interface IndicatorStat extends SharedIndicatorContentProps {
+  dataFormat: DataFormat;
+  valuePrefix?: string;
+  valueSuffix?: string;
+  valueTemplate?: string;
+  note?: ContentNote;
+}
+
+export interface IndicatorChart extends SharedIndicatorContentProps {
+  type: 'bar' | 'pie';
+  options: ECharts.Options;
+  bar?: {
+    legend: string;
+    xAxis: string;
+    yAxis: string[];
+  };
+  pie?: {
+    legend: string;
+    value: string;
+    name: string;
+  };
+}
+
+export interface SpotlightIndicatorContent {
+  stat?: IndicatorStat;
+  chart?: IndicatorChart;
 }
 
 export interface FetchIndicatorDataOptions {
@@ -45,9 +101,9 @@ export interface SpotlightLocation {
 }
 
 export interface LocationData extends SpotlightLocation {
-  value: string;
+  value: number;
   year: number;
-  meta: string;
+  meta: string; // this is a JSON string - refer to LocationDataMeta to see structure
 }
 
 export interface LocationIndicatorData {
@@ -55,11 +111,25 @@ export interface LocationIndicatorData {
   data: LocationData[];
 }
 
+export type BudgetType = 'actual' | 'approved' | 'proposed';
+
+export interface LocationDataMeta {
+  budgetType?: BudgetType;
+  valueLocalCurrency?: number;
+  extra?: { [key: string]: number | string };
+}
+
+export interface ProcessedData {
+  value: number;
+  name: string;
+  meta?: LocationDataMeta;
+}
+
 export const fetchScaffoldData = async (): Promise<PageScaffoldData> => {
-  const res_navigation = await fetch(`${process.env.CMS_URL}api/spotlights/navigation/`);
-  const navigation = await res_navigation.json();
-  const res_footer = await fetch(`${process.env.CMS_URL}api/footer/`);
-  const footer = await res_footer.json();
+  const resNavigation = await fetch(`${process.env.CMS_URL}api/spotlights/navigation/`);
+  const navigation = await resNavigation.json();
+  const resFooter = await fetch(`${process.env.CMS_URL}api/footer/`);
+  const footer = await resFooter.json();
 
   return { navigation, footer };
 };

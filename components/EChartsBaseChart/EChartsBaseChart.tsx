@@ -1,15 +1,16 @@
 import merge from 'deepmerge';
 import { init } from 'echarts';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, FunctionComponent } from 'react';
 import { axisDefaults, defaults } from './utils/options';
 
 interface EChartBaseChartProps {
   width?: string;
   height?: string;
+  classNames?: string;
   options: ECharts.Options;
 }
 
-const EChartsBaseChart = (props: EChartBaseChartProps) => {
+const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {
   const chartNode = useRef(null);
   useEffect(() => {
     if (chartNode) {
@@ -25,7 +26,7 @@ const EChartsBaseChart = (props: EChartBaseChartProps) => {
     }
   }, []);
 
-  return <div ref={chartNode} style={{ width: props.width, height: props.height }} />;
+  return <div ref={chartNode} style={{ width: props.width, height: props.height }} className={props.classNames} />;
 };
 
 EChartsBaseChart.defaultProps = {

@@ -6,7 +6,7 @@ import { SpotlightBoundary } from '../SpotlightMap';
 
 interface MapSectionHeaderProps {
   countryCode: string;
-  onSelectLocation: (location: SpotlightLocation) => void;
+  onSelectLocation: (location?: SpotlightLocation) => void;
 }
 
 // TODO: this is temporary - replace with correct location handler
@@ -31,10 +31,8 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
     });
   }, [props.countryCode]);
 
-  const onSelectLocation = (option: SelectOption): void => {
-    if (option.value) {
-      props.onSelectLocation({ geocode: option.value, name: option.label });
-    }
+  const onSelectLocation = (option?: SelectOption): void => {
+    props.onSelectLocation(option && option.value ? { geocode: option.value, name: option.label } : undefined);
   };
 
   return (
@@ -45,6 +43,8 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
           onChange={onSelectLocation}
           placeholder="Select Location"
           isLoading={!(options && options.length)}
+          chooseTheme="dark"
+          isClearable
         />
       </SpotlightBannerAside>
       <SpotlightBannerMain>
