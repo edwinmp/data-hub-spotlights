@@ -41,6 +41,11 @@ const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, childre
         onClick={toggleActive}
       >
         {title}
+        <style jsx>{`
+          :before {
+            display: ${children ? 'inline-block' : 'none'};
+          }
+        `}</style>
       </a>
       <a className="countries-menu__profile countries-menu__link js-profile-item" onClick={onView}>
         View

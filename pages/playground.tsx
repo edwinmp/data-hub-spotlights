@@ -280,7 +280,6 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     }
   ];
 
-  console.log(ugBoundaries);
   const renderMenuItems = (data: any, depth = 1) => {
     return data.map((location: any, index: number) => {
       const onView = (_event: any, title: string) => console.log(title);
