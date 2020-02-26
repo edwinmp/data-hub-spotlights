@@ -111,7 +111,7 @@ export const generateChartOptions = (configs: IndicatorChart, data: LocationIndi
           );
         }
       }
-      options.grid = options.grid || { bottom: 10, top: 50, right: 0, left: 40 };
+      options.grid = options.grid || { bottom: 20, top: 40, right: 0, left: 40 };
 
       return options;
     }
