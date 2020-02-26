@@ -35,7 +35,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: t
   const [options, setOptions] = useState<SpotlightOptions>({});
   const onOptionsChange = (optns: SpotlightOptions): void => setOptions(optns);
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(undefined);
-  const onSelectLocation = (location: SpotlightLocation): void => {
+  const onSelectLocation = (location?: SpotlightLocation): void => {
     setActiveLocation(location);
     if (onChangeLocation) {
       onChangeLocation(location);
