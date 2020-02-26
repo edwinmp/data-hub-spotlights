@@ -17,6 +17,7 @@ import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
+import { FFMenu } from '../components/FFMenu';
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -281,6 +282,9 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
+      <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
+        <FFMenu title="Kenya" />
+      </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
         <Select options={groupedOptions} chooseTheme="dark" placeholder="Select Dark" />
