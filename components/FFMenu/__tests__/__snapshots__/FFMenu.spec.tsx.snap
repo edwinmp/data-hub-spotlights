@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FFMenu renders children correctly 1`] = `
+<div>
+  <nav
+    className="countries-menu-list js-countries-menu-trigger"
+  >
+    <a
+      className="countries-menu-list__item countries-menu-list__parent"
+      onClick={[Function]}
+    >
+      <span />
+      <style
+        jsx={true}
+      >
+        
+            cursor: pointer;
+          
+      </style>
+    </a>
+  </nav>
+  <nav
+    className="countries-menu-list animated inactive"
+  >
+    <a
+      className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
+      href="#"
+      onClick={[Function]}
+    />
+    <a
+      aria-hidden="true"
+      className="countries-menu__profile countries-menu__link js-profile-item"
+      title="View undefined"
+    >
+      View
+    </a>
+    <div
+      active={false}
+    >
+      Testing
+    </div>
+  </nav>
+</div>
+`;
+
+exports[`FFMenu renders correctly 1`] = `
+<div>
+  <nav
+    className="countries-menu-list js-countries-menu-trigger"
+  >
+    <a
+      className="countries-menu-list__item countries-menu-list__parent"
+      onClick={[Function]}
+    >
+      <span />
+      <style
+        jsx={true}
+      >
+        
+            cursor: pointer;
+          
+      </style>
+    </a>
+  </nav>
+  <nav
+    className="countries-menu-list animated inactive"
+  >
+    <a
+      className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
+      href="#"
+      onClick={[Function]}
+    />
+    <a
+      aria-hidden="true"
+      className="countries-menu__profile countries-menu__link js-profile-item"
+      title="View undefined"
+    >
+      View
+    </a>
+  </nav>
+</div>
+`;
