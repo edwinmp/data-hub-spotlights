@@ -283,7 +283,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     <PageSection>
       <h1>Visualisation Playground</h1>
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <FFMenu title="Kenya" />
+        <FFMenu title="kenya" />
       </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
