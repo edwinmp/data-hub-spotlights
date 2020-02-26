@@ -3,10 +3,11 @@ import React, { Children, FunctionComponent, useState, cloneElement, isValidElem
 
 interface FFMenuListItemProps {
   title?: string;
+  depth?: number;
   onView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, title?: string) => void;
 }
 
-const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, children, onView: onViewProp }) => {
+const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, children, onView: onViewProp, depth }) => {
   const [active, setActive] = useState(false);
   const toggleActive = (): void => {
     setActive(!active);
@@ -19,12 +20,24 @@ const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, childre
   };
 
   return (
-    <li className={classNames({ 'countries-menu-list--has-children': children })}>
+    <li
+      className={classNames({
+        'countries-menu-list--has-children': children,
+        'countries-menu-list__countries': !children,
+        'js-profile-country-item': !children
+      })}
+    >
       <a
-        className={classNames(
-          'countries-menu-list__item countries-menu-list__item--parent-first js-menu-item js-search-item',
-          { active }
-        )}
+        className={classNames('countries-menu-list__item js-menu-item js-search-item', {
+          active,
+          'countries-menu-list__item--open': active && children,
+          'countries-menu-list__item--parent-first': depth === 1,
+          'countries-menu-list__item--parent-second': depth === 2,
+          'countries-menu-list__item--parent-third': depth === 3,
+          'countries-menu-list__item--parent-fourth': depth === 4,
+          'countries-menu-list__item--parent-fifth': depth === 5,
+          'countries-menu-list__item--parent-sixth': depth === 6
+        })}
         onClick={toggleActive}
       >
         {title}
@@ -36,5 +49,7 @@ const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, childre
     </li>
   );
 };
+
+FFMenuListItem.defaultProps = { depth: 1 };
 
 export { FFMenuListItem };

@@ -281,13 +281,13 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   ];
 
   console.log(ugBoundaries);
-  const renderMenuItems = (data: any) => {
+  const renderMenuItems = (data: any, depth = 1) => {
     return data.map((location: any, index: number) => {
       const onView = (_event: any, title: string) => console.log(title);
 
       return (
-        <FFMenuListItem key={index} title={location.name} onView={onView}>
-          {location.children ? <FFMenuList>{renderMenuItems(location.children)}</FFMenuList> : null}
+        <FFMenuListItem key={index} title={location.name} onView={onView} depth={depth}>
+          {location.children ? <FFMenuList>{renderMenuItems(location.children, depth + 1)}</FFMenuList> : null}
         </FFMenuListItem>
       );
     });
