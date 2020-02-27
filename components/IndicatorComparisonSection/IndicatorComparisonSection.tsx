@@ -1,11 +1,12 @@
 import React, { FunctionComponent, useState } from 'react';
-import { SpotlightLocation, SpotlightTheme, SpotlightIndicator } from '../../utils';
+import { SpotlightIndicator, SpotlightLocation, SpotlightTheme } from '../../utils';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { ComparisonWrapper } from './ComparisonWrapper';
+import { LocationComparisonChart } from './LocationComparisonChart';
 
 export interface IndicatorComparisonSectionProps {
   location?: SpotlightLocation;
@@ -34,7 +35,16 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
           ) : null}
           <VisualisationSectionMain width={!location ? '100%' : undefined}>
             <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
-            <SpotlightInteractive maxHeight="500px"></SpotlightInteractive>
+            <SpotlightInteractive maxHeight="500px">
+              <LocationComparisonChart
+                legend={['Sales', 'Expenses']}
+                yAxis={['Shirt', 'Cardign', 'Chiffon Shirt', 'Pants', 'Heels', 'Socks']}
+                series={[
+                  [5, 20, 36, 15, 10, 25],
+                  [2, 30, 3, 40, 20, 36]
+                ]}
+              />
+            </SpotlightInteractive>
           </VisualisationSectionMain>
         </VisualisationSection>
       ) : null}
