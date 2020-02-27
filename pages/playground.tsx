@@ -3,7 +3,7 @@ import merge from 'deepmerge';
 import { Map, MapboxOptions } from 'mapbox-gl';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { PageScaffoldData } from '../components/DefaultLayout';
 import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
