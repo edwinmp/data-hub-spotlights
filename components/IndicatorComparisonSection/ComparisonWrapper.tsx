@@ -1,29 +1,29 @@
 import React, { FunctionComponent, useState } from 'react';
-import { SpotlightIndicator, SpotlightOptions, SpotlightTheme } from '../../utils';
+import { SpotlightOptions, SpotlightTheme } from '../../utils';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightComparison } from '../SpotlightComparison';
 import { SpotlightFilters } from '../SpotlightFilters';
 
 interface ComparisonWrapperProps {
   themes: SpotlightTheme[];
-  onCompare: (indicators: SpotlightIndicator[]) => void;
+  onCompare: (indicators: [SpotlightOptions, SpotlightOptions]) => void;
 }
 
 const ComparisonWrapper: FunctionComponent<ComparisonWrapperProps> = ({ themes, onCompare }) => {
-  const [indicatorOne, setIndicatorOne] = useState<SpotlightIndicator | undefined>(undefined);
-  const [indicatorTwo, setIndicatorTwo] = useState<SpotlightIndicator | undefined>(undefined);
+  const [filterOne, setFilterOne] = useState<SpotlightOptions | undefined>(undefined);
+  const [filterTwo, setFilterTwo] = useState<SpotlightOptions | undefined>(undefined);
   const onFilterChange = (index: number) => (options: SpotlightOptions): void => {
-    if (options.indicator) {
+    if (options.indicator && options.year) {
       if (index === 0) {
-        setIndicatorOne(options.indicator);
+        setFilterOne(options);
       } else {
-        setIndicatorTwo(options.indicator);
+        setFilterTwo(options);
       }
     }
   };
   const onClickCompare = (): void => {
-    if (indicatorOne && indicatorTwo) {
-      onCompare([indicatorOne, indicatorTwo]);
+    if (filterOne && filterTwo) {
+      onCompare([filterOne, filterTwo]);
     }
   };
 
@@ -57,7 +57,7 @@ const ComparisonWrapper: FunctionComponent<ComparisonWrapperProps> = ({ themes, 
         type="submit"
         className="button button--compare"
         onClick={onClickCompare}
-        disabled={!indicatorOne || !indicatorTwo}
+        disabled={!filterOne || !filterTwo}
       >
         Compare
       </button>
