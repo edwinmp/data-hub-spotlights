@@ -9,7 +9,6 @@ import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 import { Legend, LegendItem } from '../components/Legend';
 import { PageSection } from '../components/PageSection';
-import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
 import { SpotlightTab } from '../components/SpotlightTab';
 import { TabContainer } from '../components/SpotlightTab/TabContainer';
 import { TabContent } from '../components/SpotlightTab/TabContent';
@@ -373,12 +372,6 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
           {renderLegendItems()}
           <LegendItem>no data / not applicable</LegendItem>
         </Legend>
-      </div>
-      <div style={{ marginBottom: '20px', display: 'flex' }}>
-        <SpotlightSidebar>
-          <SidebarHeading heading="Uganda" onClick={onSidebarHeaderClick} />
-          <SidebarContent height="300px"></SidebarContent>
-        </SpotlightSidebar>
       </div>
       <div style={{ marginBottom: '20px' }}>
         <SpotlightTab>
