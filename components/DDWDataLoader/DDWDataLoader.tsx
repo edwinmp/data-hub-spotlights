@@ -1,4 +1,4 @@
-import React, { Children, FunctionComponent, cloneElement, isValidElement, ReactNode } from 'react';
+import React, { Children, FunctionComponent, cloneElement, isValidElement, ReactNode, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
 
@@ -7,11 +7,12 @@ interface MapDataLoaderProps {
   geocode?: string;
   year?: number;
   limit?: number;
+  onLoad?: (data: LocationIndicatorData[]) => void;
 }
 
-const DDWDataLoader: FunctionComponent<MapDataLoaderProps> = ({ children, indicators, geocode, year, limit }) => {
+const DDWDataLoader: FunctionComponent<MapDataLoaderProps> = ({ indicators, geocode, year, limit, ...props }) => {
   const renderChildren = (dataLoading: boolean, data?: LocationIndicatorData[]): ReactNode =>
-    Children.map(children, child => (isValidElement(child) ? cloneElement(child, { data, dataLoading }) : null));
+    Children.map(props.children, child => (isValidElement(child) ? cloneElement(child, { data, dataLoading }) : null));
 
   if (!indicators || !indicators.length) {
     return <>{renderChildren(false)}</>;
@@ -29,6 +30,11 @@ const DDWDataLoader: FunctionComponent<MapDataLoaderProps> = ({ children, indica
   if (error) {
     throw Error(error.message);
   }
+  useEffect(() => {
+    if (props.onLoad && !loading && data) {
+      props.onLoad(data.data);
+    }
+  }, [loading]);
 
   return <>{renderChildren(loading, data && data.data)}</>;
 };
