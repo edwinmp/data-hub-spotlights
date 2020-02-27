@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from 'react';
 
-interface FFMenuListProps {
+interface SpotlightMenuListProps {
   active?: boolean;
   classNames?: string;
 }
 
-const FFMenuList: FunctionComponent<FFMenuListProps> = ({ active, children, classNames }) => {
+const SpotlightMenuList: FunctionComponent<SpotlightMenuListProps> = ({ active, children, classNames }) => {
   return (
     <ul className={classNames}>
       {children}
@@ -19,4 +19,4 @@ const FFMenuList: FunctionComponent<FFMenuListProps> = ({ active, children, clas
   );
 };
 
-export { FFMenuList };
+export { SpotlightMenuList };

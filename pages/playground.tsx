@@ -9,7 +9,7 @@ import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 import { Legend, LegendItem } from '../components/Legend';
 import { PageSection } from '../components/PageSection';
-import { SpotlightMenuItem } from '../components/SpotlightMenu';
+import { SpotlightMmenuItem } from '../components/SpotlightMmenu';
 import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
 import { SpotlightTab } from '../components/SpotlightTab';
 import { TabContainer } from '../components/SpotlightTab/TabContainer';
@@ -17,7 +17,7 @@ import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
-import { FFMenu, FFMenuList, FFMenuListItem } from '../components/FFMenu';
+import { SpotlightMenu, SpotlightMenuList, SpotlightMenuListItem } from '../components/SpotlightMenu';
 import ugBoundaries from '../boundaries/UG.json';
 
 interface PlaygroundProps {
@@ -25,7 +25,7 @@ interface PlaygroundProps {
   scaffold: PageScaffoldData;
 }
 
-const SpotlightMenu = dynamic(() => import('../components/SpotlightMenu').then(mod => mod.SpotlightMenu), {
+const SpotlightMMenu = dynamic(() => import('../components/SpotlightMmenu').then(mod => mod.SpotlightMmenu), {
   ssr: false
 });
 
@@ -172,7 +172,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   const onSidebarHeaderClick = () => {
     setSidebarActive(!sidebarActive);
   };
-  const sidebarItems: SpotlightMenuItem[] = [
+  const sidebarItems: SpotlightMmenuItem[] = [
     {
       title: 'Level 1',
       children: [
@@ -285,9 +285,11 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
       const onView = (_event: any, title: string) => console.log(title);
 
       return (
-        <FFMenuListItem key={index} title={location.name} onView={onView} depth={depth}>
-          {location.children ? <FFMenuList>{renderMenuItems(location.children, depth + 1)}</FFMenuList> : null}
-        </FFMenuListItem>
+        <SpotlightMenuListItem key={index} title={location.name} onView={onView} depth={depth}>
+          {location.children ? (
+            <SpotlightMenuList>{renderMenuItems(location.children, depth + 1)}</SpotlightMenuList>
+          ) : null}
+        </SpotlightMenuListItem>
       );
     });
   };
@@ -296,9 +298,11 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     <PageSection>
       <h1>Visualisation Playground</h1>
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <FFMenu title="Uganda">
-          <FFMenuList classNames="countries-menu-list__content">{renderMenuItems(ugBoundaries)}</FFMenuList>
-        </FFMenu>
+        <SpotlightMenu title="Uganda">
+          <SpotlightMenuList classNames="countries-menu-list__content">
+            {renderMenuItems(ugBoundaries)}
+          </SpotlightMenuList>
+        </SpotlightMenu>
       </div>
 
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
@@ -333,7 +337,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
         <SpotlightSidebar>
           <SidebarHeading heading="Uganda" onClick={onSidebarHeaderClick} />
           <SidebarContent height="300px">
-            <SpotlightMenu active={sidebarActive} items={sidebarItems} />
+            <SpotlightMMenu active={sidebarActive} items={sidebarItems} />
           </SidebarContent>
         </SpotlightSidebar>
       </div>

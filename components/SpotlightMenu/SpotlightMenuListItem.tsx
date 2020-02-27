@@ -1,13 +1,18 @@
 import classNames from 'classnames';
 import React, { Children, FunctionComponent, useState, cloneElement, isValidElement } from 'react';
 
-interface FFMenuListItemProps {
+interface SpotlightMenuListItemProps {
   title?: string;
   depth?: number;
   onView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, title?: string) => void;
 }
 
-const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, children, onView: onViewProp, depth }) => {
+const SpotlightMenuListItem: FunctionComponent<SpotlightMenuListItemProps> = ({
+  title,
+  children,
+  onView: onViewProp,
+  depth
+}) => {
   const [active, setActive] = useState(false);
   const toggleActive = (): void => {
     setActive(!active);
@@ -59,6 +64,6 @@ const FFMenuListItem: FunctionComponent<FFMenuListItemProps> = ({ title, childre
   );
 };
 
-FFMenuListItem.defaultProps = { depth: 1 };
+SpotlightMenuListItem.defaultProps = { depth: 1 };
 
-export { FFMenuListItem };
+export { SpotlightMenuListItem };

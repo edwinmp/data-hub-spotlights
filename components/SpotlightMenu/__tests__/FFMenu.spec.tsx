@@ -4,20 +4,20 @@
 import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import * as TestRenderer from 'react-test-renderer';
-import { FFMenu } from '../FFMenu';
+import { SpotlightMenu } from '../SpotlightMenu';
 
 describe('FFMenu', () => {
   test('renders correctly', () => {
-    const renderer = TestRenderer.create(<FFMenu />).toJSON();
+    const renderer = TestRenderer.create(<SpotlightMenu />).toJSON();
 
     expect(renderer).toMatchSnapshot();
   });
 
   test('renders children correctly', () => {
     const renderer = TestRenderer.create(
-      <FFMenu>
+      <SpotlightMenu>
         <div>Testing</div>
-      </FFMenu>
+      </SpotlightMenu>
     ).toJSON();
 
     expect(renderer).toMatchSnapshot();

@@ -5,7 +5,7 @@ import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import * as TestRenderer from 'react-test-renderer';
 // import { render } from '@testing-library/react';
-import { SpotlightMenu, SpotlightMenuItem } from '../SpotlightMenu';
+import { SpotlightMenu, SpotlightMenuItem } from '../SpotlightMmenu';
 
 describe('SpotlightMenu', () => {
   const sidebarItems: SpotlightMenuItem[] = [

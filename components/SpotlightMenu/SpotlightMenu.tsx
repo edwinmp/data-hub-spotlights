@@ -1,55 +1,44 @@
-import React, { FunctionComponent, useEffect, useRef } from 'react';
 import classNames from 'classnames';
-import Mmenu from 'mmenu-js';
-import 'mmenu-js/dist/mmenu.css';
+import React, { FunctionComponent, useState, Children, isValidElement, cloneElement } from 'react';
 
 interface SpotlightMenuProps {
-  active?: boolean;
-  items: SpotlightMenuItem[];
+  title?: string;
 }
 
-export interface SpotlightMenuItem {
-  title: string;
-  url?: string;
-  children?: SpotlightMenuItem[];
-  onClick?: () => void;
-}
-
-const SpotlightMenu: FunctionComponent<SpotlightMenuProps> = ({ active, items }) => {
-  const menuNode = useRef(null);
-
-  useEffect(() => {
-    if (menuNode && menuNode.current) {
-      new Mmenu(menuNode.current, { offCanvas: false }, { classNames: { selected: 'active' } }); // tslint:disable-line
-    }
-  }, []);
-
-  const renderItem = (item: SpotlightMenuItem) =>
-    item.url ? (
-      <a href={item.url} onClick={item.onClick}>
-        {item.title}
-      </a>
-    ) : (
-      <span onClick={item.onClick}>{item.title}</span>
-    );
-
-  const renderListItem = (item: SpotlightMenuItem, index: number) => (
-    <li key={index}>
-      {renderItem(item)}
-      {item.children ? <ul>{item.children.map(renderListItem)}</ul> : null}
-    </li>
-  );
-
-  const renderNavList = () => <ul>{items.map(renderListItem)}</ul>;
+const SpotlightMenu: FunctionComponent<SpotlightMenuProps> = props => {
+  const [active, setActive] = useState(false);
+  const toggleMenu = (): void => {
+    setActive(!active);
+  };
 
   return (
-    <nav
-      id="menu"
-      className={classNames('spotlight-menu mm-menu', { 'spotlight-menu--active': active })}
-      ref={menuNode}
-    >
-      {renderNavList()}
-    </nav>
+    <div>
+      <nav className={classNames('countries-menu-list js-countries-menu-trigger', { inactive: active })}>
+        <a className="countries-menu-list__item countries-menu-list__parent" onClick={toggleMenu}>
+          <span>{props.title}</span>
+          <style jsx>{`
+            cursor: pointer;
+          `}</style>
+        </a>
+      </nav>
+      <nav className={classNames('countries-menu-list animated', { inactive: !active })}>
+        <a
+          className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
+          href="#"
+          onClick={toggleMenu}
+        >
+          {props.title}
+        </a>
+        <a
+          className="countries-menu__profile countries-menu__link js-profile-item"
+          aria-hidden="true"
+          title={`View ${props.title}`}
+        >
+          View
+        </a>
+        {Children.map(props.children, child => isValidElement(child) && cloneElement(child, { active }))}
+      </nav>
+    </div>
   );
 };
 
