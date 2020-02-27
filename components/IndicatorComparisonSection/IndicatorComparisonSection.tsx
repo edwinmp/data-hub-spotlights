@@ -6,7 +6,7 @@ import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { ComparisonWrapper } from './ComparisonWrapper';
-import { LocationComparisonChart } from './LocationComparisonChart';
+import { IndicatorComparisonDataLoader } from './IndicatorComparisonDataLoader';
 
 export interface IndicatorComparisonSectionProps {
   location?: SpotlightLocation;
@@ -17,9 +17,13 @@ export interface IndicatorComparisonSectionProps {
 
 const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionProps> = props => {
   const { location, themes, countryName } = props;
+  const [loading, setLoading] = useState(false);
   const [selections, setSelections] = useState<[SpotlightOptions, SpotlightOptions] | undefined>(undefined);
-  const onCompare = (_selections: [SpotlightOptions, SpotlightOptions]): void => setSelections(_selections);
-  console.log(selections);
+  const onCompare = (_selections: [SpotlightOptions, SpotlightOptions]): void => {
+    setSelections(_selections);
+    setLoading(true);
+  };
+  const onLoad = (): void => setLoading(false);
 
   return (
     <PageSection wide dark={!location}>
@@ -36,14 +40,7 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
           <VisualisationSectionMain width={!location ? '100%' : undefined}>
             <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
             <SpotlightInteractive maxHeight="500px">
-              <LocationComparisonChart
-                legend={['Sales', 'Expenses']}
-                yAxis={['Shirt', 'Cardign', 'Chiffon Shirt', 'Pants', 'Heels', 'Socks']}
-                series={[
-                  [5, 20, 36, 15, 10, 25],
-                  [2, 30, 3, 40, 20, 36]
-                ]}
-              />
+              <IndicatorComparisonDataLoader options={selections} onLoad={onLoad} loading={loading} />
             </SpotlightInteractive>
           </VisualisationSectionMain>
         </VisualisationSection>

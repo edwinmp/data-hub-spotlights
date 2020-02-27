@@ -2,7 +2,7 @@ import React, { Children, FunctionComponent, cloneElement, isValidElement, React
 import { useQuery } from '@apollo/react-hooks';
 import { GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
 
-interface MapDataLoaderProps {
+export interface DataLoaderProps {
   indicators?: string[];
   geocode?: string;
   year?: number;
@@ -10,7 +10,7 @@ interface MapDataLoaderProps {
   onLoad?: (data: LocationIndicatorData[]) => void;
 }
 
-const DDWDataLoader: FunctionComponent<MapDataLoaderProps> = ({ indicators, geocode, year, limit, ...props }) => {
+const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode, year, limit, ...props }) => {
   const renderChildren = (dataLoading: boolean, data?: LocationIndicatorData[]): ReactNode =>
     Children.map(props.children, child => (isValidElement(child) ? cloneElement(child, { data, dataLoading }) : null));
 
