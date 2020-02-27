@@ -31,6 +31,7 @@ exports[`VisualisationSection renders only SpotlightSidebar & VisualisationSecti
       .spotlight__main :global(.leaflet-container) {
         background: inherit;
       }
+      
     
     </style>
   </div>
