@@ -26,11 +26,13 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
       <ComparisonWrapper themes={themes} onCompare={onCompare} />
       {indicators.length ? (
         <VisualisationSection className="spotlight--leader">
-          <SpotlightSidebar>
-            <SpotlightHeading>{location ? location.name : countryName}</SpotlightHeading>
-            <SpotlightInteractive></SpotlightInteractive>
-          </SpotlightSidebar>
-          <VisualisationSectionMain>
+          {location ? (
+            <SpotlightSidebar>
+              <SpotlightHeading>{location ? location.name : countryName}</SpotlightHeading>
+              <SpotlightInteractive></SpotlightInteractive>
+            </SpotlightSidebar>
+          ) : null}
+          <VisualisationSectionMain width={!location ? '100%' : undefined}>
             <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
             <SpotlightInteractive maxHeight="500px"></SpotlightInteractive>
           </VisualisationSectionMain>
