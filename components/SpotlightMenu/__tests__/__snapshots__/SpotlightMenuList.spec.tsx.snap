@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SpotlightMenuList It is not rendered when active prop is false 1`] = `
+<ul
+  className="countries-menu-list__content"
+>
+  <style
+    jsx={true}
+  >
+    
+        display: none;
+        .countries-menu-list__content {
+          max-height: 40vh;
+        }
+      
+  </style>
+</ul>
+`;
+
+exports[`SpotlightMenuList renders children correctly 1`] = `
+<ul
+  className="countries-menu-list__content"
+>
+  <div>
+    Testing
+  </div>
+  <style
+    jsx={true}
+  >
+    
+        display: block !important;
+        .countries-menu-list__content {
+          max-height: 40vh;
+        }
+      
+  </style>
+</ul>
+`;
+
+exports[`SpotlightMenuList renders correctly 1`] = `
+<ul
+  className="countries-menu-list__content"
+>
+  <style
+    jsx={true}
+  >
+    
+        display: block !important;
+        .countries-menu-list__content {
+          max-height: 40vh;
+        }
+      
+  </style>
+</ul>
+`;
