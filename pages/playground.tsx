@@ -9,7 +9,6 @@ import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 import { Legend, LegendItem } from '../components/Legend';
 import { PageSection } from '../components/PageSection';
-import { SpotlightMmenuItem } from '../components/SpotlightMmenu';
 import { SidebarContent, SidebarHeading, SpotlightSidebar } from '../components/SpotlightSidebar';
 import { SpotlightTab } from '../components/SpotlightTab';
 import { TabContainer } from '../components/SpotlightTab/TabContainer';
@@ -24,10 +23,6 @@ interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
   scaffold: PageScaffoldData;
 }
-
-const SpotlightMMenu = dynamic(() => import('../components/SpotlightMmenu').then(mod => mod.SpotlightMmenu), {
-  ssr: false
-});
 
 const BaseMap = dynamic(() => import('../components/BaseMap').then(mod => mod.BaseMap), {
   ssr: false
@@ -172,37 +167,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
   const onSidebarHeaderClick = () => {
     setSidebarActive(!sidebarActive);
   };
-  const sidebarItems: SpotlightMmenuItem[] = [
-    {
-      title: 'Level 1',
-      children: [
-        {
-          title: 'Level 1.1'
-        },
-        {
-          title: 'Level 1.2'
-        },
-        {
-          title: 'Level 1.3'
-        }
-      ]
-    },
-    {
-      title: 'Level 2'
-    },
-    {
-      title: 'Level 3',
-      children: [
-        {
-          title: 'Level 3.1'
-        },
-        {
-          title: 'Level 3.2',
-          url: 'https://google.com'
-        }
-      ]
-    }
-  ];
+
   const renderLegendItems = () => {
     const ranges = ['<30%', '30% - 50%', '50% - 70%', '70% - 90%', '>90%'];
     const colour = '#8f1b13';
@@ -282,10 +247,8 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
 
   const renderMenuItems = (data: any, depth = 1) => {
     return data.map((location: any, index: number) => {
-      const onView = (_event: any, title: string) => console.log(title);
-
       return (
-        <SpotlightMenuListItem key={index} title={location.name} onView={onView} depth={depth}>
+        <SpotlightMenuListItem key={index} title={location.name} depth={depth}>
           {location.children ? (
             <SpotlightMenuList>{renderMenuItems(location.children, depth + 1)}</SpotlightMenuList>
           ) : null}
@@ -298,7 +261,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     <PageSection>
       <h1>Visualisation Playground</h1>
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <SpotlightMenu title="Uganda">
+        <SpotlightMenu title={"Uganda"}>
           <SpotlightMenuList classNames="countries-menu-list__content">
             {renderMenuItems(ugBoundaries)}
           </SpotlightMenuList>
@@ -336,9 +299,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
       <div style={{ marginBottom: '20px', display: 'flex' }}>
         <SpotlightSidebar>
           <SidebarHeading heading="Uganda" onClick={onSidebarHeaderClick} />
-          <SidebarContent height="300px">
-            <SpotlightMMenu active={sidebarActive} items={sidebarItems} />
-          </SidebarContent>
+          <SidebarContent height="300px"></SidebarContent>
         </SpotlightSidebar>
       </div>
       <div style={{ marginBottom: '20px' }}>

@@ -18,7 +18,6 @@ const SpotlightMenuListItem: FunctionComponent<SpotlightMenuListItemProps> = ({
     setActive(!active);
   };
   const onView = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
-    event.stopPropagation();
     if (onViewProp) {
       onViewProp(event, title);
     }
@@ -59,7 +58,10 @@ const SpotlightMenuListItem: FunctionComponent<SpotlightMenuListItemProps> = ({
       >
         View
       </a>
-      {Children.map(children, child => isValidElement(child) && cloneElement(child, { active }))}
+      {Children.map(
+        children,
+        child => isValidElement(child) && cloneElement(child, { active, onViewClick: onViewProp })
+      )}
     </li>
   );
 };
