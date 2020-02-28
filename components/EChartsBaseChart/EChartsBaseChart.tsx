@@ -1,6 +1,6 @@
 import merge from 'deepmerge';
 import { init } from 'echarts';
-import React, { useEffect, useRef, FunctionComponent } from 'react';
+import React, { useEffect, useRef, FunctionComponent, useState } from 'react';
 import { axisDefaults, defaults } from './utils/options';
 
 interface EChartBaseChartProps {
@@ -10,21 +10,31 @@ interface EChartBaseChartProps {
   options: ECharts.Options;
 }
 
+const setOptions = (chart: ECharts.EChartsInstance, options: ECharts.Options): void => {
+  if (options.xAxis && Array.isArray(options.xAxis)) {
+    options.xAxis = options.xAxis.map(axis => merge(axisDefaults, axis));
+  }
+  if (options.yAxis && Array.isArray(options.yAxis)) {
+    options.yAxis = options.yAxis.map(axis => merge(axisDefaults, axis));
+  }
+  chart.setOption(merge(defaults, options));
+};
+
 const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {
-  const chartNode = useRef(null);
+  const chartNode = useRef<HTMLDivElement>(null);
+  const [baseChart, setBaseChart] = useState<ECharts.EChartsInstance | undefined>(undefined);
   useEffect(() => {
-    if (chartNode) {
-      const baseChart = init(chartNode.current);
-      const { options } = props;
-      if (options.xAxis && Array.isArray(options.xAxis)) {
-        options.xAxis = options.xAxis.map(axis => merge(axisDefaults, axis));
-      }
-      if (options.yAxis && Array.isArray(options.yAxis)) {
-        options.yAxis = options.yAxis.map(axis => merge(axisDefaults, axis));
-      }
-      baseChart.setOption(merge(defaults, props.options));
+    if (chartNode && chartNode.current) {
+      const chart = init(chartNode.current);
+      setOptions(chart, props.options);
+      setBaseChart(chart);
     }
   }, []);
+  useEffect(() => {
+    if (baseChart) {
+      setOptions(baseChart, props.options);
+    }
+  }, [props.options]);
 
   return <div ref={chartNode} style={{ width: props.width, height: props.height }} className={props.classNames} />;
 };
