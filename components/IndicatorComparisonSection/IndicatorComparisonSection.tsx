@@ -5,6 +5,7 @@ import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
+import { ComparisonChartDataHandler } from './ComparisonChartDataHandler';
 import { ComparisonWrapper } from './ComparisonWrapper';
 import { IndicatorComparisonDataLoader } from './IndicatorComparisonDataLoader';
 
@@ -40,7 +41,9 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
           <VisualisationSectionMain width={!location ? '100%' : undefined}>
             <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
             <SpotlightInteractive maxHeight="500px">
-              <IndicatorComparisonDataLoader options={selections} onLoad={onLoad} loading={loading} />
+              <IndicatorComparisonDataLoader options={selections} onLoad={onLoad} loading={loading}>
+                <ComparisonChartDataHandler />
+              </IndicatorComparisonDataLoader>
             </SpotlightInteractive>
           </VisualisationSectionMain>
         </VisualisationSection>

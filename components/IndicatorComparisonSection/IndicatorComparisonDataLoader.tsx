@@ -1,8 +1,7 @@
 import dynamic from 'next/dynamic';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { Children, cloneElement, FunctionComponent, isValidElement, useEffect, useState } from 'react';
 import { LocationIndicatorData, SpotlightIndicator, SpotlightLocation, SpotlightOptions } from '../../utils';
 import { parseIndicator } from '../MapSection/utils';
-import { ComparisonChartDataHandler } from './ComparisonChartDataHandler';
 
 interface ComponentProps {
   options?: [SpotlightOptions, SpotlightOptions];
@@ -58,7 +57,13 @@ const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = props =
   }
 
   if (dataOne && dataTwo) {
-    return <ComparisonChartDataHandler data={[dataOne, dataTwo]} />;
+    return (
+      <>
+        {Children.map(props.children, child =>
+          isValidElement(child) ? cloneElement(child, { data: [dataOne, dataTwo] }) : null
+        )}
+      </>
+    );
   }
 
   return <div>No Data</div>;
