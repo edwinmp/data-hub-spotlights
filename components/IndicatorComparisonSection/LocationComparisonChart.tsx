@@ -65,7 +65,7 @@ const LocationComparisonChart: FunctionComponent<LocationComparisonChartProps> =
     ]
   };
 
-  return <EChartsBaseChart options={options} height="500px" />;
+  return <EChartsBaseChart options={options} height={props.height} />;
 };
 
 export { LocationComparisonChart };

@@ -23,6 +23,8 @@ const getLocationData = (locations: SpotlightLocation[], data: LocationData[]): 
     return match ? match.value : 0;
   });
 
+const getHeightFromCount = (count = 12): string => (count >= 12 ? `${((count / 12) * 500).toFixed()}px` : '500px');
+
 const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerProps> = ({ data, ...props }) => {
   const [locations, setLocations] = useState<SpotlightLocation[]>([]);
   if (!data) {
@@ -41,17 +43,12 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
   if (locations.length && data.length) {
     return (
       <LocationComparisonChart
-        yAxis={locations
-          .slice()
-          .splice(0, 12)
-          .map(location => location.name)}
+        yAxis={locations.map(location => location.name)}
         series={{
           names: [props.indicators[0].name, props.indicators[1].name],
-          data: [
-            getLocationData(locations.slice().splice(0, 12), data[0].data),
-            getLocationData(locations.slice().splice(0, 12), data[1].data)
-          ]
+          data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
         }}
+        height={getHeightFromCount(locations.length)}
       />
     );
   }
