@@ -261,7 +261,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     <PageSection>
       <h1>Visualisation Playground</h1>
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <SpotlightMenu title={"Uganda"}>
+        <SpotlightMenu title={'Uganda'}>
           <SpotlightMenuList classNames="countries-menu-list__content">
             {renderMenuItems(ugBoundaries)}
           </SpotlightMenuList>

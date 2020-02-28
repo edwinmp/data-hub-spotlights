@@ -6,16 +6,16 @@ import React from 'react';
 import * as TestRenderer from 'react-test-renderer';
 import { SpotlightMenu } from '../SpotlightMenu';
 
-describe('FFMenu', () => {
+describe('SpotlightMenu', () => {
   test('renders correctly', () => {
-    const renderer = TestRenderer.create(<SpotlightMenu />).toJSON();
+    const renderer = TestRenderer.create(<SpotlightMenu title={'Uganda'} />).toJSON();
 
     expect(renderer).toMatchSnapshot();
   });
 
   test('renders children correctly', () => {
     const renderer = TestRenderer.create(
-      <SpotlightMenu>
+      <SpotlightMenu title={'Uganda'}>
         <div>Testing</div>
       </SpotlightMenu>
     ).toJSON();

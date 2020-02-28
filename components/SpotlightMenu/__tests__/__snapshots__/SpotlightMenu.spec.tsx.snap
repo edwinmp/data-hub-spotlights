@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FFMenu renders children correctly 1`] = `
+exports[`SpotlightMenu renders children correctly 1`] = `
 <div>
   <nav
     className="countries-menu-list js-countries-menu-trigger"
@@ -9,7 +9,9 @@ exports[`FFMenu renders children correctly 1`] = `
       className="countries-menu-list__item countries-menu-list__parent"
       onClick={[Function]}
     >
-      <span />
+      <span>
+        Uganda
+      </span>
       <style
         jsx={true}
       >
@@ -22,20 +24,31 @@ exports[`FFMenu renders children correctly 1`] = `
   <nav
     className="countries-menu-list animated inactive"
   >
+    <style
+      jsx={true}
+    >
+      
+          cursor: pointer;
+        
+    </style>
     <a
       className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
       href="#"
       onClick={[Function]}
-    />
+    >
+      Uganda
+    </a>
     <a
       aria-hidden="true"
       className="countries-menu__profile countries-menu__link js-profile-item"
-      title="View undefined"
+      onClick={[Function]}
+      title="View Uganda"
     >
       View
     </a>
     <div
       active={false}
+      onViewClick={[Function]}
     >
       Testing
     </div>
@@ -43,7 +56,7 @@ exports[`FFMenu renders children correctly 1`] = `
 </div>
 `;
 
-exports[`FFMenu renders correctly 1`] = `
+exports[`SpotlightMenu renders correctly 1`] = `
 <div>
   <nav
     className="countries-menu-list js-countries-menu-trigger"
@@ -52,7 +65,9 @@ exports[`FFMenu renders correctly 1`] = `
       className="countries-menu-list__item countries-menu-list__parent"
       onClick={[Function]}
     >
-      <span />
+      <span>
+        Uganda
+      </span>
       <style
         jsx={true}
       >
@@ -65,15 +80,25 @@ exports[`FFMenu renders correctly 1`] = `
   <nav
     className="countries-menu-list animated inactive"
   >
+    <style
+      jsx={true}
+    >
+      
+          cursor: pointer;
+        
+    </style>
     <a
       className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
       href="#"
       onClick={[Function]}
-    />
+    >
+      Uganda
+    </a>
     <a
       aria-hidden="true"
       className="countries-menu__profile countries-menu__link js-profile-item"
-      title="View undefined"
+      onClick={[Function]}
+      title="View Uganda"
     >
       View
     </a>
