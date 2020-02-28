@@ -21,8 +21,20 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
   const [loading, setLoading] = useState(false);
   const [selections, setSelections] = useState<[SpotlightOptions, SpotlightOptions] | undefined>(undefined);
   const onCompare = (_selections: [SpotlightOptions, SpotlightOptions]): void => {
-    setSelections(_selections);
-    setLoading(true);
+    if (selections) {
+      if (
+        _selections[0].indicator?.name !== selections[0].indicator?.name ||
+        _selections[1].indicator?.name !== selections[1].indicator?.name ||
+        _selections[0].year !== selections[0].year ||
+        _selections[1].year !== selections[1].year
+      ) {
+        setSelections(_selections);
+        setLoading(true);
+      }
+    } else {
+      setSelections(_selections);
+      setLoading(true);
+    }
   };
   const onLoad = (): void => setLoading(false);
 
