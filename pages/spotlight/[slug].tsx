@@ -38,12 +38,14 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
           location={location}
           themes={filterByThemeSection(page.themes, 'facts')}
         />
-        <IndicatorComparisonSection
-          location={location}
-          themes={mapThemes}
-          countryCode={page.country_code}
-          countryName={page.country_name}
-        />
+        {!location ? (
+          <IndicatorComparisonSection
+            location={location}
+            themes={mapThemes}
+            countryCode={page.country_code}
+            countryName={page.country_name}
+          />
+        ) : null}
       </>
     );
   }
