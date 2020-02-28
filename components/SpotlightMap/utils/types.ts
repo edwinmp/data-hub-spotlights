@@ -33,8 +33,3 @@ export interface MapLocations {
   };
   other: SpotlightLocation[];
 }
-
-export interface SpotlightBoundary extends SpotlightLocation {
-  code: string;
-  children: SpotlightBoundary;
-}
