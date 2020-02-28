@@ -12,7 +12,7 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
   const [options, setOptions] = useState<SelectOptions>([]);
   useEffect(() => {
     getBoundariesByCountryCode(props.countryCode).then(boundaries => {
-      setOptions(createLocationOptions(boundaries));
+      setOptions(createLocationOptions(boundaries, 'd')); // TODO: allow greater depth when sub-county data comes in
     });
   }, [props.countryCode]);
 
