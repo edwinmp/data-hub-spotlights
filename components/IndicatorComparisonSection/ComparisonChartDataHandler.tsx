@@ -4,7 +4,8 @@ import {
   SpotlightLocation,
   getBoundariesByCountryCode,
   getBoundariesByDepth,
-  LocationData
+  LocationData,
+  SpotlightIndicator
 } from '../../utils';
 import { LocationComparisonChart } from './LocationComparisonChart';
 
@@ -12,6 +13,7 @@ interface ComparisonChartDataHandlerProps {
   data?: [LocationIndicatorData, LocationIndicatorData];
   location?: SpotlightLocation;
   countryCode: string;
+  indicators: [SpotlightIndicator, SpotlightIndicator];
 }
 
 const getLocationData = (locations: SpotlightLocation[], data: LocationData[]): number[] =>
@@ -44,7 +46,7 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
           .splice(0, 12)
           .map(location => location.name)}
         series={{
-          names: [data[0].indicator, data[1].indicator],
+          names: [props.indicators[0].name, props.indicators[1].name],
           data: [
             getLocationData(locations.slice().splice(0, 12), data[0].data),
             getLocationData(locations.slice().splice(0, 12), data[1].data)

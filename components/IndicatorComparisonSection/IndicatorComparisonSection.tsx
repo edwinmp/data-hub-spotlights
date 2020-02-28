@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import { SpotlightLocation, SpotlightOptions, SpotlightTheme, SpotlightIndicator } from '../../utils';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
@@ -42,7 +42,10 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
             <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
             <SpotlightInteractive maxHeight="500px">
               <IndicatorComparisonDataLoader options={selections} onLoad={onLoad} loading={loading}>
-                <ComparisonChartDataHandler countryCode={countryCode} />
+                <ComparisonChartDataHandler
+                  countryCode={countryCode}
+                  indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
+                />
               </IndicatorComparisonDataLoader>
             </SpotlightInteractive>
           </VisualisationSectionMain>
