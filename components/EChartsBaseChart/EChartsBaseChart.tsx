@@ -17,7 +17,7 @@ const setOptions = (chart: ECharts.EChartsInstance, options: ECharts.Options): v
   if (options.yAxis && Array.isArray(options.yAxis)) {
     options.yAxis = options.yAxis.map(axis => merge(axisDefaults, axis));
   }
-  chart.setOption(merge(defaults, options));
+  chart.setOption(merge(defaults, options, { arrayMerge: (_destinationArray, sourceArray) => sourceArray }));
 };
 
 const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {

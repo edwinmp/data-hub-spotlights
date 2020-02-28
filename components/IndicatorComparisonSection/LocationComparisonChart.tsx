@@ -47,6 +47,7 @@ const LocationComparisonChart: FunctionComponent<LocationComparisonChartProps> =
       }
     ],
     grid: [{ left: '50%' }, { right: '50%' }],
+    color: ['#0089cc', '#eb642b'], // TODO: perhaps configure these in CMS
     series: [
       {
         type: 'bar',
