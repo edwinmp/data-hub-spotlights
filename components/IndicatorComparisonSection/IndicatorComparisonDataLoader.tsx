@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import React, { Children, cloneElement, FunctionComponent, isValidElement, useEffect, useState } from 'react';
 import { LocationIndicatorData, SpotlightIndicator, SpotlightLocation, SpotlightOptions } from '../../utils';
+import { Loading } from '../Loading';
 import { parseIndicator } from '../MapSection/utils';
 
 interface ComponentProps {
@@ -41,8 +42,7 @@ const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = props =
 
   if (loading) {
     return (
-      <div>
-        Loading...
+      <Loading active>
         {props.options.map(({ indicator, year }, index) => {
           const _indicators = [parseIndicator(indicator as SpotlightIndicator) as string];
 
@@ -52,7 +52,7 @@ const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = props =
             </div>
           );
         })}
-      </div>
+      </Loading>
     );
   }
 
