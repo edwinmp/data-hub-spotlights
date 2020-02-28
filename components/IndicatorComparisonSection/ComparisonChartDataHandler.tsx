@@ -11,7 +11,6 @@ interface ComparisonChartDataHandlerProps {
 const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerProps> = () => {
   return (
     <LocationComparisonChart
-      legend={['Sales', 'Expenses']}
       yAxis={['Shirt', 'Cardign', 'Chiffon Shirt', 'Pants', 'Heels', 'Socks']}
       series={[
         [5, 20, 36, 15, 10, 25],

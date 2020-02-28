@@ -3,16 +3,13 @@ import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
 
 interface LocationComparisonChartProps {
-  legend: string[];
   yAxis: string[];
   series: number[][];
 }
 
 const LocationComparisonChart: FunctionComponent<LocationComparisonChartProps> = props => {
   const options: ECharts.Options = {
-    legend: {
-      data: props.legend
-    },
+    legend: { show: false },
     xAxis: [
       {
         type: 'value',
