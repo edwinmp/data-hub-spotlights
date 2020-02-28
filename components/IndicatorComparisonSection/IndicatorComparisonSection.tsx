@@ -17,7 +17,7 @@ export interface IndicatorComparisonSectionProps {
 }
 
 const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionProps> = props => {
-  const { location, themes, countryName } = props;
+  const { location, themes, countryName, countryCode } = props;
   const [loading, setLoading] = useState(false);
   const [selections, setSelections] = useState<[SpotlightOptions, SpotlightOptions] | undefined>(undefined);
   const onCompare = (_selections: [SpotlightOptions, SpotlightOptions]): void => {
@@ -42,7 +42,7 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
             <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
             <SpotlightInteractive maxHeight="500px">
               <IndicatorComparisonDataLoader options={selections} onLoad={onLoad} loading={loading}>
-                <ComparisonChartDataHandler />
+                <ComparisonChartDataHandler countryCode={countryCode} />
               </IndicatorComparisonDataLoader>
             </SpotlightInteractive>
           </VisualisationSectionMain>
