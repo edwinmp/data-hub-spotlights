@@ -67,7 +67,7 @@ exports[`SpotlightInteractive renders the configured maxHeight 1`] = `
         height: auto;
         border: 1px solid #e84439;
         
-            overflow: hidden;
+            overflow: scroll;
             max-height: 400px
           
       
