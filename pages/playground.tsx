@@ -247,8 +247,10 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
 
   const renderMenuItems = (data: any, depth = 1) => {
     return data.map((location: any, index: number) => {
+      const onView = (_event: any, id: string) => console.log(id);
+
       return (
-        <SpotlightMenuListItem key={index} title={location.name} depth={depth}>
+        <SpotlightMenuListItem key={index} title={location.name} depth={depth} onView={onView}>
           {location.children ? (
             <SpotlightMenuList>{renderMenuItems(location.children, depth + 1)}</SpotlightMenuList>
           ) : null}

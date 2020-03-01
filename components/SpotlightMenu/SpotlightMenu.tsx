@@ -7,22 +7,15 @@ interface SpotlightMenuProps {
 
 const SpotlightMenu: FunctionComponent<SpotlightMenuProps> = ({ children, title }) => {
   const [active, setActive] = useState(false);
-  const [menuTitle, setMenuTitle] = useState(title);
   const toggleMenu = (): void => {
     setActive(!active);
   };
-
-  const onViewClicked = (_event: any, title: string) => {
-    event?.stopPropagation();
-    setMenuTitle(title);
-  };
-  const resetTitle = () => setMenuTitle(title);
 
   return (
     <div>
       <nav className={classNames('countries-menu-list js-countries-menu-trigger', { inactive: active })}>
         <a className="countries-menu-list__item countries-menu-list__parent" onClick={toggleMenu}>
-          <span>{menuTitle}</span>
+          <span>{title}</span>
           <style jsx>{`
             cursor: pointer;
           `}</style>
@@ -37,20 +30,16 @@ const SpotlightMenu: FunctionComponent<SpotlightMenuProps> = ({ children, title 
           href="#"
           onClick={toggleMenu}
         >
-          {menuTitle}
+          {title}
         </a>
         <a
           className="countries-menu__profile countries-menu__link js-profile-item"
           aria-hidden="true"
-          title={`View ${menuTitle}`}
-          onClick={resetTitle}
+          title={`View ${title}`}
         >
           View
         </a>
-        {Children.map(
-          children,
-          child => isValidElement(child) && cloneElement(child, { active, onViewClick: onViewClicked })
-        )}
+        {Children.map(children, child => isValidElement(child) && cloneElement(child, { active }))}
       </nav>
     </div>
   );

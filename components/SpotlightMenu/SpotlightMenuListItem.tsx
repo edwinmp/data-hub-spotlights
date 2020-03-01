@@ -1,23 +1,19 @@
 import classNames from 'classnames';
 import React, { Children, FunctionComponent, useState, cloneElement, isValidElement } from 'react';
 
-interface SpotlightMenuListItemProps {
+interface ComponentProps {
   title?: string;
   depth?: number;
   onView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, title?: string) => void;
 }
 
-const SpotlightMenuListItem: FunctionComponent<SpotlightMenuListItemProps> = ({
-  title,
-  children,
-  onView: onViewProp,
-  depth
-}) => {
+const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ title, children, onView: onViewProp, depth }) => {
   const [active, setActive] = useState(false);
   const toggleActive = (): void => {
     setActive(!active);
   };
   const onView = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
+    event.stopPropagation();
     if (onViewProp) {
       onViewProp(event, title);
     }
@@ -58,10 +54,7 @@ const SpotlightMenuListItem: FunctionComponent<SpotlightMenuListItemProps> = ({
       >
         View
       </a>
-      {Children.map(
-        children,
-        child => isValidElement(child) && cloneElement(child, { active, onViewClick: onViewProp })
-      )}
+      {Children.map(children, child => isValidElement(child) && cloneElement(child, { active }))}
     </li>
   );
 };

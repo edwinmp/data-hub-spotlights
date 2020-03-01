@@ -41,14 +41,12 @@ exports[`SpotlightMenu renders children correctly 1`] = `
     <a
       aria-hidden="true"
       className="countries-menu__profile countries-menu__link js-profile-item"
-      onClick={[Function]}
       title="View Uganda"
     >
       View
     </a>
     <div
       active={false}
-      onViewClick={[Function]}
     >
       Testing
     </div>
@@ -97,7 +95,6 @@ exports[`SpotlightMenu renders correctly 1`] = `
     <a
       aria-hidden="true"
       className="countries-menu__profile countries-menu__link js-profile-item"
-      onClick={[Function]}
       title="View Uganda"
     >
       View
