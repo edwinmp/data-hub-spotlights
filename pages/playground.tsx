@@ -16,8 +16,14 @@ import { TabContent } from '../components/SpotlightTab/TabContent';
 import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { Select } from '../components/Select';
 import { fetchScaffoldData } from '../utils';
-import { SpotlightMenu, SpotlightMenuList, SpotlightMenuListItem } from '../components/SpotlightMenu';
+import {
+  SpotlightMenu,
+  SpotlightMenuList,
+  SpotlightMenuListItem,
+  SpotlightMenuToggle
+} from '../components/SpotlightMenu';
 import ugBoundaries from '../boundaries/UG.json';
+import SpotlightMenuNav from '../components/SpotlightMenu/SpotlightMenuNav';
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -245,28 +251,43 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     }
   ];
 
-  const renderMenuItems = (data: any, depth = 1) => {
+  const [showMenu, setShowMenu] = useState(false);
+
+  const renderMenuItems = (data: any, depth = 1, setActive: (_id: string) => void) => {
     return data.map((location: any, index: number) => {
-      const onView = (_event: any, id: string) => console.log(id);
+      const onView = (_event: any, id: string) => {
+        setActive(id);
+        setShowMenu(false);
+      };
 
       return (
         <SpotlightMenuListItem key={index} title={location.name} depth={depth} onView={onView}>
           {location.children ? (
-            <SpotlightMenuList>{renderMenuItems(location.children, depth + 1)}</SpotlightMenuList>
+            <SpotlightMenuList>{renderMenuItems(location.children, depth + 1, setActive)}</SpotlightMenuList>
           ) : null}
         </SpotlightMenuListItem>
       );
     });
   };
 
+  const [activeItem, setActiveItem] = useState('Uganda');
+  const onShowMenu = (): void => setShowMenu(!showMenu);
+  const onShowAll = (): void => {
+    onShowMenu();
+    setActiveItem('Uganda');
+  };
+
   return (
     <PageSection>
       <h1>Visualisation Playground</h1>
       <div style={{ display: 'block', paddingBottom: '20px', width: '100%' }}>
-        <SpotlightMenu title={'Uganda'}>
-          <SpotlightMenuList classNames="countries-menu-list__content">
-            {renderMenuItems(ugBoundaries)}
-          </SpotlightMenuList>
+        <SpotlightMenu>
+          <SpotlightMenuToggle caption={activeItem} show={!showMenu} onClick={onShowMenu} />
+          <SpotlightMenuNav caption={'Uganda'} active={showMenu} onClick={onShowMenu} onShowAll={onShowAll}>
+            <SpotlightMenuList classNames="countries-menu-list__content">
+              {renderMenuItems(ugBoundaries, 1, (item: string) => setActiveItem(item))}
+            </SpotlightMenuList>
+          </SpotlightMenuNav>
         </SpotlightMenu>
       </div>
 

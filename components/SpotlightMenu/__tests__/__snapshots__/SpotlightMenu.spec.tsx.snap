@@ -45,9 +45,7 @@ exports[`SpotlightMenu renders children correctly 1`] = `
     >
       View
     </a>
-    <div
-      active={false}
-    >
+    <div>
       Testing
     </div>
   </nav>

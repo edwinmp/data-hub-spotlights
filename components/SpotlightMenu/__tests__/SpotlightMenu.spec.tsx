@@ -8,14 +8,14 @@ import { SpotlightMenu } from '../SpotlightMenu';
 
 describe('SpotlightMenu', () => {
   test('renders correctly', () => {
-    const renderer = TestRenderer.create(<SpotlightMenu title={'Uganda'} />).toJSON();
+    const renderer = TestRenderer.create(<SpotlightMenu mainCaption={'Uganda'} />).toJSON();
 
     expect(renderer).toMatchSnapshot();
   });
 
   test('renders children correctly', () => {
     const renderer = TestRenderer.create(
-      <SpotlightMenu title={'Uganda'}>
+      <SpotlightMenu mainCaption={'Uganda'}>
         <div>Testing</div>
       </SpotlightMenu>
     ).toJSON();
