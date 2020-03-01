@@ -6,7 +6,7 @@ import React from 'react';
 import * as TestRenderer from 'react-test-renderer';
 import { Button } from '../Button';
 
-describe('Footer', () => {
+describe('Button', () => {
   test('renders correctly', () => {
     const renderer = TestRenderer.create(<Button>Caption</Button>).toJSON();
 
