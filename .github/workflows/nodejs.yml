@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
+        node-version: [12.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -19,9 +19,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install yarn
       run: npm install -g yarn
-    - name: yarn install, test
+    - name: yarn install, lint
       run: |
         yarn install
+        yarn lint
+    - name: yarn test
+      run: |
         yarn test
       env:
         CI: true

@@ -19,7 +19,7 @@ const SpotlightInteractive: FunctionComponent<SpotlightInteractiveProps> = props
         border: 1px solid #e84439;
         ${props.maxHeight
           ? `
-            overflow: hidden;
+            overflow: scroll;
             max-height: ${props.maxHeight}
           `
           : ''}

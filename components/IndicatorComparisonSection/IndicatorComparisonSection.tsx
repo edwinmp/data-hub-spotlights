@@ -1,13 +1,15 @@
 import React, { FunctionComponent, useState } from 'react';
+import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import { ComparisonChartDataHandler } from '../ComparisonChartDataHandler';
+import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
+import { IndicatorComparisonDataLoader } from '../IndicatorComparisonDataLoader';
+import { LocationComparisonBarChart } from '../LocationComparisonBarChart';
 import { PageSection, PageSectionHeading } from '../PageSection';
-import { SpotlightLocation, SpotlightTheme, SpotlightOptions, SpotlightIndicator } from '../../utils';
-import { SpotlightComparison } from '../SpotlightComparison';
-import { SpotlightFilters } from '../SpotlightFilters';
-import { SpotlightBanner } from '../SpotlightBanner';
-import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { SpotlightSidebar } from '../SpotlightSidebar';
 import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
+import { SpotlightSidebar } from '../SpotlightSidebar';
+import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
+import { IndicatorSelectionBanner } from './IndicatorSelectionBanner';
 
 export interface IndicatorComparisonSectionProps {
   location?: SpotlightLocation;
@@ -17,63 +19,76 @@ export interface IndicatorComparisonSectionProps {
 }
 
 const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionProps> = props => {
-  const { location, themes, countryName } = props;
-  const [indicatorOne, setIndicatorOne] = useState<SpotlightIndicator | undefined>(undefined);
-  const [indicatorTwo, setIndicatorTwo] = useState<SpotlightIndicator | undefined>(undefined);
-  const onFilterChange = (index: number) => (options: SpotlightOptions): void => {
-    if (options.indicator) {
-      if (index === 0) {
-        setIndicatorOne(options.indicator);
-      } else {
-        setIndicatorTwo(options.indicator);
+  const { location, themes, countryName, countryCode } = props;
+  const [loading, setLoading] = useState(false);
+  const [selections, setSelections] = useState<[SpotlightOptions, SpotlightOptions] | undefined>(undefined);
+  const onCompare = (_selections: [SpotlightOptions, SpotlightOptions]): void => {
+    if (selections) {
+      if (
+        _selections[0].indicator?.name !== selections[0].indicator?.name ||
+        _selections[1].indicator?.name !== selections[1].indicator?.name ||
+        _selections[0].year !== selections[0].year ||
+        _selections[1].year !== selections[1].year
+      ) {
+        setSelections(_selections);
+        setLoading(true);
       }
+    } else {
+      setSelections(_selections);
+      setLoading(true);
     }
   };
-  console.log(indicatorOne, indicatorTwo);
+  const onLoad = (): void => setLoading(false);
 
   return (
     <PageSection wide dark={!location}>
       <PageSectionHeading>Compare indicators for {location ? location.name : countryName}</PageSectionHeading>
-      <SpotlightBanner>
-        <SpotlightComparison>
-          <SpotlightFilters
-            themes={themes}
-            onOptionsChange={onFilterChange(0)}
-            topicLabel="Topic"
-            indicatorLabel="Indicator"
-            yearLabel="Year"
-            topicClassName="form-field--inline-three"
-            indicatorClassName="form-field--inline-three"
-            yearClassName="form-field--inline-three"
-          />
-        </SpotlightComparison>
-        <SpotlightComparison legendClassName="spotlight__comparison-legend--alt">
-          <SpotlightFilters
-            themes={themes}
-            onOptionsChange={onFilterChange(1)}
-            topicLabel="Topic"
-            indicatorLabel="Indicator"
-            yearLabel="Year"
-            topicClassName="form-field--inline-three"
-            indicatorClassName="form-field--inline-three"
-            yearClassName="form-field--inline-three"
-          />
-        </SpotlightComparison>
-        <button type="submit" className="button button--compare">
-          Compare
-        </button>
-      </SpotlightBanner>
-
-      <VisualisationSection className="spotlight--leader">
-        <SpotlightSidebar>
-          <SpotlightHeading>{location ? location.name : countryName}</SpotlightHeading>
-          <SpotlightInteractive></SpotlightInteractive>
-        </SpotlightSidebar>
-        <VisualisationSectionMain>
-          <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
-          <SpotlightInteractive maxHeight="500px"></SpotlightInteractive>
-        </VisualisationSectionMain>
-      </VisualisationSection>
+      <IndicatorSelectionBanner themes={themes} onCompare={onCompare} />
+      {selections ? (
+        <VisualisationSection className="spotlight--leader">
+          {location ? (
+            <SpotlightSidebar width="100%">
+              <SpotlightHeading>{location ? location.name : countryName}</SpotlightHeading>
+              <SpotlightInteractive>
+                <IndicatorComparisonDataLoader
+                  options={selections}
+                  onLoad={onLoad}
+                  loading={loading}
+                  locations={location && [location]}
+                >
+                  <ComparisonChartDataHandler
+                    countryCode={countryCode}
+                    locations={props.location && [props.location]}
+                    indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
+                  >
+                    <IndicatorComparisonColumnChart height="500px" />
+                  </ComparisonChartDataHandler>
+                </IndicatorComparisonDataLoader>
+              </SpotlightInteractive>
+            </SpotlightSidebar>
+          ) : (
+            <VisualisationSectionMain width="100%">
+              <SpotlightHeading>Locations in {countryName}</SpotlightHeading>
+              <SpotlightInteractive maxHeight="500px">
+                <IndicatorComparisonDataLoader
+                  options={selections}
+                  onLoad={onLoad}
+                  loading={loading}
+                  locations={location && [location]}
+                >
+                  <ComparisonChartDataHandler
+                    countryCode={countryCode}
+                    locations={props.location && [props.location]}
+                    indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
+                  >
+                    <LocationComparisonBarChart />
+                  </ComparisonChartDataHandler>
+                </IndicatorComparisonDataLoader>
+              </SpotlightInteractive>
+            </VisualisationSectionMain>
+          )}
+        </VisualisationSection>
+      ) : null}
     </PageSection>
   );
 };

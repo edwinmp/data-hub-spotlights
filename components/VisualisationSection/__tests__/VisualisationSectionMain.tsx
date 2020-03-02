@@ -12,4 +12,10 @@ describe('VisualisationSectionMain', () => {
 
     expect(renderer).toMatchSnapshot();
   });
+
+  test('renders with the configured width', () => {
+    const renderer = TestRenderer.create(<VisualisationSectionMain width="100px" />).toJSON();
+
+    expect(renderer).toMatchSnapshot();
+  });
 });
