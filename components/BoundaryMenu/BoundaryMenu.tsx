@@ -43,7 +43,7 @@ const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ boundaries, countr
         depth={depth}
         onView={onView}
       >
-        {boundary.children ? (
+        {boundary.children && boundary.geocode.indexOf('d') === -1 ? ( // TODO: allow sub-county data once it's acquired
           <SpotlightMenuList>{renderMenuItems(boundary.children, depth + 1, setActive)}</SpotlightMenuList>
         ) : null}
       </SpotlightMenuListItem>
