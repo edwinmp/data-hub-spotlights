@@ -25,6 +25,13 @@ exports[`SpotlightMenuListItem renders children correctly 1`] = `
     title="View Palisa"
   >
     View
+    <style
+      jsx={true}
+    >
+      
+          
+        
+    </style>
   </a>
   <div
     active={false}
@@ -59,6 +66,13 @@ exports[`SpotlightMenuListItem renders correctly 1`] = `
     title="View Busia"
   >
     View
+    <style
+      jsx={true}
+    >
+      
+          
+        
+    </style>
   </a>
 </li>
 `;

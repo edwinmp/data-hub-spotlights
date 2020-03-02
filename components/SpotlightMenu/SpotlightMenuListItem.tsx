@@ -4,6 +4,7 @@ import React, { Children, FunctionComponent, useState, cloneElement, isValidElem
 interface ComponentProps {
   item: MenuListItem;
   depth?: number;
+  viewable?: boolean;
   onView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, item: MenuListItem) => void;
 }
 
@@ -12,15 +13,15 @@ export interface MenuListItem {
   value: string;
 }
 
-const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ item, children, onView: onViewProp, depth }) => {
+const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ item, children, depth, ...props }) => {
   const [active, setActive] = useState(false);
   const toggleActive = (): void => {
     setActive(!active);
   };
   const onView = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
     event.stopPropagation();
-    if (onViewProp) {
-      onViewProp(event, item);
+    if (props.onView) {
+      props.onView(event, item);
     }
   };
 
@@ -58,12 +59,15 @@ const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ item, childr
         title={`View ${item.label}`}
       >
         View
+        <style jsx>{`
+          ${!props.viewable ? 'display: none;' : ''}
+        `}</style>
       </a>
       {Children.map(children, child => isValidElement(child) && cloneElement(child, { active }))}
     </li>
   );
 };
 
-SpotlightMenuListItem.defaultProps = { depth: 1 };
+SpotlightMenuListItem.defaultProps = { depth: 1, viewable: true };
 
 export { SpotlightMenuListItem };
