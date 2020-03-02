@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
 import { ComparisonChartDataHandler } from '../ComparisonChartDataHandler';
 import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
@@ -39,6 +39,7 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
     }
   };
   const onLoad = (): void => setLoading(false);
+  useEffect(() => setLoading(true), [location]);
 
   return (
     <PageSection wide dark={!location}>
