@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import { SpotlightLocation, SpotlightOptions, SpotlightTheme, SpotlightIndicator } from '../../utils';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
@@ -8,6 +8,7 @@ import { VisualisationSection, VisualisationSectionMain } from '../Visualisation
 import { ComparisonChartDataHandler } from './ComparisonChartDataHandler';
 import { ComparisonWrapper } from './ComparisonWrapper';
 import { IndicatorComparisonDataLoader } from './IndicatorComparisonDataLoader';
+import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
 import { LocationComparisonBarChart } from './LocationComparisonBarChart';
 
 export interface IndicatorComparisonSectionProps {
@@ -46,9 +47,24 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
       {selections ? (
         <VisualisationSection className="spotlight--leader">
           {location ? (
-            <SpotlightSidebar>
+            <SpotlightSidebar width="100%">
               <SpotlightHeading>{location ? location.name : countryName}</SpotlightHeading>
-              <SpotlightInteractive></SpotlightInteractive>
+              <SpotlightInteractive>
+                <IndicatorComparisonDataLoader
+                  options={selections}
+                  onLoad={onLoad}
+                  loading={loading}
+                  locations={location && [location]}
+                >
+                  <ComparisonChartDataHandler
+                    countryCode={countryCode}
+                    locations={props.location && [props.location]}
+                    indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
+                  >
+                    <IndicatorComparisonColumnChart height="500px" />
+                  </ComparisonChartDataHandler>
+                </IndicatorComparisonDataLoader>
+              </SpotlightInteractive>
             </SpotlightSidebar>
           ) : (
             <VisualisationSectionMain width="100%">

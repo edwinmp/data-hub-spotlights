@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IndicatorComparisonColumnChart renders default state correctly 1`] = `
+<div
+  style={
+    Object {
+      "height": "400px",
+      "width": "100%",
+    }
+  }
+/>
+`;
