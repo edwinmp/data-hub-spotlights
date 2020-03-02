@@ -41,6 +41,7 @@ const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ boundaries, countr
         key={index}
         item={{ label: boundary.name, value: boundary.geocode }}
         depth={depth}
+        viewable={boundary.geocode.indexOf('d') > -1}
         onView={onView}
       >
         {boundary.children && boundary.geocode.indexOf('d') === -1 ? ( // TODO: allow sub-county data once it's acquired
