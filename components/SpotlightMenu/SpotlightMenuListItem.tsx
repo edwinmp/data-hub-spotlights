@@ -18,9 +18,6 @@ const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ title, child
     if (onViewProp) {
       onViewProp(event, title);
     }
-    if (altOnViewProp) {
-      altOnViewProp(event, title);
-    }
   };
 
   return (
