@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { SpotlightLocation, createLocationOptions, getBoundariesByCountryCode, SpotlightBoundary } from '../../utils';
+import { createLocationOptions, getBoundariesByCountryCode, SpotlightBoundary, SpotlightLocation } from '../../utils';
+import { BoundaryMenu } from '../BoundaryMenu';
 import { Select, SelectOption, SelectOptions } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain } from '../SpotlightBanner';
-import { BoundaryMenu } from '../BoundaryMenu';
+import { MenuListItem } from '../SpotlightMenu';
 
 interface MapSectionHeaderProps {
   countryCode: string;
@@ -22,14 +23,14 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
     setOptions(createLocationOptions(boundaries, 'd')); // TODO: allow greater depth when sub-county data comes in
   }, [boundaries]);
 
-  const onSelectLocation = (option?: SelectOption): void => {
+  const onSelectLocation = (option?: SelectOption | MenuListItem): void => {
     props.onSelectLocation(option && option.value ? { geocode: option.value, name: option.label } : undefined);
   };
 
   return (
     <SpotlightBanner header>
       <SpotlightBannerAside>
-        <BoundaryMenu countryName={props.countryName} boundaries={boundaries} />
+        <BoundaryMenu countryName={props.countryName} boundaries={boundaries} onSelectLocation={onSelectLocation} />
       </SpotlightBannerAside>
       <SpotlightBannerMain>
         <Select

@@ -1,14 +1,21 @@
 import React, { FunctionComponent, useState, ReactNode } from 'react';
-import { SpotlightMenu, SpotlightMenuToggle, SpotlightMenuList, SpotlightMenuListItem } from '../SpotlightMenu';
+import {
+  SpotlightMenu,
+  SpotlightMenuToggle,
+  SpotlightMenuList,
+  SpotlightMenuListItem,
+  MenuListItem
+} from '../SpotlightMenu';
 import SpotlightMenuNav from '../SpotlightMenu/SpotlightMenuNav';
 import { SpotlightBoundary } from '../../utils';
 
 interface BoundaryMenuProps {
   boundaries: SpotlightBoundary[];
   countryName: string;
+  onSelectLocation?: (location?: MenuListItem) => void;
 }
 
-const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ boundaries, countryName }) => {
+const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ boundaries, countryName, onSelectLocation }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [activeItem, setActiveItem] = useState(countryName);
 
@@ -16,17 +23,28 @@ const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ boundaries, countr
   const onShowAll = (): void => {
     onShowMenu();
     setActiveItem(countryName);
+    if (onSelectLocation) {
+      onSelectLocation();
+    }
   };
-  const onView = (_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, locationName: string): void => {
-    setActiveItem(locationName);
+  const onView = (_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, location: MenuListItem): void => {
+    setActiveItem(location.label);
     setShowMenu(false);
+    if (onSelectLocation) {
+      onSelectLocation(location);
+    }
   };
 
   const renderMenuItems = (data: SpotlightBoundary[], depth = 1, setActive: (_id: string) => void): ReactNode =>
-    data.map((location, index: number) => (
-      <SpotlightMenuListItem key={index} title={location.name} depth={depth} onView={onView}>
-        {location.children ? (
-          <SpotlightMenuList>{renderMenuItems(location.children, depth + 1, setActive)}</SpotlightMenuList>
+    data.map((boundary, index: number) => (
+      <SpotlightMenuListItem
+        key={index}
+        item={{ label: boundary.name, value: boundary.geocode }}
+        depth={depth}
+        onView={onView}
+      >
+        {boundary.children ? (
+          <SpotlightMenuList>{renderMenuItems(boundary.children, depth + 1, setActive)}</SpotlightMenuList>
         ) : null}
       </SpotlightMenuListItem>
     ));
