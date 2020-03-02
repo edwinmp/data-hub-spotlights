@@ -1,5 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
-import { SpotlightLocation, SpotlightOptions, SpotlightTheme, SpotlightIndicator } from '../../utils';
+import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
+import { IndicatorComparisonDataLoader } from '../IndicatorComparisonDataLoader';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
@@ -7,8 +9,6 @@ import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { ComparisonChartDataHandler } from './ComparisonChartDataHandler';
 import { ComparisonWrapper } from './ComparisonWrapper';
-import { IndicatorComparisonDataLoader } from './IndicatorComparisonDataLoader';
-import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
 import { LocationComparisonBarChart } from './LocationComparisonBarChart';
 
 export interface IndicatorComparisonSectionProps {
