@@ -32,7 +32,7 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
   return null;
 };
 
-const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: themeData, onChangeLocation }) => {
+const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
   const [options, setOptions] = useState<SpotlightOptions>({});
   const onOptionsChange = (optns: SpotlightOptions): void => setOptions(optns);
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(undefined);
@@ -49,13 +49,13 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: t
 
   return (
     <PageSection>
-      <MapSectionHeader onSelectLocation={onSelectLocation} countryCode={countryCode} />
+      <MapSectionHeader onSelectLocation={onSelectLocation} countryCode={countryCode} countryName={props.countryName} />
 
       <VisualisationSection>
         <SpotlightSidebar className="spotlight__aside--no-margin">
           <SidebarContent>
             <SpotlightFilters
-              themes={themeData}
+              themes={props.themes}
               onOptionsChange={onOptionsChange}
               topicClassName=""
               indicatorClassName="form-field--spaced-minor"

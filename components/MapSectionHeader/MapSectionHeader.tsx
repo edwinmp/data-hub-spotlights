@@ -1,20 +1,26 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { SpotlightLocation, createLocationOptions, getBoundariesByCountryCode } from '../../utils';
+import { SpotlightLocation, createLocationOptions, getBoundariesByCountryCode, SpotlightBoundary } from '../../utils';
 import { Select, SelectOption, SelectOptions } from '../Select';
-import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBannerMain } from '../SpotlightBanner';
+import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain } from '../SpotlightBanner';
+import { BoundaryMenu } from '../BoundaryMenu';
 
 interface MapSectionHeaderProps {
   countryCode: string;
+  countryName: string;
   onSelectLocation: (location?: SpotlightLocation) => void;
 }
 
 const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
+  const [boundaries, setBoundaries] = useState<SpotlightBoundary[]>([]);
   const [options, setOptions] = useState<SelectOptions>([]);
   useEffect(() => {
     getBoundariesByCountryCode(props.countryCode).then(boundaries => {
-      setOptions(createLocationOptions(boundaries, 'd')); // TODO: allow greater depth when sub-county data comes in
+      setBoundaries(boundaries);
     });
   }, [props.countryCode]);
+  useEffect(() => {
+    setOptions(createLocationOptions(boundaries, 'd')); // TODO: allow greater depth when sub-county data comes in
+  }, [boundaries]);
 
   const onSelectLocation = (option?: SelectOption): void => {
     props.onSelectLocation(option && option.value ? { geocode: option.value, name: option.label } : undefined);
@@ -23,6 +29,9 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
   return (
     <SpotlightBanner header>
       <SpotlightBannerAside>
+        <BoundaryMenu countryName={props.countryName} boundaries={boundaries} />
+      </SpotlightBannerAside>
+      <SpotlightBannerMain>
         <Select
           options={options}
           onChange={onSelectLocation}
@@ -31,9 +40,6 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
           chooseTheme="dark"
           isClearable
         />
-      </SpotlightBannerAside>
-      <SpotlightBannerMain>
-        <SpotlightBannerForm />
       </SpotlightBannerMain>
     </SpotlightBanner>
   );

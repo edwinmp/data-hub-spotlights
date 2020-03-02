@@ -32,7 +32,12 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
   if (page.themes && page.country_code) {
     return (
       <>
-        <MapSection themes={mapThemes} countryCode={page.country_code} onChangeLocation={onChangeLocation} />
+        <MapSection
+          themes={mapThemes}
+          countryCode={page.country_code}
+          countryName={page.country_name}
+          onChangeLocation={onChangeLocation}
+        />
         <KeyFactsSection
           currencyCode={page.currency_code || ''}
           location={location}

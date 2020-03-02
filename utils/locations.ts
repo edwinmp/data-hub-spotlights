@@ -4,7 +4,7 @@ import { getLocationIDFromGeoCode } from '../components/SpotlightMap/utils';
 
 export interface SpotlightBoundary extends SpotlightLocation {
   code: string;
-  children: SpotlightBoundary;
+  children: SpotlightBoundary[];
 }
 
 export const getBoundariesByCountryCode = async (countryCode: string): Promise<SpotlightBoundary[]> =>
