@@ -1,6 +1,21 @@
-declare module 'echarts';
+declare module 'echarts' {
+  function init(node: HTMLElement, theme?: string | null, options?: ECharts.InitOptions): ECharts.EChartsInstance;
+
+  export { init };
+}
 
 declare namespace ECharts {
+  interface InitOptions {
+    devicePixelRatio?: number;
+    renderer?: 'canvas' | 'svg';
+    width?: 'string' | null;
+    height?: 'string' | null;
+  }
+
+  interface EChartsInstance {
+    setOption: (options: Options) => void;
+  }
+
   interface Options {
     title?: {
       text: string;
@@ -8,6 +23,9 @@ declare namespace ECharts {
     tooltip?: {
       trigger?: 'item' | 'axis' | 'none';
       formatter?: string;
+      axisPointer?: {
+        type: 'line' | 'shadow' | 'cross' | 'none';
+      };
     };
     legend?: Legend;
     xAxis?: XAxis | XAxis[];
@@ -34,6 +52,8 @@ declare namespace ECharts {
 
   interface Axis {
     name?: string;
+    nameLocation?: 'start' | 'end' | 'center';
+    nameTextStyle?: TextStyle;
     show?: boolean;
     data?: Data[];
     axisLine?: AxisLine;
@@ -66,6 +86,7 @@ declare namespace ECharts {
     fontStyle?: string;
     fontSize?: number;
     fontFamily?: string;
+    padding?: number | number[];
   }
 
   interface AxisLine {
@@ -74,6 +95,7 @@ declare namespace ECharts {
   }
 
   interface AxisLabel {
+    show?: boolean;
     formatter?: ((value: string | number, index: number) => void) | string;
   }
 
@@ -118,6 +140,8 @@ declare namespace ECharts {
     xAxisIndex?: number;
     yAxisIndex?: number;
     label?: SeriesLabel;
+    barWidth?: number;
+    barGap?: string;
   }
 
   interface SeriesLabel {

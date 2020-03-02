@@ -59,9 +59,9 @@ const DarkThemeGroupLabel = (group: GroupType<OptionTypeBase>): JSX.Element => (
   </div>
 );
 
-const Select: FunctionComponent<ExtendedSelectProps> = ({ chooseTheme: theme, ...props }) => {
+const Select: FunctionComponent<ExtendedSelectProps> = ({ chooseTheme: theme, styles, ...props }) => {
   const borderColor = '#8f1b13';
-  const styles: Styles = {
+  const defaultStyles: Styles = {
     container: provided => ({ ...provided, fontSize: '1.6rem' }),
     control: provided => ({
       ...provided,
@@ -81,13 +81,14 @@ const Select: FunctionComponent<ExtendedSelectProps> = ({ chooseTheme: theme, ..
       ...provided,
       ':hover': theme === 'dark' ? { cursor: 'pointer' } : { backgroundColor: '#f0826d' },
       backgroundColor: state.isSelected && theme !== 'dark' ? borderColor : 'transparent'
-    })
+    }),
+    ...styles
   };
 
   return (
     <ReactSelect
       {...props}
-      styles={{ ...styles, ...props.styles }}
+      styles={defaultStyles}
       components={theme === 'dark' ? { Option: DarkThemeOption } : undefined}
       formatGroupLabel={theme === 'dark' ? DarkThemeGroupLabel : undefined}
     />

@@ -1,33 +1,18 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { SpotlightLocation } from '../../utils';
+import { SpotlightLocation, createLocationOptions, getBoundariesByCountryCode } from '../../utils';
 import { Select, SelectOption, SelectOptions } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBannerMain } from '../SpotlightBanner';
-import { SpotlightBoundary } from '../SpotlightMap';
 
 interface MapSectionHeaderProps {
   countryCode: string;
   onSelectLocation: (location?: SpotlightLocation) => void;
 }
 
-// TODO: this is temporary - replace with correct location handler
-const createLocationOptions = (locations: SpotlightBoundary[]): SelectOptions => {
-  let districts: SpotlightBoundary[] = [];
-  locations.forEach(location => {
-    districts = districts.concat(location.children);
-  });
-  const options: SelectOption[] = districts.map(content => ({
-    label: content.name,
-    value: content.geocode
-  }));
-
-  return options;
-};
-
 const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
   const [options, setOptions] = useState<SelectOptions>([]);
   useEffect(() => {
-    import(`../../boundaries/${props.countryCode}`).then(({ default: boundaries }) => {
-      setOptions(createLocationOptions(boundaries));
+    getBoundariesByCountryCode(props.countryCode).then(boundaries => {
+      setOptions(createLocationOptions(boundaries, 'd')); // TODO: allow greater depth when sub-county data comes in
     });
   }, [props.countryCode]);
 
@@ -36,7 +21,7 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
   };
 
   return (
-    <SpotlightBanner>
+    <SpotlightBanner header>
       <SpotlightBannerAside>
         <Select
           options={options}

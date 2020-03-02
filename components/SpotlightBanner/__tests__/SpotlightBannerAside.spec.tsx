@@ -22,4 +22,10 @@ describe('SpotlightBannerAside', () => {
 
     expect(renderer).toMatchSnapshot();
   });
+
+  test('renders the expected class name', () => {
+    const renderer = TestRenderer.create(<SpotlightBannerAside className="banner-aside-extra" />).toJSON();
+
+    expect(renderer).toMatchSnapshot();
+  });
 });
