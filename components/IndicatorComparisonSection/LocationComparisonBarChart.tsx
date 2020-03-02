@@ -3,8 +3,8 @@ import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
 
 interface LocationComparisonChartProps {
-  yAxis: string[];
-  series: {
+  labels?: string[];
+  series?: {
     names: [string, string];
     data: [number[], number[]];
   };
@@ -12,6 +12,10 @@ interface LocationComparisonChartProps {
 }
 
 const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = props => {
+  if (!props.series || !props.labels) {
+    return <div>No Data</div>;
+  }
+
   const options: ECharts.Options = {
     legend: { show: false },
     tooltip: {
@@ -36,12 +40,12 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
       {
         show: false,
         type: 'category',
-        data: toBasicAxisData(props.yAxis)
+        data: toBasicAxisData(props.labels)
       },
       {
         type: 'category',
         gridIndex: 1,
-        data: toBasicAxisData(props.yAxis),
+        data: toBasicAxisData(props.labels),
         offset: 20,
         axisTick: { show: false }
       }

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect, Children, isValidElement, cloneElement } from 'react';
 import {
   LocationIndicatorData,
   SpotlightLocation,
@@ -7,7 +7,6 @@ import {
   LocationData,
   SpotlightIndicator
 } from '../../utils';
-import { LocationComparisonBarChart } from './LocationComparisonBarChart';
 
 interface ComparisonChartDataHandlerProps {
   data?: [LocationIndicatorData, LocationIndicatorData];
@@ -42,14 +41,21 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
 
   if (locations.length && data.length) {
     return (
-      <LocationComparisonBarChart
-        yAxis={locations.map(location => location.name)}
-        series={{
-          names: [props.indicators[0].name, props.indicators[1].name],
-          data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
-        }}
-        height={getHeightFromCount(locations.length)}
-      />
+      <>
+        {Children.map(
+          props.children,
+          child =>
+            isValidElement(child) &&
+            cloneElement(child, {
+              labels: locations.map(location => location.name),
+              series: {
+                names: [props.indicators[0].name, props.indicators[1].name],
+                data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
+              },
+              height: getHeightFromCount(locations.length)
+            })
+        )}
+      </>
     );
   }
 

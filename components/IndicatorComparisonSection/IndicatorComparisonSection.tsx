@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { SpotlightLocation, SpotlightOptions, SpotlightTheme, SpotlightIndicator } from '../../utils';
+import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
@@ -8,6 +8,7 @@ import { VisualisationSection, VisualisationSectionMain } from '../Visualisation
 import { ComparisonChartDataHandler } from './ComparisonChartDataHandler';
 import { ComparisonWrapper } from './ComparisonWrapper';
 import { IndicatorComparisonDataLoader } from './IndicatorComparisonDataLoader';
+import { LocationComparisonBarChart } from './LocationComparisonBarChart';
 
 export interface IndicatorComparisonSectionProps {
   location?: SpotlightLocation;
@@ -49,24 +50,27 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
               <SpotlightHeading>{location ? location.name : countryName}</SpotlightHeading>
               <SpotlightInteractive></SpotlightInteractive>
             </SpotlightSidebar>
-          ) : null}
-          <VisualisationSectionMain width={!location ? '100%' : undefined}>
-            <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
-            <SpotlightInteractive maxHeight="500px">
-              <IndicatorComparisonDataLoader
-                options={selections}
-                onLoad={onLoad}
-                loading={loading}
-                locations={location && [location]}
-              >
-                <ComparisonChartDataHandler
-                  countryCode={countryCode}
-                  locations={props.location && [props.location]}
-                  indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
-                />
-              </IndicatorComparisonDataLoader>
-            </SpotlightInteractive>
-          </VisualisationSectionMain>
+          ) : (
+            <VisualisationSectionMain width="100%">
+              <SpotlightHeading>Locations in {countryName}</SpotlightHeading>
+              <SpotlightInteractive maxHeight="500px">
+                <IndicatorComparisonDataLoader
+                  options={selections}
+                  onLoad={onLoad}
+                  loading={loading}
+                  locations={location && [location]}
+                >
+                  <ComparisonChartDataHandler
+                    countryCode={countryCode}
+                    locations={props.location && [props.location]}
+                    indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
+                  >
+                    <LocationComparisonBarChart />
+                  </ComparisonChartDataHandler>
+                </IndicatorComparisonDataLoader>
+              </SpotlightInteractive>
+            </VisualisationSectionMain>
+          )}
         </VisualisationSection>
       ) : null}
     </PageSection>
