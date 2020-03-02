@@ -9,7 +9,7 @@ import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { ComparisonWrapper } from './ComparisonWrapper';
+import { IndicatorSelectionBanner } from './IndicatorSelectionBanner';
 
 export interface IndicatorComparisonSectionProps {
   location?: SpotlightLocation;
@@ -43,7 +43,7 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
   return (
     <PageSection wide dark={!location}>
       <PageSectionHeading>Compare indicators for {location ? location.name : countryName}</PageSectionHeading>
-      <ComparisonWrapper themes={themes} onCompare={onCompare} />
+      <IndicatorSelectionBanner themes={themes} onCompare={onCompare} />
       {selections ? (
         <VisualisationSection className="spotlight--leader">
           {location ? (

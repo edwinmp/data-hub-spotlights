@@ -9,7 +9,7 @@ interface ComparisonWrapperProps {
   onCompare: (indicators: [SpotlightOptions, SpotlightOptions]) => void;
 }
 
-const ComparisonWrapper: FunctionComponent<ComparisonWrapperProps> = ({ themes, onCompare }) => {
+const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ themes, onCompare }) => {
   const [filterOne, setFilterOne] = useState<SpotlightOptions | undefined>(undefined);
   const [filterTwo, setFilterTwo] = useState<SpotlightOptions | undefined>(undefined);
   const onFilterChange = (index: number) => (options: SpotlightOptions): void => {
@@ -65,4 +65,4 @@ const ComparisonWrapper: FunctionComponent<ComparisonWrapperProps> = ({ themes, 
   );
 };
 
-export { ComparisonWrapper };
+export { IndicatorSelectionBanner };
