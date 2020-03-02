@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SpotlightMenuToggle It adds inactive class when show prop is false 1`] = `
+<nav
+  className="countries-menu-list js-countries-menu-trigger inactive"
+>
+  <a
+    className="countries-menu-list__item countries-menu-list__parent"
+  >
+    <span>
+      Uganda
+    </span>
+    <style
+      jsx={true}
+    >
+      
+          cursor: pointer;
+        
+    </style>
+  </a>
+</nav>
+`;
+
+exports[`SpotlightMenuToggle It adds inactive class when show prop is true 1`] = `
+<nav
+  className="countries-menu-list js-countries-menu-trigger"
+>
+  <a
+    className="countries-menu-list__item countries-menu-list__parent"
+  >
+    <span>
+      Uganda
+    </span>
+    <style
+      jsx={true}
+    >
+      
+          cursor: pointer;
+        
+    </style>
+  </a>
+</nav>
+`;
+
+exports[`SpotlightMenuToggle renders children correctly 1`] = `
+<nav
+  className="countries-menu-list js-countries-menu-trigger inactive"
+>
+  <a
+    className="countries-menu-list__item countries-menu-list__parent"
+  >
+    <span>
+      Uganda
+    </span>
+    <style
+      jsx={true}
+    >
+      
+          cursor: pointer;
+        
+    </style>
+  </a>
+</nav>
+`;
+
+exports[`SpotlightMenuToggle renders correctly 1`] = `
+<nav
+  className="countries-menu-list js-countries-menu-trigger inactive"
+>
+  <a
+    className="countries-menu-list__item countries-menu-list__parent"
+  >
+    <span>
+      Uganda
+    </span>
+    <style
+      jsx={true}
+    >
+      
+          cursor: pointer;
+        
+    </style>
+  </a>
+</nav>
+`;

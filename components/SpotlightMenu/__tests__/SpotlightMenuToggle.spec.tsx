@@ -23,8 +23,8 @@ describe('SpotlightMenuToggle', () => {
     expect(renderer).toMatchSnapshot();
   });
 
-  test('It adds inactive class when show prop is true', () => {
-    const renderer = TestRenderer.create(<SpotlightMenuToggle caption="Uganda" show={true} />).toJSON();
+  test('It adds inactive class when show prop is false', () => {
+    const renderer = TestRenderer.create(<SpotlightMenuToggle caption="Uganda" show={false} />).toJSON();
 
     expect(renderer).toMatchSnapshot();
   });
