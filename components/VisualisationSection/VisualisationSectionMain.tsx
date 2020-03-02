@@ -7,7 +7,7 @@ const VisualisationSectionMain: FunctionComponent<{ width?: string }> = ({ child
       .spotlight__main :global(.leaflet-container) {
         background: inherit;
       }
-      ${width ? 'width: ' + width : ''}
+      ${width ? `width: ${width};` : ''}
     `}</style>
   </div>
 );

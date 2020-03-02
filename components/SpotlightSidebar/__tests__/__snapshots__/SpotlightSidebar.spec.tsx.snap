@@ -9,6 +9,7 @@ exports[`SpotlightSidebar renders correctly 1`] = `
   >
     
         min-height: 500px;
+        
       
   </style>
 </div>
@@ -23,6 +24,22 @@ exports[`SpotlightSidebar renders with the specified class name 1`] = `
   >
     
         min-height: 500px;
+        
+      
+  </style>
+</div>
+`;
+
+exports[`SpotlightSidebar renders with the specified width 1`] = `
+<div
+  className="spotlight__aside"
+>
+  <style
+    jsx={true}
+  >
+    
+        min-height: 500px;
+        width: 300px;
       
   </style>
 </div>

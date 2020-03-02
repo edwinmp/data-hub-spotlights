@@ -18,4 +18,10 @@ describe('SpotlightSidebar', () => {
 
     expect(renderer).toMatchSnapshot();
   });
+
+  test('renders with the specified width', () => {
+    const renderer = TestRenderer.create(<SpotlightSidebar width="300px" />).toJSON();
+
+    expect(renderer).toMatchSnapshot();
+  });
 });

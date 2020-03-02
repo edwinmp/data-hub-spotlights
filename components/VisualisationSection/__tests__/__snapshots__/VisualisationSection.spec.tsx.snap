@@ -18,6 +18,7 @@ exports[`VisualisationSection renders only SpotlightSidebar & VisualisationSecti
     >
       
         min-height: 500px;
+        
       
     </style>
   </div>

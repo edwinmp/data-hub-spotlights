@@ -4,7 +4,12 @@ import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SidebarContent } from './SidebarContent';
 
-const SpotlightSidebar: FunctionComponent<{ className?: string }> = ({ children, className }) => {
+interface ComponentProps {
+  className?: string;
+  width?: string;
+}
+
+const SpotlightSidebar: FunctionComponent<ComponentProps> = ({ children, className, width }) => {
   return (
     <div className={classNames('spotlight__aside', className)}>
       {Children.map(children, child =>
@@ -15,6 +20,7 @@ const SpotlightSidebar: FunctionComponent<{ className?: string }> = ({ children,
       )}
       <style jsx>{`
         min-height: 500px;
+        ${width ? `width: ${width};` : ''}
       `}</style>
     </div>
   );
