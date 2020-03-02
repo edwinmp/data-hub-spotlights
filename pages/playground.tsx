@@ -221,12 +221,6 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     ]
   };
 
-  const [sidebarActive, setSidebarActive] = useState(false);
-
-  const onSidebarHeaderClick = () => {
-    setSidebarActive(!sidebarActive);
-  };
-
   const renderLegendItems = () => {
     const ranges = ['<30%', '30% - 50%', '50% - 70%', '70% - 90%', '>90%'];
     const colour = '#8f1b13';
