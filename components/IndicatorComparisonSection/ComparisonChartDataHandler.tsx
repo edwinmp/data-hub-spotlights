@@ -7,7 +7,7 @@ import {
   LocationData,
   SpotlightIndicator
 } from '../../utils';
-import { LocationComparisonChart } from './LocationComparisonChart';
+import { LocationComparisonBarChart } from './LocationComparisonBarChart';
 
 interface ComparisonChartDataHandlerProps {
   data?: [LocationIndicatorData, LocationIndicatorData];
@@ -42,7 +42,7 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
 
   if (locations.length && data.length) {
     return (
-      <LocationComparisonChart
+      <LocationComparisonBarChart
         yAxis={locations.map(location => location.name)}
         series={{
           names: [props.indicators[0].name, props.indicators[1].name],

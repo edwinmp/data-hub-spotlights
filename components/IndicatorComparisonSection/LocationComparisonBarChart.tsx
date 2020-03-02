@@ -11,7 +11,7 @@ interface LocationComparisonChartProps {
   height?: string;
 }
 
-const LocationComparisonChart: FunctionComponent<LocationComparisonChartProps> = props => {
+const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = props => {
   const options: ECharts.Options = {
     legend: { show: false },
     tooltip: {
@@ -69,4 +69,4 @@ const LocationComparisonChart: FunctionComponent<LocationComparisonChartProps> =
   return <EChartsBaseChart options={options} height={props.height} />;
 };
 
-export { LocationComparisonChart };
+export { LocationComparisonBarChart };
