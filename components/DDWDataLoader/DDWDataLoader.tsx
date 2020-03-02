@@ -4,13 +4,13 @@ import { GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
 
 export interface DataLoaderProps {
   indicators?: string[];
-  geocode?: string;
+  geocodes?: string[];
   year?: number;
   limit?: number;
   onLoad?: (data: LocationIndicatorData[]) => void;
 }
 
-const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode, year, limit, ...props }) => {
+const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocodes, year, limit, ...props }) => {
   const renderChildren = (dataLoading: boolean, data?: LocationIndicatorData[]): ReactNode =>
     Children.map(props.children, child => (isValidElement(child) ? cloneElement(child, { data, dataLoading }) : null));
 
@@ -21,7 +21,7 @@ const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode
   const { data, loading, error } = useQuery<{ data: LocationIndicatorData[] }>(GET_INDICATOR_DATA, {
     variables: {
       indicators,
-      geocodes: geocode ? [geocode] : [],
+      geocodes: geocodes || [],
       startYear: year,
       endYear: year,
       limit

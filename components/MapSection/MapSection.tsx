@@ -76,7 +76,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, themes: t
           <SpotlightInteractive height="100%">
             <DynamicMapDataLoader
               indicators={indicatorID ? [indicatorID] : undefined}
-              geocode={activeLocation && activeLocation.geocode}
+              geocodes={activeLocation && [activeLocation.geocode]}
               year={options.year ? options.year : options.indicator && options.indicator.start_year}
               limit={10000}
             >
