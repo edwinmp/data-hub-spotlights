@@ -53,7 +53,7 @@ const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ boundaries, countr
   return (
     <SpotlightMenu>
       <SpotlightMenuToggle caption={activeItem} show={!showMenu} onClick={onShowMenu} />
-      <SpotlightMenuNav caption={'Uganda'} active={showMenu} onClick={onShowMenu} onShowAll={onShowAll}>
+      <SpotlightMenuNav caption={countryName} active={showMenu} onClick={onShowMenu} onShowAll={onShowAll}>
         <SpotlightMenuList classNames="countries-menu-list__content">
           {renderMenuItems(boundaries, 1, (item: string) => setActiveItem(item))}
         </SpotlightMenuList>
