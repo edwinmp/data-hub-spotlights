@@ -302,13 +302,18 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
 
   const renderMenuItems = (data: any, depth = 1, setActive: (_id: string) => void) => {
     return data.map((location: any, index: number) => {
-      const onView = (_event: any, id: string) => {
-        setActive(id);
+      const onView = (_event: any, item: any) => {
+        setActive(item.label);
         setShowMenu(false);
       };
 
       return (
-        <SpotlightMenuListItem key={index} title={location.name} depth={depth} onView={onView}>
+        <SpotlightMenuListItem
+          key={index}
+          item={{ label: location.name, value: location.geocode }}
+          depth={depth}
+          onView={onView}
+        >
           {location.children ? (
             <SpotlightMenuList>{renderMenuItems(location.children, depth + 1, setActive)}</SpotlightMenuList>
           ) : null}
