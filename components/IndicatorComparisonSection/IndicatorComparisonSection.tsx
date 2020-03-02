@@ -53,9 +53,15 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
           <VisualisationSectionMain width={!location ? '100%' : undefined}>
             <SpotlightHeading>Locations in {location ? location.name : countryName}</SpotlightHeading>
             <SpotlightInteractive maxHeight="500px">
-              <IndicatorComparisonDataLoader options={selections} onLoad={onLoad} loading={loading}>
+              <IndicatorComparisonDataLoader
+                options={selections}
+                onLoad={onLoad}
+                loading={loading}
+                locations={location && [location]}
+              >
                 <ComparisonChartDataHandler
                   countryCode={countryCode}
+                  locations={props.location && [props.location]}
                   indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
                 />
               </IndicatorComparisonDataLoader>

@@ -6,7 +6,7 @@ import { parseIndicator } from '../MapSection/utils';
 
 interface ComponentProps {
   options?: [SpotlightOptions, SpotlightOptions];
-  location?: SpotlightLocation;
+  locations?: SpotlightLocation[];
   loading?: boolean;
   onLoad?: () => void;
 }
@@ -48,7 +48,12 @@ const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = props =
 
           return (
             <div key={index}>
-              <DynamicDataLoader indicators={_indicators} year={year} onLoad={onLoad(index)} />
+              <DynamicDataLoader
+                indicators={_indicators}
+                year={year}
+                onLoad={onLoad(index)}
+                geocodes={props.locations && props.locations.map(loc => loc.geocode)}
+              />
             </div>
           );
         })}

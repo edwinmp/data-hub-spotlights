@@ -11,7 +11,7 @@ import { LocationComparisonChart } from './LocationComparisonChart';
 
 interface ComparisonChartDataHandlerProps {
   data?: [LocationIndicatorData, LocationIndicatorData];
-  location?: SpotlightLocation;
+  locations?: SpotlightLocation[];
   countryCode: string;
   indicators: [SpotlightIndicator, SpotlightIndicator];
 }
@@ -26,13 +26,13 @@ const getLocationData = (locations: SpotlightLocation[], data: LocationData[]): 
 const getHeightFromCount = (count = 12): string => (count >= 12 ? `${((count / 12) * 500).toFixed()}px` : '500px');
 
 const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerProps> = ({ data, ...props }) => {
-  const [locations, setLocations] = useState<SpotlightLocation[]>([]);
+  const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations || []);
   if (!data) {
     return <div>No Data</div>;
   }
 
   useEffect(() => {
-    if (!props.location) {
+    if (!props.locations || !props.locations.length) {
       getBoundariesByCountryCode(props.countryCode).then(boundaries => {
         const requiredBoundaries = getBoundariesByDepth(boundaries, 'd');
         setLocations(requiredBoundaries.map(({ name, geocode }) => ({ name, geocode })));
