@@ -3,13 +3,13 @@ import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme
 import { ComparisonChartDataHandler } from '../ComparisonChartDataHandler';
 import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
 import { IndicatorComparisonDataLoader } from '../IndicatorComparisonDataLoader';
+import { LocationComparisonBarChart } from '../LocationComparisonBarChart';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { ComparisonWrapper } from './ComparisonWrapper';
-import { LocationComparisonBarChart } from './LocationComparisonBarChart';
 
 export interface IndicatorComparisonSectionProps {
   location?: SpotlightLocation;
