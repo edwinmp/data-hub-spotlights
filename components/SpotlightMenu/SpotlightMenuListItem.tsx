@@ -5,6 +5,7 @@ interface ComponentProps {
   title?: string;
   depth?: number;
   onView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, title?: string) => void;
+  altOnView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, title?: string) => void;
 }
 
 const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ title, children, onView: onViewProp, depth }) => {
@@ -16,6 +17,9 @@ const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ title, child
     event.stopPropagation();
     if (onViewProp) {
       onViewProp(event, title);
+    }
+    if (altOnViewProp) {
+      altOnViewProp(event, title);
     }
   };
 
