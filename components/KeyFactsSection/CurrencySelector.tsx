@@ -20,10 +20,13 @@ const CurrencySelector: FunctionComponent<CurrencySelectorProps> = ({ onChange, 
   const options = getOptions(currencyCode);
 
   return (
-    <>
+    <div>
       <label className="form-label">Currency</label>
       <Select options={options} onChange={onSelectCurrency} placeholder="Select Currency" defaultValue={options[0]} />
-    </>
+      <style jsx>{`
+        width: 300px;
+      `}</style>
+    </div>
   );
 };
 
