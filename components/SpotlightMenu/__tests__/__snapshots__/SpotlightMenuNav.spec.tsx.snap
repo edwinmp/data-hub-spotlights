@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SpotlightMenuNav renders children correctly 1`] = `
+<nav
+  className="countries-menu-list animated inactive"
+>
+  <a
+    className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
+    href="#"
+  >
+    Uganda
+  </a>
+  <a
+    aria-hidden="true"
+    className="countries-menu__profile countries-menu__link js-profile-item"
+    title="View Uganda"
+  >
+    View
+  </a>
+  <style
+    jsx={true}
+  >
+    
+        cursor: pointer;
+      
+  </style>
+  <div>
+    Testing
+  </div>
+</nav>
+`;
+
+exports[`SpotlightMenuNav renders correctly 1`] = `
+<nav
+  className="countries-menu-list animated inactive"
+>
+  <a
+    className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
+    href="#"
+  >
+    Uganda
+  </a>
+  <a
+    aria-hidden="true"
+    className="countries-menu__profile countries-menu__link js-profile-item"
+    title="View Uganda"
+  >
+    View
+  </a>
+  <style
+    jsx={true}
+  >
+    
+        cursor: pointer;
+      
+  </style>
+</nav>
+`;

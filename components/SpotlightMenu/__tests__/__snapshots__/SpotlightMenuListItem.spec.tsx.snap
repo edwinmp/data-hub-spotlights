@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SpotlightMenuListItem renders children correctly 1`] = `
+<li
+  className="countries-menu-list--has-children"
+>
+  <a
+    className="countries-menu-list__item js-menu-item js-search-item countries-menu-list__item--parent-first"
+    onClick={[Function]}
+  >
+    Palisa
+    <style
+      jsx={true}
+    >
+      
+          :before {
+            display: inline-block;
+          }
+        
+    </style>
+  </a>
+  <a
+    className="countries-menu__profile countries-menu__link js-profile-item"
+    onClick={[Function]}
+    title="View Palisa"
+  >
+    View
+  </a>
+  <div
+    active={false}
+  >
+    Testing
+  </div>
+</li>
+`;
+
+exports[`SpotlightMenuListItem renders correctly 1`] = `
+<li
+  className="countries-menu-list__countries js-profile-country-item"
+>
+  <a
+    className="countries-menu-list__item js-menu-item js-search-item countries-menu-list__item--parent-first"
+    onClick={[Function]}
+  >
+    Busia
+    <style
+      jsx={true}
+    >
+      
+          :before {
+            display: none;
+          }
+        
+    </style>
+  </a>
+  <a
+    className="countries-menu__profile countries-menu__link js-profile-item"
+    onClick={[Function]}
+    title="View Busia"
+  >
+    View
+  </a>
+</li>
+`;
