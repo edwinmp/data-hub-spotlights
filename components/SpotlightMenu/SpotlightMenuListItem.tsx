@@ -2,12 +2,17 @@ import classNames from 'classnames';
 import React, { Children, FunctionComponent, useState, cloneElement, isValidElement } from 'react';
 
 interface ComponentProps {
-  title?: string;
+  item: MenuListItem;
   depth?: number;
-  onView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, title?: string) => void;
+  onView?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, item: MenuListItem) => void;
 }
 
-const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ title, children, onView: onViewProp, depth }) => {
+export interface MenuListItem {
+  label: string;
+  value: string;
+}
+
+const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ item, children, onView: onViewProp, depth }) => {
   const [active, setActive] = useState(false);
   const toggleActive = (): void => {
     setActive(!active);
@@ -15,7 +20,7 @@ const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ title, child
   const onView = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
     event.stopPropagation();
     if (onViewProp) {
-      onViewProp(event, title);
+      onViewProp(event, item);
     }
   };
 
@@ -40,7 +45,7 @@ const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ title, child
         })}
         onClick={toggleActive}
       >
-        {title}
+        {item.label}
         <style jsx>{`
           :before {
             display: ${children ? 'inline-block' : 'none'};
@@ -50,7 +55,7 @@ const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ title, child
       <a
         className="countries-menu__profile countries-menu__link js-profile-item"
         onClick={onView}
-        title={`View ${title}`}
+        title={`View ${item.label}`}
       >
         View
       </a>

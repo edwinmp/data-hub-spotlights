@@ -8,14 +8,14 @@ import { SpotlightMenuListItem } from '../SpotlightMenuListItem';
 
 describe('SpotlightMenuListItem', () => {
   test('renders correctly', () => {
-    const renderer = TestRenderer.create(<SpotlightMenuListItem title={'Busia'} />).toJSON();
+    const renderer = TestRenderer.create(<SpotlightMenuListItem item={{ label: 'Busia', value: 'busia' }} />).toJSON();
 
     expect(renderer).toMatchSnapshot();
   });
 
   test('renders children correctly', () => {
     const renderer = TestRenderer.create(
-      <SpotlightMenuListItem title={'Palisa'}>
+      <SpotlightMenuListItem item={{ label: 'Palisa', value: 'palisa' }}>
         <div>Testing</div>
       </SpotlightMenuListItem>
     ).toJSON();
