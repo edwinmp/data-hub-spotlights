@@ -62,6 +62,33 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
       {renderLayers()}
       <style jsx>{`
         background: ${props.background};
+        font-family: geomanist, sans-serif;
+
+        div :global(.mapboxgl-canary) {
+          background: red;
+        }
+
+        div :global(.mapboxgl-popup) {
+          z-index: 400;
+        }
+
+        div :global(.mapboxgl-popup-content) {
+          background-color: rgba(0, 0, 0, 0.9) !important;
+          box-shadow: none !important;
+          color: #ffffff !important;
+          font-family: geomanist, sans-serif;
+          -webkit-tap-highlight-color: black;
+          opacity: 0.8;
+        }
+
+        div :global(.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip) {
+          border-top-color: rgba(0, 0, 0, 0.9);
+          opacity: 0.8;
+        }
+
+        div :global(.mapboxgl-popup-content .mapBox-popup p) {
+          margin-bottom: 0;
+        }
       `}</style>
     </div>
   );
