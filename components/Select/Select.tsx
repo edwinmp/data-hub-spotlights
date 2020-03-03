@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import ReactSelect, {
-  OptionsType,
-  Props as SelectProps,
-  Styles,
-  OptionProps,
-  OptionTypeBase,
+  components,
   GroupType,
-  components
+  OptionProps,
+  OptionsType,
+  OptionTypeBase,
+  Props as SelectProps
 } from 'react-select';
+import { getDefaultStyles } from './utils';
 
 export type SelectOptions = OptionsType<{ label: string; value: string }> | undefined;
 
@@ -16,11 +16,13 @@ export interface SelectOption {
   value: string;
 }
 
+export type SelectTheme = 'light' | 'dark';
+
 interface ExtendedSelectProps extends SelectProps {
-  chooseTheme?: 'light' | 'dark';
+  chooseTheme?: SelectTheme;
 }
 
-const DarkThemeOption = (props: OptionProps<OptionTypeBase>): JSX.Element => (
+export const DarkThemeOption = (props: OptionProps<OptionTypeBase>): JSX.Element => (
   <components.Option {...props}>
     <span>
       {props.children}
@@ -40,7 +42,7 @@ const DarkThemeOption = (props: OptionProps<OptionTypeBase>): JSX.Element => (
   </components.Option>
 );
 
-const DarkThemeGroupLabel = (group: GroupType<OptionTypeBase>): JSX.Element => (
+export const DarkThemeGroupLabel = (group: GroupType<OptionTypeBase>): JSX.Element => (
   <div className="select-group-label">
     <span>{group.label}</span>
     <style jsx>{`
@@ -61,34 +63,11 @@ const DarkThemeGroupLabel = (group: GroupType<OptionTypeBase>): JSX.Element => (
 
 const Select: FunctionComponent<ExtendedSelectProps> = ({ chooseTheme: theme, styles, ...props }) => {
   const borderColor = '#8f1b13';
-  const defaultStyles: Styles = {
-    container: provided => ({ ...provided, fontSize: '1.6rem' }),
-    control: provided => ({
-      ...provided,
-      ':hover': { borderColor },
-      borderColor: '#ddd',
-      boxShadow: 'none',
-      height: '48px',
-      borderRadius: '0'
-    }),
-    menu: provided => ({
-      ...provided,
-      color: theme === 'dark' ? '#fff' : '#443e42',
-      backgroundColor: theme === 'dark' ? '#443e42' : '#FFFFFF',
-      'z-index': 15000
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      ':hover': theme === 'dark' ? { cursor: 'pointer' } : { backgroundColor: '#f0826d' },
-      backgroundColor: state.isSelected && theme !== 'dark' ? borderColor : 'transparent'
-    }),
-    ...styles
-  };
 
   return (
     <ReactSelect
       {...props}
-      styles={defaultStyles}
+      styles={{ ...getDefaultStyles(theme || 'light', borderColor), ...styles }}
       components={theme === 'dark' ? { Option: DarkThemeOption } : undefined}
       formatGroupLabel={theme === 'dark' ? DarkThemeGroupLabel : undefined}
     />
