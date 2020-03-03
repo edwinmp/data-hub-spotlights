@@ -1,5 +1,6 @@
 // import { getLocationIDFromGeoCode } from '.';
-import { LocationData } from '../../../utils';
+import { LocationData, toCamelCase } from '../../../utils';
+import { Map, MapMouseEvent, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
 
 type LocationStyle = [string | number, string];
 
@@ -25,4 +26,32 @@ export const getLocationStyles = (
   }
 
   return [];
+};
+
+interface TooltipOptions {
+  popup: Popup;
+  nameProperty: string;
+  dataPrefix?: string;
+  dataSuffix?: string;
+}
+
+type TooltipEvent = MapMouseEvent & { features?: MapboxGeoJSONFeature[] };
+
+export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
+  const { popup, nameProperty } = options;
+  if (event.features && event.features[0].properties) {
+    const geometry = event.features?.[0].geometry;
+    if (geometry.type === 'Polygon') {
+      if (event.features[0].properties[nameProperty]) {
+        popup
+          .setLngLat(event.lngLat)
+          .setHTML(
+            `
+            <span style="font-size:1.4rem;">${toCamelCase(event.features[0].properties[nameProperty])}</span>
+          `
+          )
+          .addTo(map);
+      }
+    }
+  }
 };

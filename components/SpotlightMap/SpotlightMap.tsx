@@ -1,7 +1,8 @@
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
-import { config, getLocationStyles, SpotlightMapProps } from './utils';
+import { config, getLocationStyles, SpotlightMapProps, renderTooltip } from './utils';
+import { Map, Popup } from 'mapbox-gl';
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const { countryCode, level, data, dataLoading, range, colours } = props;
@@ -12,6 +13,22 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   useEffect(() => {
     setLoading(false);
   }, [countryCode]);
+
+  const onLoad = (map: Map): void => {
+    const popup = new Popup({
+      offset: 5,
+      closeButton: false
+    });
+    map.on('mousemove', 'highlight', event => {
+      map.getCanvas().style.cursor = 'pointer';
+      renderTooltip(map, event, { nameProperty: options.nameProperty, popup });
+    });
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'highlight', () => {
+      map.getCanvas().style.cursor = '';
+      popup.remove();
+    });
+  };
 
   const renderLayers = (): ReactNode => {
     if (!dataLoading && data && data[0].data.length) {
@@ -52,6 +69,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
         }}
         width="100%"
         height="100%"
+        onLoad={onLoad}
       >
         {renderLayers()}
       </BaseMap>
