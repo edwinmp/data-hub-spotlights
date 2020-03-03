@@ -70,6 +70,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
 
         div :global(.mapboxgl-popup) {
           z-index: 400;
+          max-width: 100% !important;
         }
 
         div :global(.mapboxgl-popup-content) {
