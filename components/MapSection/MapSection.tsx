@@ -9,7 +9,14 @@ import { SpotlightIndicatorInfo } from '../SpotlightIndicatorInfo';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SidebarContent, SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { getIndicatorColours, MapSectionProps, parseIndicator, splitByComma } from './utils';
+import {
+  getIndicatorColours,
+  MapSectionProps,
+  parseIndicator,
+  splitByComma,
+  getDataPrefix,
+  getDataSuffix
+} from './utils';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
@@ -84,8 +91,8 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 countryCode={countryCode}
                 range={range}
                 colours={colours}
-                dataPrefix={options.indicator && options.indicator.value_prefix}
-                dataSuffix={options.indicator && options.indicator.value_suffix}
+                dataPrefix={getDataPrefix(options)}
+                dataSuffix={getDataSuffix(options)}
               />
             </DynamicMapDataLoader>
           </SpotlightInteractive>

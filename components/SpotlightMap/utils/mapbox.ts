@@ -31,23 +31,42 @@ export const getLocationStyles = (
 interface TooltipOptions {
   popup: Popup;
   nameProperty: string;
+  data: LocationData[];
   dataPrefix?: string;
   dataSuffix?: string;
+  format?: (value: string) => string | number;
 }
 
-type TooltipEvent = MapMouseEvent & { features?: MapboxGeoJSONFeature[] };
+export type TooltipEvent = MapMouseEvent & { features?: MapboxGeoJSONFeature[] };
+
+const getTooltipValue = (options: TooltipOptions, location?: LocationData): string =>
+  location && location.value
+    ? `${options.dataPrefix}<span style="font-size: 1em; font-weight: 700; color:#EA7600">${location.value.toFixed(
+        1
+      )}</span>${options.dataSuffix}`
+    : 'No Data';
 
 export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
-  const { popup, nameProperty } = options;
+  const { popup, nameProperty, data, format } = options;
   if (event.features && event.features[0].properties) {
     const geometry = event.features?.[0].geometry;
     if (geometry.type === 'Polygon') {
-      if (event.features[0].properties[nameProperty]) {
+      const locationName = event.features[0].properties[nameProperty];
+      if (locationName) {
+        const location = data.find(_location => {
+          const name = format ? format(_location.name) : _location.name;
+          return locationName === name;
+        });
         popup
           .setLngLat(event.lngLat)
           .setHTML(
             `
-            <span style="font-size:1.4rem;">${toCamelCase(event.features[0].properties[nameProperty])}</span>
+            <div style="white-space: nowrap;">
+              <div style="font-size:1.6rem;padding-bottom:5px;font-weight:700;text-align:center">${toCamelCase(
+                locationName
+              )}</div>
+              <em style="font-size:1.4rem;">${getTooltipValue(options, location)}</em>
+            </div>
           `
           )
           .addTo(map);
