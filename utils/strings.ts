@@ -17,6 +17,10 @@ export const toCamelCase = (text: string): string => {
     const textArray = text.toLowerCase().split('-');
 
     return textArray.map(_text => toCamelCase(_text)).join('-');
+  } else if (text.includes(' ')) {
+    const textArray = text.toLowerCase().split(' ');
+
+    return textArray.map(_text => toCamelCase(_text)).join(' ');
   }
   const textArray = text.toLowerCase().split('');
   textArray[0] = textArray[0].toUpperCase();
