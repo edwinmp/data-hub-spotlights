@@ -25,7 +25,7 @@ interface ExtendedSelectProps extends SelectProps {
 export const DarkThemeOption = (props: OptionProps<OptionTypeBase>): JSX.Element => (
   <components.Option {...props}>
     <span>
-      {props.children}
+      {props.children?.toString().toLowerCase()}
       <style jsx>{`
         padding-top: 5px;
         padding-bottom: 5px;

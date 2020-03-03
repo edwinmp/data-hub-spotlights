@@ -24,6 +24,7 @@ export const getDefaultStyles = (theme: SelectTheme, borderColor: string): Style
   option: (provided, state): CSSProperties =>
     ({
       ...provided,
+      textTransform: 'capitalize',
       ':hover': theme === 'dark' ? { cursor: 'pointer' } : { backgroundColor: '#f0826d' },
       backgroundColor: state.isSelected && theme !== 'dark' ? borderColor : 'transparent'
     } as CSSProperties)
