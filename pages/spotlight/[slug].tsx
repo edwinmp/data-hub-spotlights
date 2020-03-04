@@ -71,7 +71,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
             ))
         )}
         <DataSourcesSection description={page.datasources_description} dataSourceLinks={page.datasource_links} />
-        <LocationComparisonSection />
+        <LocationComparisonSection countryCode={page.country_code} countryName={page.country_name} />
       </>
     );
   }
