@@ -1,5 +1,4 @@
-// import { getLocationIDFromGeoCode } from '.';
-import { LocationData, toCamelCase } from '../../../utils';
+import { LocationData } from '../../../utils';
 import { Map, MapMouseEvent, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
 
 type LocationStyle = [string | number, string];
@@ -62,9 +61,9 @@ export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOpt
           .setHTML(
             `
             <div style="white-space: nowrap;">
-              <div style="font-size:1.6rem;padding-bottom:5px;font-weight:700;text-align:center">${toCamelCase(
-                locationName
-              )}</div>
+              <div style="font-size:1.6rem;padding-bottom:5px;font-weight:700;text-align:center;text-transform:capitalize;">
+                ${locationName.toLowerCase()}
+              </div>
               <em style="font-size:1.4rem;">${getTooltipValue(options, location)}</em>
             </div>
           `
