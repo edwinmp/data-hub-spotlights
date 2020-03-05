@@ -11,7 +11,7 @@ export const LegendItem: FunctionComponent<LegendItemProps> = ({ children, class
     {children}
     <style jsx>{`
       span {
-        background-color: ${bgColor || '#f3f3f3'};
+        background-color: ${bgColor || '#D1CBCF'};
         color: ${textColor || 'inherit'};
       }
     `}</style>

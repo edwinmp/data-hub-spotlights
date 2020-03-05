@@ -13,7 +13,7 @@ exports[`Legend renders only LegendItem children 1`] = `
     >
       
       span {
-        background-color: #f3f3f3;
+        background-color: #D1CBCF;
         color: inherit;
       }
     
@@ -27,7 +27,7 @@ exports[`Legend renders only LegendItem children 1`] = `
     >
       
       span {
-        background-color: #f3f3f3;
+        background-color: #D1CBCF;
         color: inherit;
       }
     

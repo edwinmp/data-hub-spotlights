@@ -120,7 +120,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
             'fill-color': {
               property: options.nameProperty,
               type: 'categorical',
-              default: '#b3adad',
+              default: '#D1CBCF',
               stops: getLocationStyles(data[0].data, range, colours, options.format)
             },
             'fill-opacity': 0.75,
