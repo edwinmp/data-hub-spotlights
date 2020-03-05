@@ -1,19 +1,19 @@
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
-import { PageScaffoldData } from '../../components/DefaultLayout';
-import { LocationComparisonSection } from '../../components/LocationComparisonSection';
-import { IndicatorComparisonSection } from '../../components/IndicatorComparisonSection';
-import { KeyFactsSection } from '../../components/KeyFactsSection';
-import { MapSection } from '../../components/MapSection';
-import { PageSection } from '../../components/PageSection';
-import { RevenueExpenditureSection } from '../../components/RevenueExpenditureSection';
+import { PageScaffoldData } from '../../../components/DefaultLayout';
+import { LocationComparisonSection } from '../../../components/LocationComparisonSection';
+import { IndicatorComparisonSection } from '../../../components/IndicatorComparisonSection';
+import { KeyFactsSection } from '../../../components/KeyFactsSection';
+import { MapSection } from '../../../components/MapSection';
+import { PageSection } from '../../../components/PageSection';
+import { RevenueExpenditureSection } from '../../../components/RevenueExpenditureSection';
 import {
   fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
   SpotlightLocation,
   SpotlightPage
-} from '../../utils';
+} from '../../../utils';
 
 interface SpotlightProps {
   setData?: (data: PageScaffoldData) => void;
