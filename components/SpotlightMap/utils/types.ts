@@ -1,10 +1,13 @@
 import { LocationIndicatorData, SpotlightLocation } from '../../../utils';
 import { FeatureCollection, Geometry, MultiPolygon } from 'geojson';
+import { Map } from 'mapbox-gl';
+import { LayerConfig } from './config';
 
 export interface SpotlightMapProps {
   center?: number[];
   zoom?: number;
   countryCode: string;
+  location?: SpotlightLocation;
   level?: number;
   dataLoading?: boolean;
   data?: LocationIndicatorData[];
@@ -12,7 +15,9 @@ export interface SpotlightMapProps {
   colours?: string[];
   dataPrefix?: string;
   dataSuffix?: string;
-  onLoad?: (data: MapLocations) => void;
+  layerConfig?: LayerConfig;
+  hideParentLayer?: boolean;
+  onLoad?: (map: Map) => void;
 }
 
 export interface SpotlightMapGeoJSON {

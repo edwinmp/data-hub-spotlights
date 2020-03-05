@@ -1,15 +1,17 @@
+import { Map, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
-import { config, getLocationStyles, SpotlightMapProps, renderTooltip, TooltipEvent } from './utils';
-import { Map, Popup } from 'mapbox-gl';
+import { config, getLocationStyles, renderTooltip, SpotlightMapProps, TooltipEvent } from './utils';
+
+const COLOURED_LAYER = 'highlight';
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const { countryCode, level, data, dataLoading, range, colours } = props;
   const [loading, setLoading] = useState<boolean>(true);
   const [map, setMap] = useState<Map | undefined>(undefined);
   const { layers } = config[countryCode];
-  const options = level && level <= layers.length ? layers[level] : layers[0];
+  const options = { ...(level && level <= layers.length ? layers[level] : layers[0]), ...props.layerConfig };
 
   useEffect(() => {
     if (map) {
@@ -33,27 +35,40 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
         popup.remove();
       };
 
-      map.on('mousemove', 'highlight', onHover);
-      map.on('mouseleave', 'highlight', onBlur);
+      map.on('mousemove', COLOURED_LAYER, onHover);
+      map.on('mouseleave', COLOURED_LAYER, onBlur);
 
       return (): void => {
-        map.off('mousemove', 'highlight', onHover);
-        map.off('mouseleave', 'highlight', onBlur);
+        map.off('mousemove', COLOURED_LAYER, onHover);
+        map.off('mouseleave', COLOURED_LAYER, onBlur);
         popup.remove();
       };
     }
   }, [map, loading, data]);
+  useEffect(() => {
+    if (map && props.hideParentLayer && map.getLayer(options.sourceLayer)) {
+      map.setLayoutProperty(options.sourceLayer, 'visibility', 'none');
+    }
+  });
 
-  const onLoad = (map: Map): void => {
+  const onLoad = (_map: Map): void => {
     setLoading(false);
-    setMap(map);
+    setMap(_map);
+    if (props.onLoad) {
+      props.onLoad(_map);
+    }
+  };
+  const onAddLayer = (_map: Map, layerID: string): void => {
+    if (props.location) {
+      _map.setFilter(layerID, ['==', options.nameProperty, props.location.name]);
+    }
   };
 
   const renderLayers = (): ReactNode => {
     if (!dataLoading && data && data[0].data.length) {
       return (
         <BaseMapLayer
-          id="highlight"
+          id={COLOURED_LAYER}
           source="composite"
           source-layer={options.source}
           maxzoom={options.maxZoom && options.maxZoom + 1}
@@ -68,11 +83,12 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
             'fill-opacity': 0.75,
             'fill-outline-color': '#ffffff'
           }}
+          onAdd={onAddLayer}
         />
       );
     }
 
-    return <BaseMapLayer id="highlight" show={false} />;
+    return <BaseMapLayer id={COLOURED_LAYER} show={false} />;
   };
 
   return (
