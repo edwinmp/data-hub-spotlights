@@ -6,7 +6,6 @@ exports[`SpotlightMenuNav renders children correctly 1`] = `
 >
   <a
     className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
-    href="#"
   >
     Uganda
   </a>
@@ -36,7 +35,6 @@ exports[`SpotlightMenuNav renders correctly 1`] = `
 >
   <a
     className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
-    href="#"
   >
     Uganda
   </a>

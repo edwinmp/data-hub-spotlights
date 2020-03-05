@@ -13,7 +13,6 @@ const SpotlightMenuNav: FunctionComponent<ComponentProps> = ({ active, caption, 
     <nav className={classNames('countries-menu-list animated', { inactive: !active })}>
       <a
         className="countries-menu-list__item countries-menu-list__parent countries-menu-list__item--open js-countries-menu-trigger"
-        href="#"
         onClick={onClick}
       >
         {caption}
