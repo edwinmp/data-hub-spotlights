@@ -1,7 +1,12 @@
+import { Map, MapboxGeoJSONFeature, MapMouseEvent, Popup } from 'mapbox-gl';
 import { LocationData } from '../../../utils';
-import { Map, MapMouseEvent, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
 
 type LocationStyle = [string | number, string];
+
+export const getProperLocationName = (
+  locationName: string,
+  formatter?: (value: string) => string | number
+): string | number => (formatter ? formatter(locationName) : locationName);
 
 export const getLocationStyles = (
   data?: LocationData[],
@@ -11,7 +16,7 @@ export const getLocationStyles = (
 ): LocationStyle[] => {
   if (data && range && colours) {
     return data.map<LocationStyle>(location => {
-      const locationID = format ? format(location.name) : location.name;
+      const locationID = getProperLocationName(location.name, format);
       const matchingRange = range.find(rng => location.value <= parseFloat(rng));
 
       if (matchingRange) {
@@ -33,7 +38,7 @@ interface TooltipOptions {
   data: LocationData[];
   dataPrefix?: string;
   dataSuffix?: string;
-  format?: (value: string) => string | number;
+  formatter?: (value: string) => string | number;
 }
 
 export type TooltipEvent = MapMouseEvent & { features?: MapboxGeoJSONFeature[] };
@@ -46,7 +51,7 @@ const getTooltipValue = (options: TooltipOptions, location?: LocationData): stri
     : 'No Data';
 
 export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
-  const { popup, nameProperty, data, format } = options;
+  const { popup, nameProperty, data, formatter: format } = options;
   if (event.features && event.features[0].properties) {
     const geometry = event.features?.[0].geometry;
     if (geometry.type === 'Polygon' || geometry.type === 'MultiPolygon') {

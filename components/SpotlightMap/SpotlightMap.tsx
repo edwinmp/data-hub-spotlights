@@ -2,7 +2,15 @@ import { LngLat, Map, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
-import { config, getLocationStyles, renderTooltip, SpotlightMapProps, TooltipEvent, LayerConfig } from './utils';
+import {
+  config,
+  getLocationStyles,
+  renderTooltip,
+  SpotlightMapProps,
+  TooltipEvent,
+  LayerConfig,
+  getProperLocationName
+} from './utils';
 
 const COLOURED_LAYER = 'highlight';
 
@@ -26,7 +34,7 @@ const getPosition = ({ geometry }: MapboxGeoJSONFeature): LngLat | null => {
 const flyToLocation = (map: Map, locationName: string, options: LayerConfig): void => {
   const features = map.querySourceFeatures('composite', {
     sourceLayer: options.sourceLayer,
-    filter: ['in', options.nameProperty, locationName]
+    filter: ['in', options.nameProperty, getProperLocationName(locationName, options.formatter)]
   });
 
   if (features && features.length) {
@@ -61,7 +69,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           data: data ? data[0].data : [],
           dataPrefix: props.dataPrefix,
           dataSuffix: props.dataSuffix,
-          format: options.format
+          formatter: options.formatter
         });
       };
       const onBlur = (): void => {
@@ -99,7 +107,11 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   };
   const onAddLayer = (_map: Map, layerID: string): void => {
     if (props.location) {
-      _map.setFilter(layerID, ['==', options.nameProperty, props.location.name]);
+      _map.setFilter(layerID, [
+        '==',
+        options.nameProperty,
+        getProperLocationName(props.location.name, options.formatter)
+      ]);
       _map.setPaintProperty(options.layerName, 'fill-color', '#d1d1d1');
       if (props.locationHandling === 'flyto') {
         flyToLocation(_map, props.location.name, options);
@@ -121,7 +133,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
               property: options.nameProperty,
               type: 'categorical',
               default: '#D1CBCF',
-              stops: getLocationStyles(data[0].data, range, colours, options.format)
+              stops: getLocationStyles(data[0].data, range, colours, options.formatter)
             },
             'fill-opacity': 0.75,
             'fill-outline-color': '#ffffff'

@@ -9,7 +9,7 @@ export interface LayerConfig {
   maxZoom?: number;
   nameProperty: string; // the data property on the layer that corresponds to the location's name
   codeProperty: string; // the data property on the layer that corresponds to the location's code,
-  format?: (value: string) => string | number; // when there's a mismatch between API data & map data, this aligns them
+  formatter?: (value: string) => string | number; // when there's a mismatch between API data & map data, this aligns them
 }
 
 interface MapConfig {
@@ -30,7 +30,7 @@ export const config: { [key: string]: MapConfig } = {
         maxZoom: 7,
         nameProperty: 'DName2016',
         codeProperty: 'dc2018',
-        format: (value: string): string => value.toUpperCase()
+        formatter: (value: string): string => value.toUpperCase()
       }
     ]
   },
@@ -47,7 +47,7 @@ export const config: { [key: string]: MapConfig } = {
         maxZoom: 6,
         nameProperty: 'ADM1_EN',
         codeProperty: 'ADM1_PCODE',
-        format: (value: string): string => {
+        formatter: (value: string): string => {
           if (value === 'Trans-Nzoia') {
             return 'Trans Nzoia';
           }
