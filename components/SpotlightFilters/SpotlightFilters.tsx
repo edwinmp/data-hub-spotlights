@@ -11,8 +11,8 @@ import {
   SpotlightOptions
 } from '../../utils';
 
-const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = props => {
-  const { options: defaultOptions, selected: defaultSelected } = getDefaults(props.themes, props.defaultIndexes);
+const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultIndexes, ...props }) => {
+  const { options: defaultOptions, selected: defaultSelected } = getDefaults(props.themes, defaultIndexes);
   const [options, setOptions] = useState<FilterSelectOptions>(defaultOptions);
   const { themes, indicators, years } = options;
   const [selected, setSelected] = useState<SpotlightOptions>(defaultSelected);
@@ -67,7 +67,7 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = props => {
           onChange={onSelectTheme}
           placeholder="Select Topic"
           isLoading={!themes}
-          defaultValue={options.themes ? options.themes[0] : undefined}
+          defaultValue={options.themes ? options.themes[defaultIndexes ? defaultIndexes[0] : 0] : undefined}
         />
       </FormField>
       <IndicatorFilterForm

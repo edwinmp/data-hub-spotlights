@@ -44,7 +44,7 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
   return (
     <PageSection wide dark={!location}>
       <PageSectionHeading>Compare indicators for {location ? location.name : countryName}</PageSectionHeading>
-      <IndicatorSelectionBanner themes={themes} onCompare={onCompare} />
+      <IndicatorSelectionBanner themes={themes} onCompare={onCompare} compareOnLoad />
       {selections ? (
         <VisualisationSection className="spotlight--leader">
           {location ? (
