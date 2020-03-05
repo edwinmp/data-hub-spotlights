@@ -31,7 +31,7 @@ const getPosition = ({ geometry }: MapboxGeoJSONFeature): LngLat | null => {
   return null;
 };
 
-const flyToLocation = (map: Map, locationName: string, options: LayerConfig): void => {
+const flyToLocation = (map: Map, locationName: string, options: LayerConfig, recenter = true): void => {
   const features = map.querySourceFeatures('composite', {
     sourceLayer: options.sourceLayer,
     filter: ['in', options.nameProperty, getProperLocationName(locationName, options.formatter)]
@@ -45,6 +45,12 @@ const flyToLocation = (map: Map, locationName: string, options: LayerConfig): vo
         zoom: 16
       });
     }
+  } else if (recenter) {
+    // reset view before next flyTo, otherwise flying to locations not currently visible shall fail
+    map.flyTo({ center: options.center, zoom: options.zoom || 6.1 });
+    setTimeout(() => {
+      flyToLocation(map, locationName, options, false);
+    }, 200);
   }
 };
 
