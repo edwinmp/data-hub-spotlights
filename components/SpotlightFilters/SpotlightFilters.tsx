@@ -12,7 +12,7 @@ import {
 } from '../../utils';
 
 const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = props => {
-  const { options: defaultOptions, selected: defaultSelected } = getDefaults(props.themes);
+  const { options: defaultOptions, selected: defaultSelected } = getDefaults(props.themes, props.defaultIndexes);
   const [options, setOptions] = useState<FilterSelectOptions>(defaultOptions);
   const { themes, indicators, years } = options;
   const [selected, setSelected] = useState<SpotlightOptions>(defaultSelected);

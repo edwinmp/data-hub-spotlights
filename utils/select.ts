@@ -45,11 +45,15 @@ export const parseIndicatorToOption = (indicator: SpotlightIndicator): SelectOpt
   value: indicator.ddw_id
 });
 
-export const getThemeDefaults = (theme: SpotlightTheme, currentOptions: FilterSelectOptions): FilterDefaults => {
+export const getThemeDefaults = (
+  theme: SpotlightTheme,
+  currentOptions: FilterSelectOptions,
+  defaultIndicatorIndex = 0
+): FilterDefaults => {
   const options: FilterSelectOptions = { ...currentOptions };
   const selected: SpotlightOptions = { theme };
   options.indicators = createIndicatorOptionsFromTheme(theme);
-  const defaultIndicator = theme.indicators[0];
+  const defaultIndicator = theme.indicators[defaultIndicatorIndex];
   selected.indicator = defaultIndicator;
   if (defaultIndicator) {
     options.years = createYearOptionsFromIndicator(defaultIndicator);
@@ -59,15 +63,15 @@ export const getThemeDefaults = (theme: SpotlightTheme, currentOptions: FilterSe
   return { options, selected };
 };
 
-export const getDefaults = (themes: SpotlightTheme[]): FilterDefaults => {
+export const getDefaults = (themes: SpotlightTheme[], defaultIndexes: [number, number] = [0, 0]): FilterDefaults => {
   const defaultOptions: FilterSelectOptions = {
     ...defaultSelectOptions,
     themes: createThemeOptions(themes)
   };
-  const defaultTheme = themes[0];
+  const defaultTheme = themes[defaultIndexes[0]];
   const defaultSelected: SpotlightOptions = { theme: defaultTheme };
   if (defaultTheme) {
-    return getThemeDefaults(defaultTheme, defaultOptions);
+    return getThemeDefaults(defaultTheme, defaultOptions, defaultIndexes[1]);
   }
 
   return { options: defaultOptions, selected: defaultSelected };

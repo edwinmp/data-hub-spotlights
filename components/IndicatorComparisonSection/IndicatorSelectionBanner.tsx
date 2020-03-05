@@ -51,6 +51,7 @@ const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ t
           topicClassName="form-field--inline-three"
           indicatorClassName="form-field--inline-three"
           yearClassName="form-field--inline-three"
+          defaultIndexes={[0, 1]}
         />
       </SpotlightComparison>
       <button

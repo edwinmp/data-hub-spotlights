@@ -10,6 +10,7 @@ export interface SpotlightFilterProps {
   topicClassName?: string; // for the form field
   indicatorClassName?: string; // for the form field
   yearClassName?: string; // for the form field
+  defaultIndexes?: [number, number]; // [themeIndex, indicatorIndex]
 }
 
 export interface FilterSelectOptions {
