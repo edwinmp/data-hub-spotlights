@@ -80,6 +80,11 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
     }
   }, [map, loading, data]);
   useEffect(() => {
+    if (map && !props.location) {
+      map.setCenter(options.center).setZoom(options.zoom || 6.1);
+    }
+  }, [props.location]);
+  useEffect(() => {
     if (map && props.hideParentLayer && map.getLayer(options.layerName)) {
       map.setLayoutProperty(options.layerName, 'visibility', 'none');
     }
@@ -95,6 +100,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const onAddLayer = (_map: Map, layerID: string): void => {
     if (props.location) {
       _map.setFilter(layerID, ['==', options.nameProperty, props.location.name]);
+      _map.setPaintProperty(options.layerName, 'fill-color', '#d1d1d1');
       if (props.locationHandling === 'flyto') {
         flyToLocation(_map, props.location.name, options);
       }
