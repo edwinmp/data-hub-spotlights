@@ -17,6 +17,7 @@ export interface SpotlightMapProps {
   dataSuffix?: string;
   layerConfig?: LayerConfig;
   hideParentLayer?: boolean;
+  locationHandling?: 'flyto' | 'highlight-only'; // highlight-only is the default
   onLoad?: (map: Map) => void;
 }
 

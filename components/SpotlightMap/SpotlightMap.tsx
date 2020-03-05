@@ -1,10 +1,44 @@
-import { Map, Popup } from 'mapbox-gl';
+import { LngLat, Map, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
-import { config, getLocationStyles, renderTooltip, SpotlightMapProps, TooltipEvent } from './utils';
+import { config, getLocationStyles, renderTooltip, SpotlightMapProps, TooltipEvent, LayerConfig } from './utils';
 
 const COLOURED_LAYER = 'highlight';
+
+const getPosition = ({ geometry }: MapboxGeoJSONFeature): LngLat | null => {
+  if (geometry) {
+    if (geometry.type === 'Polygon') {
+      const position = geometry.coordinates[0][0];
+
+      return new LngLat(position[0], position[1]);
+    }
+    if (geometry.type === 'MultiPolygon') {
+      const positions = geometry.coordinates[0][0];
+
+      return new LngLat(positions[0][0], positions[0][1]);
+    }
+  }
+
+  return null;
+};
+
+const flyToLocation = (map: Map, locationName: string, options: LayerConfig): void => {
+  const features = map.querySourceFeatures('composite', {
+    sourceLayer: options.sourceLayer,
+    filter: ['in', options.nameProperty, locationName]
+  });
+
+  if (features && features.length) {
+    const position = getPosition(features[0]);
+    if (position) {
+      map.flyTo({
+        center: position,
+        zoom: 16
+      });
+    }
+  }
+};
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const { countryCode, level, data, dataLoading, range, colours } = props;
@@ -46,8 +80,8 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
     }
   }, [map, loading, data]);
   useEffect(() => {
-    if (map && props.hideParentLayer && map.getLayer(options.sourceLayer)) {
-      map.setLayoutProperty(options.sourceLayer, 'visibility', 'none');
+    if (map && props.hideParentLayer && map.getLayer(options.layerName)) {
+      map.setLayoutProperty(options.layerName, 'visibility', 'none');
     }
   });
 
@@ -61,6 +95,9 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const onAddLayer = (_map: Map, layerID: string): void => {
     if (props.location) {
       _map.setFilter(layerID, ['==', options.nameProperty, props.location.name]);
+      if (props.locationHandling === 'flyto') {
+        flyToLocation(_map, props.location.name, options);
+      }
     }
   };
 
@@ -70,7 +107,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
         <BaseMapLayer
           id={COLOURED_LAYER}
           source="composite"
-          source-layer={options.source}
+          source-layer={options.sourceLayer}
           maxzoom={options.maxZoom && options.maxZoom + 1}
           type="fill"
           paint={{
@@ -114,7 +151,8 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 
 SpotlightMap.defaultProps = {
   level: 0,
-  dataLoading: false
+  dataLoading: false,
+  locationHandling: 'highlight-only'
 };
 
 export { SpotlightMap };

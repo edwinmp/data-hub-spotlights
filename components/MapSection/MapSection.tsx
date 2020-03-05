@@ -94,6 +94,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 dataPrefix={getDataPrefix(options)}
                 dataSuffix={getDataSuffix(options)}
                 location={activeLocation}
+                locationHandling="flyto"
               />
             </DynamicMapDataLoader>
           </SpotlightInteractive>
