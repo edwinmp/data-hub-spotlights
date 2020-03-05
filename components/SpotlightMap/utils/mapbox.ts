@@ -49,7 +49,7 @@ export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOpt
   const { popup, nameProperty, data, format } = options;
   if (event.features && event.features[0].properties) {
     const geometry = event.features?.[0].geometry;
-    if (geometry.type === 'Polygon') {
+    if (geometry.type === 'Polygon' || geometry.type === 'MultiPolygon') {
       const locationName = event.features[0].properties[nameProperty];
       if (locationName) {
         const location = data.find(_location => {
