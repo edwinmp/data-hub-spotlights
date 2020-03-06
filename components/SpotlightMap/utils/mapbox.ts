@@ -50,31 +50,39 @@ const getTooltipValue = (options: TooltipOptions, location?: LocationData): stri
       )}</span>${options.dataSuffix}`
     : 'No Data';
 
-export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
-  const { popup, nameProperty, data, formatter: format } = options;
+export const getLocationNameFromEvent = (event: TooltipEvent, nameProperty: string): string | null => {
   if (event.features && event.features[0].properties) {
-    const geometry = event.features?.[0].geometry;
+    const geometry = event.features[0].geometry;
     if (geometry.type === 'Polygon' || geometry.type === 'MultiPolygon') {
       const locationName = event.features[0].properties[nameProperty];
-      if (locationName) {
-        const location = data.find(_location => {
-          const name = format ? format(_location.name) : _location.name;
-          return locationName === name;
-        });
-        popup
-          .setLngLat(event.lngLat)
-          .setHTML(
-            `
-            <div style="white-space: nowrap;">
-              <div style="font-size:1.6rem;padding-bottom:5px;font-weight:700;text-align:center;text-transform:capitalize;">
-                ${locationName.toLowerCase()}
-              </div>
-              <em style="font-size:1.4rem;">${getTooltipValue(options, location)}</em>
-            </div>
-          `
-          )
-          .addTo(map);
-      }
+
+      return locationName || null;
     }
+  }
+
+  return null;
+};
+
+export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
+  const { popup, nameProperty, data, formatter: format } = options;
+  const locationName = getLocationNameFromEvent(event, nameProperty);
+  if (locationName) {
+    const location = data.find(_location => {
+      const name = format ? format(_location.name) : _location.name;
+      return locationName === name;
+    });
+    popup
+      .setLngLat(event.lngLat)
+      .setHTML(
+        `
+        <div style="white-space: nowrap;">
+          <div style="font-size:1.6rem;padding-bottom:5px;font-weight:700;text-align:center;text-transform:capitalize;">
+            ${locationName.toLowerCase()}
+          </div>
+          <em style="font-size:1.4rem;">${getTooltipValue(options, location)}</em>
+        </div>
+      `
+      )
+      .addTo(map);
   }
 };

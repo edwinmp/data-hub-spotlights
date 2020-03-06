@@ -9,7 +9,8 @@ import {
   SpotlightMapProps,
   TooltipEvent,
   LayerConfig,
-  getProperLocationName
+  getProperLocationName,
+  getLocationNameFromEvent
 } from './utils';
 
 const COLOURED_LAYER = 'highlight';
@@ -86,9 +87,19 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       map.on('mousemove', COLOURED_LAYER, onHover);
       map.on('mouseleave', COLOURED_LAYER, onBlur);
 
+      const onClick = (event: TooltipEvent): void => {
+        const locationName = getLocationNameFromEvent(event, options.nameProperty);
+        if (locationName) {
+          flyToLocation(map, locationName, options);
+        }
+      };
+
+      map.on('click', COLOURED_LAYER, onClick);
+
       return (): void => {
         map.off('mousemove', COLOURED_LAYER, onHover);
         map.off('mouseleave', COLOURED_LAYER, onBlur);
+        map.off('click', COLOURED_LAYER, onClick);
         popup.remove();
       };
     }
