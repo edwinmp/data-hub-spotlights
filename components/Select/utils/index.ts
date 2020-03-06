@@ -19,12 +19,12 @@ export const getDefaultStyles = (theme: SelectTheme, borderColor: string): Style
       color: theme === 'dark' ? '#fff' : '#443e42',
       backgroundColor: theme === 'dark' ? '#443e42' : '#FFFFFF',
       borderRadius: '0',
-      'z-index': 15000
+      'z-index': 15000,
+      textTransform: 'capitalize'
     } as CSSProperties),
   option: (provided, state): CSSProperties =>
     ({
       ...provided,
-      textTransform: 'capitalize',
       ':hover': theme === 'dark' ? { cursor: 'pointer' } : { backgroundColor: '#f0826d' },
       backgroundColor: state.isSelected && theme !== 'dark' ? borderColor : 'transparent'
     } as CSSProperties)

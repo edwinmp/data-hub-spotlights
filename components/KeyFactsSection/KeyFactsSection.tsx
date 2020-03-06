@@ -24,7 +24,9 @@ const KeyFactsSection: FunctionComponent<KeyFactsSectionProps> = ({ location, th
 
   return (
     <PageSection dark wide>
-      <PageSectionHeading>Key facts for {location.name}</PageSectionHeading>
+      <PageSectionHeading>
+        Key facts for {location.name.toUpperCase().charAt(0) + location.name.toLowerCase().substring(1)}
+      </PageSectionHeading>
       <SpotlightTab>{renderTabs()}</SpotlightTab>
     </PageSection>
   );

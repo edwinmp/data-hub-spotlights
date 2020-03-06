@@ -28,7 +28,14 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
   }, [boundaries]);
 
   const onSelectLocation = (option?: SelectOption | MenuListItem | null): void => {
-    props.onSelectLocation(option && option.value ? { geocode: option.value, name: option.label } : undefined);
+    props.onSelectLocation(
+      option && option.value
+        ? {
+            geocode: option.value,
+            name: option.label.toUpperCase().charAt(0) + option.label.toLowerCase().substring(1)
+          }
+        : undefined
+    );
   };
   const loadOptions = async (inputValue: string): Promise<SelectOptions> =>
     options && inputValue
