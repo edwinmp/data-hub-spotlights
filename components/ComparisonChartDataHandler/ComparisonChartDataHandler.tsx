@@ -15,9 +15,9 @@ interface ComparisonChartDataHandlerProps {
   indicators: [SpotlightIndicator, SpotlightIndicator];
 }
 
-const getLocationData = (locations: SpotlightLocation[], data: LocationData[]): number[] =>
+const getLocationData = (locations: string[], data: LocationData[]): number[] =>
   locations.map(location => {
-    const match = data.find(_data => _data.name.toLowerCase() === location.name.toLowerCase());
+    const match = data.find(_data => _data.name.toLowerCase() === location.toLowerCase());
 
     return match ? match.value : 0;
   });
@@ -25,7 +25,12 @@ const getLocationData = (locations: SpotlightLocation[], data: LocationData[]): 
 const getHeightFromCount = (count = 12): string => (count >= 12 ? `${((count / 12) * 500).toFixed()}px` : '500px');
 
 const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerProps> = ({ data, ...props }) => {
-  const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations || []);
+  const [locations, setLocations] = useState<string[]>(
+    (props.locations || [])
+      .map(location => location.name)
+      .sort()
+      .reverse() // eCharts stacks the data, first down last up. So reverse is necessary to show it properly
+  );
   if (!data) {
     return <div>No Data</div>;
   }
@@ -34,7 +39,12 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
     if (!props.locations || !props.locations.length) {
       getBoundariesByCountryCode(props.countryCode).then(boundaries => {
         const requiredBoundaries = getBoundariesByDepth(boundaries, 'd');
-        setLocations(requiredBoundaries.map(({ name, geocode }) => ({ name, geocode })));
+        setLocations(
+          requiredBoundaries
+            .map(({ name }) => name)
+            .sort()
+            .reverse()
+        );
       });
     }
   }, []);
@@ -47,7 +57,7 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
           child =>
             isValidElement(child) &&
             cloneElement(child, {
-              labels: locations.map(location => location.name),
+              labels: locations,
               series: {
                 names: [props.indicators[0].name, props.indicators[1].name],
                 data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
