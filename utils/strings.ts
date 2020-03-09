@@ -6,10 +6,7 @@ export interface TemplateOptions {
 export const processTemplateString = (text: string, values: TemplateOptions): string => {
   let finalString = text;
   if (values.location) {
-    finalString = finalString.replace(
-      '{LOCATION}',
-      values.location.toUpperCase().charAt(0) + values.location.toLowerCase().substring(1)
-    );
+    finalString = finalString.replace('{LOCATION}', values.location);
   }
 
   return finalString;

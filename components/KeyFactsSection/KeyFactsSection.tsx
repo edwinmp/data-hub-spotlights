@@ -1,4 +1,5 @@
 import React, { FunctionComponent, ReactNode, useState } from 'react';
+import { toCamelCase } from '../../utils';
 import { KeyFactTab } from '../KeyFactTab';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightTab } from '../SpotlightTab';
@@ -24,9 +25,7 @@ const KeyFactsSection: FunctionComponent<KeyFactsSectionProps> = ({ location, th
 
   return (
     <PageSection dark wide>
-      <PageSectionHeading>
-        Key facts for {location.name.toUpperCase().charAt(0) + location.name.toLowerCase().substring(1)}
-      </PageSectionHeading>
+      <PageSectionHeading>Key facts for {toCamelCase(location.name)}</PageSectionHeading>
       <SpotlightTab>{renderTabs()}</SpotlightTab>
     </PageSection>
   );

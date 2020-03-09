@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
-import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme, toCamelCase } from '../../utils';
 import { ComparisonChartDataHandler } from '../ComparisonChartDataHandler';
 import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
 import { IndicatorComparisonDataLoader } from '../IndicatorComparisonDataLoader';
@@ -43,13 +43,15 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
 
   return (
     <PageSection wide dark={!location}>
-      <PageSectionHeading>Compare indicators for {location ? location.name : countryName}</PageSectionHeading>
+      <PageSectionHeading>
+        Compare indicators for {toCamelCase(location ? location.name : countryName)}
+      </PageSectionHeading>
       <IndicatorSelectionBanner themes={themes} onCompare={onCompare} compareOnLoad />
       {selections ? (
         <VisualisationSection className="spotlight--leader">
           {location ? (
             <SpotlightSidebar width="100%">
-              <SpotlightHeading>{location ? location.name : countryName}</SpotlightHeading>
+              <SpotlightHeading>{toCamelCase(location ? location.name : countryName)}</SpotlightHeading>
               <SpotlightInteractive>
                 <IndicatorComparisonDataLoader
                   options={selections}
@@ -69,7 +71,7 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
             </SpotlightSidebar>
           ) : (
             <VisualisationSectionMain width="100%">
-              <SpotlightHeading>Locations in {countryName}</SpotlightHeading>
+              <SpotlightHeading>Locations in {toCamelCase(countryName)}</SpotlightHeading>
               <SpotlightInteractive maxHeight="500px">
                 <IndicatorComparisonDataLoader
                   options={selections}
