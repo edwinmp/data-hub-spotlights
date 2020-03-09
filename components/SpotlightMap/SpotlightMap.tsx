@@ -1,31 +1,45 @@
+import { center, Feature, featureCollection, point, Point, Position, Properties } from '@turf/turf';
 import { LngLat, Map, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
 import {
   config,
+  getLocationNameFromEvent,
   getLocationStyles,
+  getProperLocationName,
+  LayerConfig,
   renderTooltip,
   SpotlightMapProps,
-  TooltipEvent,
-  LayerConfig,
-  getProperLocationName,
-  getLocationNameFromEvent
+  TooltipEvent
 } from './utils';
 
 const COLOURED_LAYER = 'highlight';
 
+const getCoordinatesCenter = (coordinates: Position[]): Feature<Point, Properties> => {
+  const features = featureCollection(coordinates.map(position => point(position)));
+
+  return center(features);
+};
+
+const getLngLatFromFeature = (feature: Feature<Point, Properties>): LngLat | null => {
+  const position = feature.geometry?.coordinates;
+
+  return position ? new LngLat(position[0], position[1]) : null;
+};
+
 const getPosition = ({ geometry }: MapboxGeoJSONFeature): LngLat | null => {
   if (geometry) {
     if (geometry.type === 'Polygon') {
-      const position = geometry.coordinates[0][0];
+      const feature = getCoordinatesCenter(geometry.coordinates[0]);
 
-      return new LngLat(position[0], position[1]);
+      return getLngLatFromFeature(feature);
     }
     if (geometry.type === 'MultiPolygon') {
       const positions = geometry.coordinates[0][0];
+      const feature = getCoordinatesCenter(positions);
 
-      return new LngLat(positions[0][0], positions[0][1]);
+      return getLngLatFromFeature(feature);
     }
   }
 
@@ -51,7 +65,7 @@ const flyToLocation = (map: Map, locationName: string, options: LayerConfig, rec
     map.flyTo({ center: options.center, zoom: options.zoom || 6.1 });
     setTimeout(() => {
       flyToLocation(map, locationName, options, false);
-    }, 200);
+    }, 500);
   }
 };
 
