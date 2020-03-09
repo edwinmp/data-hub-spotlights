@@ -27,7 +27,7 @@ export const config: { [key: string]: MapConfig } = {
         center: [32.655221, 1.344666],
         zoom: 6.1,
         minZoom: 6,
-        maxZoom: 7,
+        maxZoom: 8,
         nameProperty: 'DName2016',
         codeProperty: 'dc2018',
         formatter: (value: string): string => value.toUpperCase()
@@ -44,7 +44,7 @@ export const config: { [key: string]: MapConfig } = {
         center: [37.703, 0.482],
         zoom: 5.3,
         minZoom: 5.0,
-        maxZoom: 6,
+        maxZoom: 6.5,
         nameProperty: 'ADM1_EN',
         codeProperty: 'ADM1_PCODE',
         formatter: (value: string): string => {
