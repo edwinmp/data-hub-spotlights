@@ -51,7 +51,8 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
             defaultOptions
             styles={{
               dropdownIndicator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
-              indicatorSeparator: (provided): CSSProperties => ({ ...provided, display: 'none' })
+              indicatorSeparator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
+              singleValue: (provided): CSSProperties => ({ ...provided, textTransform: 'uppercase' })
             }}
             noOptionsMessage={noOptionsMessage}
             onChange={onSelectLocation as (options: ValueType<OptionTypeBase>) => void}

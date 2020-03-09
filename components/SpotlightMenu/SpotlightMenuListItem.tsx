@@ -46,7 +46,7 @@ const SpotlightMenuListItem: FunctionComponent<ComponentProps> = ({ item, childr
         })}
         onClick={toggleActive}
       >
-        {item.label}
+        {item.label.toLowerCase()}
         <style jsx>{`
           :before {
             display: ${children ? 'inline-block' : 'none'};

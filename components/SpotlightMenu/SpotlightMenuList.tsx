@@ -11,6 +11,7 @@ const SpotlightMenuList: FunctionComponent<SpotlightMenuListProps> = ({ active, 
       {children}
       <style jsx>{`
         display: ${active ? 'block !important' : 'none'};
+        text-transform: capitalize;
       `}</style>
     </ul>
   );
