@@ -1,4 +1,5 @@
-import { center, Feature, featureCollection, point, Point, Position, Properties } from '@turf/turf';
+import center from '@turf/center';
+import { Feature, featureCollection, point, Point, Position, Properties } from '@turf/helpers';
 import { LngLat, Map, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
