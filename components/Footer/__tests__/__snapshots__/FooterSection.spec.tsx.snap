@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FooterSection renders correctly 1`] = `
+<div
+  className="l-footer__col"
+>
+  <h4
+    className="footer__title"
+  >
+    More links
+  </h4>
+  <ul
+    className="footer__list"
+  >
+    <li>
+      <a
+        href="https://localhost:3000/nav-1"
+      >
+        Nav 1
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://localhost:3000/nav-2"
+      >
+        Nav 2
+      </a>
+    </li>
+    <li>
+      <a
+        href="http://localhost:3000/contact-us"
+      >
+        Contact us
+      </a>
+    </li>
+  </ul>
+  <ul
+    className="footer__social"
+  >
+    <li>
+      <a
+        href="http://localhost:3000/contact-us"
+      >
+        <img
+          alt="facebook"
+          src="http://localhost:3000/assets/images/image.svg"
+        />
+      </a>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`FooterSection renders either a page_url or a link_url 1`] = `
+<div
+  className="l-footer__col"
+>
+  <h4
+    className="footer__title"
+  >
+    More links
+  </h4>
+  <ul
+    className="footer__list"
+  >
+    <li>
+      <a
+        href="https://localhost:3000/nav-1"
+      >
+        Nav 1
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://localhost:3000/nav-2"
+      >
+        Nav 2
+      </a>
+    </li>
+    <li>
+      <a
+        href="http://localhost:3000/my-page"
+      >
+        Contact us
+      </a>
+    </li>
+  </ul>
+  <ul
+    className="footer__social"
+  >
+    <li>
+      <a
+        href="http://localhost:3000/contact-us"
+      >
+        <img
+          alt="facebook"
+          src="http://localhost:3000/assets/images/image.svg"
+        />
+      </a>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`FooterSectionLink renders correctly 1`] = `
+<li>
+  <a
+    href=""
+  >
+    Contact us
+  </a>
+</li>
+`;
+
+exports[`FooterSocialLink renders correctly 1`] = `
+<li>
+  <a
+    href="http://localhost:3000/contact-us"
+  >
+    <img
+      alt="facebook"
+      src="http://localhost:3000/assets/images/image.svg"
+    />
+  </a>
+</li>
+`;

@@ -1,0 +1,172 @@
+import gql from 'graphql-tag';
+import fetch from 'isomorphic-unfetch';
+import { PageScaffoldData } from '../components/DefaultLayout';
+
+export interface SpotlightPage {
+  title: string;
+  full_url: string;
+  relative_url: string;
+  country_code: string;
+  country_name: string;
+  currency_code: string;
+  themes: SpotlightTheme[];
+}
+
+export interface SpotlightTheme {
+  name: string;
+  slug: string;
+  section: string | null;
+  indicators: SpotlightIndicator[];
+}
+
+export type DataFormat = 'plain' | 'currency' | 'percent';
+
+export interface SpotlightIndicator {
+  ddw_id: string;
+  name: string;
+  description?: string;
+  start_year?: number;
+  end_year?: number;
+  data_format: DataFormat;
+  range?: string;
+  value_prefix?: string;
+  value_suffix?: string;
+  tooltip_template?: string;
+  content_template: string | null; // this is a JSON string in the format of SpotlightIndicatorContent
+  colour?: string;
+  source?: string;
+}
+
+export interface ContentMeta {
+  description?: string;
+  source?: string;
+}
+
+export interface ContentNote {
+  content?: string;
+  meta?: ContentMeta;
+}
+
+export type Aggregation = 'SUM' | 'AVG' | 'PERCENT' | 'POSN ASC' | 'POSN DESC';
+
+interface SharedIndicatorContentProps {
+  indicators: string[];
+  startYear?: number;
+  endYear?: number;
+  title?: string;
+  meta?: ContentMeta;
+  fetchAll?: boolean;
+  aggregation?: Aggregation; // this allows for simple operations on the data for more complex stats
+}
+
+export interface IndicatorStat extends SharedIndicatorContentProps {
+  dataFormat: DataFormat;
+  valuePrefix?: string;
+  valueSuffix?: string;
+  valueTemplate?: string;
+  note?: ContentNote;
+}
+
+export interface IndicatorChart extends SharedIndicatorContentProps {
+  type: 'bar' | 'pie';
+  options: ECharts.Options;
+  bar?: {
+    legend: string;
+    xAxis: string;
+    yAxis: string[];
+  };
+  pie?: {
+    legend: string;
+    value: string;
+    name: string;
+  };
+}
+
+export interface SpotlightIndicatorContent {
+  stat?: IndicatorStat;
+  chart?: IndicatorChart;
+}
+
+export interface FetchIndicatorDataOptions {
+  indicators: string[];
+  geocodes?: string[];
+  startYear?: number;
+  endYear?: number;
+  limit?: number;
+  offset?: number;
+}
+
+export interface SpotlightLocation {
+  geocode: string;
+  name: string;
+}
+
+export interface LocationData extends SpotlightLocation {
+  value: number;
+  year: number;
+  meta: string; // this is a JSON string - refer to LocationDataMeta to see structure
+}
+
+export interface LocationIndicatorData {
+  indicator: string;
+  data: LocationData[];
+}
+
+export type BudgetType = 'actual' | 'approved' | 'proposed';
+
+export interface LocationDataMeta {
+  budgetType?: BudgetType;
+  valueLocalCurrency?: number;
+  extra?: { [key: string]: number | string };
+}
+
+export interface ProcessedData {
+  value: number;
+  name: string;
+  meta?: LocationDataMeta;
+}
+
+export const fetchScaffoldData = async (): Promise<PageScaffoldData> => {
+  const resNavigation = await fetch(`${process.env.CMS_URL}api/spotlights/navigation/`);
+  const navigation = await resNavigation.json();
+  const resFooter = await fetch(`${process.env.CMS_URL}api/footer/`);
+  const footer = await resFooter.json();
+
+  return { navigation, footer };
+};
+
+export const fetchSpotlightPage = async (slug: string): Promise<SpotlightPage> => {
+  const response = await fetch(`${process.env.CMS_URL}api/spotlights/page/${slug}/`);
+  const data = await response.json();
+
+  return data;
+};
+
+export const GET_INDICATOR_DATA = gql`
+  query GetIndicatorData(
+    $indicators: [String]!
+    $geocodes: [String] = []
+    $startYear: Int = 0
+    $endYear: Int = 9999
+    $limit: Int = 100
+    $page: Int = 0
+  ) {
+    data(
+      indicators: $indicators
+      geocodes: $geocodes
+      startYear: $startYear
+      endYear: $endYear
+      limit: $limit
+      page: $page
+    ) {
+      indicator
+      data {
+        geocode
+        name
+        value
+        year
+        meta
+      }
+    }
+  }
+`;

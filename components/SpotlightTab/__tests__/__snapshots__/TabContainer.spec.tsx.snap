@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabContainer renders correctly 1`] = `
+<section
+  className="tabs__container"
+  id="container"
+>
+  <input
+    className="tabs__input"
+    id="container-option"
+    name="sections"
+    type="radio"
+  />
+  <label
+    className="tabs__label"
+    htmlFor="container-option"
+  >
+    My Label
+  </label>
+</section>
+`;

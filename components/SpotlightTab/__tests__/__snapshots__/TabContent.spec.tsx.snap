@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabContent renders correctly 1`] = `
+<article
+  className="tabs__content"
+/>
+`;
+
+exports[`TabContent renders with children 1`] = `
+<article
+  className="tabs__content"
+>
+  <div>
+    My Child
+  </div>
+</article>
+`;

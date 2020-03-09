@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Legend renders only LegendItem children 1`] = `
+<div
+  className="spotlight-legend"
+  data-testid="spotlight-legend"
+>
+  <span
+    data-testid="spotlight-legend-item"
+  >
+    <style
+      jsx={true}
+    >
+      
+      span {
+        background-color: #D1CBCF;
+        color: inherit;
+      }
+    
+    </style>
+  </span>
+  <span
+    data-testid="spotlight-legend-item"
+  >
+    <style
+      jsx={true}
+    >
+      
+      span {
+        background-color: #D1CBCF;
+        color: inherit;
+      }
+    
+    </style>
+  </span>
+</div>
+`;

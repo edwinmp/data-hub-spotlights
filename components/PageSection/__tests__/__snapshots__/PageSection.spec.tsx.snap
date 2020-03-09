@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PageSection renders correctly 1`] = `
+<section
+  className="section"
+>
+  <div
+    className="row"
+  />
+</section>
+`;
+
+exports[`PageSection renders the appropriate class when dark 1`] = `
+<section
+  className="section section--alt-dark"
+>
+  <div
+    className="row"
+  />
+</section>
+`;
+
+exports[`PageSection renders the appropriate class when narrow 1`] = `
+<section
+  className="section"
+>
+  <div
+    className="row row--narrow"
+  />
+</section>
+`;
+
+exports[`PageSection renders the appropriate class when wide 1`] = `
+<section
+  className="section"
+>
+  <div
+    className="row row--wide"
+  />
+</section>
+`;

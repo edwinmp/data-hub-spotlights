@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VisualisationSection renders correctly 1`] = `
+<div
+  className="spotlight"
+/>
+`;
+
+exports[`VisualisationSection renders only SpotlightSidebar & VisualisationSectionMain 1`] = `
+<div
+  className="spotlight"
+>
+  <div
+    className="spotlight__aside"
+  >
+    <style
+      jsx={true}
+    >
+      
+        min-height: 500px;
+        
+      
+    </style>
+  </div>
+  <div
+    className="spotlight__main"
+  >
+    <style
+      jsx={true}
+    >
+      
+      .spotlight__main :global(.leaflet-container) {
+        background: inherit;
+      }
+      
+    
+    </style>
+  </div>
+</div>
+`;
+
+exports[`VisualisationSection renders with the specified class name 1`] = `
+<div
+  className="spotlight spotlight--leader"
+/>
+`;
