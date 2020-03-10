@@ -72,16 +72,19 @@ export interface IndicatorStat extends SharedIndicatorContentProps {
 export interface IndicatorChart extends SharedIndicatorContentProps {
   type: 'bar' | 'pie';
   options: EChartOption<EChartOption.SeriesBar | EChartOption.SeriesLine>;
-  bar?: {
-    legend: string;
-    xAxis: string;
-    yAxis: string[];
-  };
+  bar?: BarLineOptions;
+  line?: BarLineOptions;
   pie?: {
     legend: string;
     value: string;
     name: string;
   };
+}
+
+export interface BarLineOptions {
+  legend: string;
+  xAxis: string;
+  yAxis: string[];
 }
 
 export interface SpotlightIndicatorContent {

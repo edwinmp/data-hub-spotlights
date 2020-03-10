@@ -13,7 +13,7 @@ const IndicatorChartDataHandler: FunctionComponent<DataHandlerProps> = ({ data, 
     if (data.length === 1) {
       return <IndicatorStatChart options={generateChartOptions(configs, data)} />;
     }
-    console.log('TODO: handled charts built from multiple indicators');
+    console.log('TODO: handle charts built from multiple indicators');
 
     // TODO: handle charts built from multiple indicators
 
