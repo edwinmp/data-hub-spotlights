@@ -50,7 +50,7 @@ const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = props =
             <div key={index}>
               <DynamicDataLoader
                 indicators={_indicators}
-                year={year}
+                startYear={year}
                 onLoad={onLoad(index)}
                 geocodes={props.locations && props.locations.map(loc => loc.geocode)}
               />
