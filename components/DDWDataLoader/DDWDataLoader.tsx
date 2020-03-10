@@ -35,6 +35,7 @@ const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode
   }
   useEffect(() => {
     if (props.onLoad && !loading && data) {
+      console.log('Data is ' + JSON.stringify(data.data));
       props.onLoad(data.data);
     }
   }, [loading]);
