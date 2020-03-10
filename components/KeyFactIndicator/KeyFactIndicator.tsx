@@ -40,7 +40,8 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   <DynamicDataLoader
                     indicators={stat.indicators}
                     geocodes={!stat.fetchAll ? [location.geocode] : undefined}
-                    year={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
+                    startYear={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
+                    endYear={stat.endYear || stat.startYear || indicator.end_year || indicator.start_year}
                   >
                     <IndicatorStatDataHandler
                       valueOptions={{
@@ -70,7 +71,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   <DynamicDataLoader
                     indicators={chart.indicators}
                     geocodes={!chart.fetchAll ? [location.geocode] : undefined}
-                    year={chart.startYear || chart.endYear || indicator.start_year || indicator.end_year}
+                    startYear={chart.startYear || chart.endYear || indicator.start_year || indicator.end_year}
                   >
                     <IndicatorChartDataHandler {...chart} />
                   </DynamicDataLoader>
@@ -98,7 +99,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
         <DynamicDataLoader
           indicators={[indicator.ddw_id]}
           geocodes={[location.geocode]}
-          year={indicator.start_year || indicator.end_year}
+          startYear={indicator.start_year || indicator.end_year}
         >
           <IndicatorStatDataHandler
             valueOptions={{

@@ -84,7 +84,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
             <DynamicMapDataLoader
               indicators={indicatorID ? [indicatorID] : undefined}
               geocodes={activeLocation && [activeLocation.geocode]}
-              year={options.year ? options.year : options.indicator && options.indicator.start_year}
+              startYear={options.year ? options.year : options.indicator && options.indicator.start_year}
               limit={10000}
             >
               <DynamicMap
