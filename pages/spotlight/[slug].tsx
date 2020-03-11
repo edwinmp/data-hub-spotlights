@@ -50,7 +50,16 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
           countryCode={page.country_code}
           countryName={page.country_name}
         />
-        <RevenueExpenditureSection />
+        {filterByThemeSection(page.themes, 'revenue-expenditure').map(theme =>
+          theme.indicators.map((indicator, index) => (
+            <RevenueExpenditureSection
+              key={index}
+              indicator={indicator}
+              countryName={page.country_name}
+              location={location}
+            />
+          ))
+        )}
       </>
     );
   }
