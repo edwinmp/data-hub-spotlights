@@ -1,14 +1,15 @@
 import React, { FunctionComponent, useState } from 'react';
-import { PageSection, PageSectionHeading } from '../PageSection';
-import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain, SpotlightBannerForm } from '../SpotlightBanner';
+import { createYearOptionsFromRange, processTemplateString, SpotlightIndicator, SpotlightLocation } from '../../utils';
+import { Button } from '../Button';
+import { CurrencySelector } from '../CurrencySelector';
 import { FormField } from '../FormField';
 import { FormFieldSelect } from '../FormFieldSelect';
-import { Button } from '../Button';
-import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { SpotlightSidebar } from '../SpotlightSidebar';
+import { PageSection, PageSectionHeading } from '../PageSection';
+import { SelectOption } from '../Select';
+import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBannerMain } from '../SpotlightBanner';
 import { SpotlightInteractive } from '../SpotlightInteractive';
-import { processTemplateString, SpotlightLocation, SpotlightIndicator } from '../../utils';
-import { CurrencySelector } from '../CurrencySelector';
+import { SpotlightSidebar } from '../SpotlightSidebar';
+import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 
 interface SelectType {
   label: string;
@@ -26,9 +27,11 @@ interface RevenueSectionProps {
 
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
   const [useLocalValue, setUseLocalValue] = useState(false);
+  const [selectedYear, setSelectedYear] = useState(indicator.start_year);
 
   const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
-  console.log(useLocalValue); // TODO: remove when variable is used elsewhere
+  const onSelectYear = (option?: SelectOption): void => setSelectedYear(option ? parseInt(option.value) : undefined);
+  console.log(useLocalValue, selectedYear); // TODO: remove when variable is used elsewhere
 
   return (
     <PageSection>
@@ -47,7 +50,14 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         <SpotlightBannerMain>
           <SpotlightBannerForm>
             <FormField className="form-field--inline">
-              <FormFieldSelect label="Year" options={props.yearOptions} />
+              <FormFieldSelect
+                label="Year"
+                options={createYearOptionsFromRange(indicator.start_year, indicator.end_year)}
+                defaultValue={
+                  indicator.start_year ? { label: `${indicator.start_year}`, value: `${indicator.start_year}` } : null
+                }
+                onChange={onSelectYear}
+              />
             </FormField>
             <FormField className="form-field--inline">
               <Button>Update</Button>
