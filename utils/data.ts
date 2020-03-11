@@ -114,7 +114,7 @@ export interface LocationIndicatorData {
 
 export type BudgetType = 'actual' | 'approved' | 'proposed';
 
-export interface LocationDataMeta {
+export interface LocationDataMeta extends Object {
   budgetType?: BudgetType;
   valueLocalCurrency?: number;
   extra?: { [key: string]: number | string };
@@ -140,6 +140,23 @@ export const fetchSpotlightPage = async (slug: string): Promise<SpotlightPage> =
   const data = await response.json();
 
   return data;
+};
+
+export const extraValueFromMeta = (meta: string, field: string, defaultValue = ''): string | number => {
+  try {
+    const _meta: LocationDataMeta = JSON.parse(meta);
+
+    if (_meta.hasOwnProperty(field)) {
+      return (_meta as any)[field];
+    }
+    if (_meta.extra) {
+      return _meta.extra[field];
+    }
+
+    return defaultValue;
+  } catch (error) {
+    return defaultValue;
+  }
 };
 
 export const GET_INDICATOR_DATA = gql`
