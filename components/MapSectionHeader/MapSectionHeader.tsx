@@ -36,7 +36,7 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
       : [];
 
   return (
-    <SpotlightBanner header>
+    <SpotlightBanner className="spotlight-banner--header">
       <SpotlightBannerAside>
         <BoundaryMenu countryName={props.countryName} boundaries={boundaries} onSelectLocation={onSelectLocation} />
       </SpotlightBannerAside>
@@ -52,7 +52,7 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
             styles={{
               dropdownIndicator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
               indicatorSeparator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
-              singleValue: (provided): CSSProperties => ({ ...provided, textTransform: 'uppercase' })
+              singleValue: (provided): CSSProperties => ({ ...provided, textTransform: 'capitalize' })
             }}
             noOptionsMessage={noOptionsMessage}
             onChange={onSelectLocation as (options: ValueType<OptionTypeBase>) => void}

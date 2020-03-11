@@ -15,6 +15,7 @@ exports[`SpotlightMenuToggle It adds inactive class when show prop is false 1`] 
     >
       
           cursor: pointer;
+          text-transform: capitalize;
         
     </style>
   </a>
@@ -36,6 +37,7 @@ exports[`SpotlightMenuToggle renders children correctly 1`] = `
     >
       
           cursor: pointer;
+          text-transform: capitalize;
         
     </style>
   </a>
@@ -57,6 +59,7 @@ exports[`SpotlightMenuToggle renders correctly 1`] = `
     >
       
           cursor: pointer;
+          text-transform: capitalize;
         
     </style>
   </a>

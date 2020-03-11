@@ -1,6 +1,7 @@
-import { SpotlightLocation } from './data';
 import { SelectOption, SelectOptions } from '../components/Select';
 import { getLocationIDFromGeoCode } from '../components/SpotlightMap/utils';
+import { SpotlightLocation } from './data';
+import { toCamelCase } from './strings';
 
 export interface SpotlightBoundary extends SpotlightLocation {
   code: string;
@@ -35,7 +36,7 @@ export const createLocationOptions = (
   const districts: SpotlightBoundary[] = getBoundariesByDepth(locations, depth);
   // up to district level
   const options: SelectOption[] = districts.map(content => ({
-    label: content.name,
+    label: toCamelCase(content.name),
     value: content.geocode
   }));
 

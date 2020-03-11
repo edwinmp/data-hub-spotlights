@@ -5,6 +5,7 @@ import { IndicatorComparisonSection } from '../../components/IndicatorComparison
 import { KeyFactsSection } from '../../components/KeyFactsSection';
 import { MapSection } from '../../components/MapSection';
 import { PageSection } from '../../components/PageSection';
+import { RevenueExpenditureSection } from '../../components/RevenueExpenditureSection';
 import {
   fetchScaffoldData,
   fetchSpotlightPage,
@@ -49,6 +50,17 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
           countryCode={page.country_code}
           countryName={page.country_name}
         />
+        {filterByThemeSection(page.themes, 'revenue-expenditure').map(theme =>
+          theme.indicators.map((indicator, index) => (
+            <RevenueExpenditureSection
+              key={index}
+              indicator={indicator}
+              countryName={page.country_name}
+              currencyCode={page.currency_code || ''}
+              location={location}
+            />
+          ))
+        )}
       </>
     );
   }
