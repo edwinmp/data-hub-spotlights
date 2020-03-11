@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { Select, SelectOption } from '../Select';
+import { FormFieldSelect } from '../FormFieldSelect';
+import { SelectOption } from '../Select';
 
 interface CurrencySelectorProps {
   currencyCode: string; // for local currency - only alternative is US$
@@ -24,8 +25,13 @@ const CurrencySelector: FunctionComponent<CurrencySelectorProps> = ({ onChange, 
 
   return (
     <div>
-      <label className="form-label">{props.label}</label>
-      <Select options={options} onChange={onSelectCurrency} placeholder={props.placeholder} defaultValue={options[0]} />
+      <FormFieldSelect
+        label={props.label}
+        options={options}
+        onChange={onSelectCurrency}
+        placeholder={props.placeholder}
+        defaultValue={options[0]}
+      />
       <style jsx>{`
         width: ${props.width};
       `}</style>
