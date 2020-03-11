@@ -1,6 +1,11 @@
-import React, { FunctionComponent, useState } from 'react';
-import { createYearOptionsFromRange, processTemplateString, SpotlightIndicator, SpotlightLocation } from '../../utils';
-import { Button } from '../Button';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import {
+  createYearOptionsFromRange,
+  processTemplateString,
+  SpotlightIndicator,
+  SpotlightLocation,
+  toCamelCase
+} from '../../utils';
 import { CurrencySelector } from '../CurrencySelector';
 import { FormField } from '../FormField';
 import { FormFieldSelect } from '../FormFieldSelect';
@@ -10,6 +15,7 @@ import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBa
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
+import { useRevenueExpenditureData } from './utils';
 
 interface SelectType {
   label: string;
@@ -22,16 +28,28 @@ interface RevenueSectionProps {
   indicator: SpotlightIndicator;
   location?: SpotlightLocation;
   budgetTypeOptions?: SelectType[];
-  yearOptions?: SelectType[];
 }
 
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
   const [useLocalValue, setUseLocalValue] = useState(false);
-  const [selectedYear, setSelectedYear] = useState(indicator.start_year);
+  const { dataLoading, budgetTypes, options, setOptions } = useRevenueExpenditureData({
+    indicators: [indicator.ddw_id],
+    geocodes: location && [location.geocode],
+    startYear: indicator.start_year,
+    limit: 500
+  });
+  useEffect(() => {
+    setOptions({ ...options, geocodes: location && [location.geocode] });
+  }, [location]);
 
   const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
-  const onSelectYear = (option?: SelectOption): void => setSelectedYear(option ? parseInt(option.value) : undefined);
-  console.log(useLocalValue, selectedYear); // TODO: remove when variable is used elsewhere
+  const onSelectYear = (option?: SelectOption): void => {
+    setOptions({
+      ...options,
+      startYear: option ? parseInt(option.value) : undefined
+    });
+  };
+  console.log(useLocalValue); // TODO: remove when variable is used elsewhere
 
   return (
     <PageSection>
@@ -41,7 +59,12 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       <SpotlightBanner className="spotlight-banner--alt">
         <SpotlightBannerAside>
           <FormField className="form-field--inline">
-            <FormFieldSelect label="Budget Type" options={props.budgetTypeOptions} />
+            <FormFieldSelect
+              label="Budget Type"
+              options={budgetTypes.map(type => ({ label: toCamelCase(type), value: type }))}
+              value={budgetTypes.length ? { label: toCamelCase(budgetTypes[0]), value: budgetTypes[0] } : null}
+              isLoading={dataLoading}
+            />
           </FormField>
           <FormField className="form-field--inline">
             <CurrencySelector currencyCode={props.currencyCode} onChange={onChangeCurrency} width="100%" />
@@ -58,9 +81,6 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                 }
                 onChange={onSelectYear}
               />
-            </FormField>
-            <FormField className="form-field--inline">
-              <Button>Update</Button>
             </FormField>
           </SpotlightBannerForm>
         </SpotlightBannerMain>
