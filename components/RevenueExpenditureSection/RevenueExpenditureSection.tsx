@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain, SpotlightBannerForm } from '../SpotlightBanner';
 import { FormField } from '../FormField';
@@ -8,6 +8,7 @@ import { VisualisationSection, VisualisationSectionMain } from '../Visualisation
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { processTemplateString, SpotlightLocation, SpotlightIndicator } from '../../utils';
+import { CurrencySelector } from '../CurrencySelector';
 
 interface SelectType {
   label: string;
@@ -16,14 +17,19 @@ interface SelectType {
 
 interface RevenueSectionProps {
   countryName: string;
+  currencyCode: string;
   indicator: SpotlightIndicator;
   location?: SpotlightLocation;
   budgetTypeOptions?: SelectType[];
-  currencyOptions?: SelectType[];
   yearOptions?: SelectType[];
 }
 
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
+  const [useLocalValue, setUseLocalValue] = useState(false);
+
+  const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
+  console.log(useLocalValue); // TODO: remove when variable is used elsewhere
+
   return (
     <PageSection>
       <PageSectionHeading>
@@ -35,7 +41,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
             <FormFieldSelect label="Budget Type" options={props.budgetTypeOptions} />
           </FormField>
           <FormField className="form-field--inline">
-            <FormFieldSelect label="Currency" options={props.currencyOptions} />
+            <CurrencySelector currencyCode={props.currencyCode} onChange={onChangeCurrency} width="100%" />
           </FormField>
         </SpotlightBannerAside>
         <SpotlightBannerMain>
