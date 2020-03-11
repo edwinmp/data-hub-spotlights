@@ -9,8 +9,9 @@ export const useRevenueExpenditureData = (optns: DataLoaderProps): RevenueExpend
   if (!dataLoading && data && data.length) {
     const processedData = processRevenueExpenditureData(data[0].data);
     const groupedByBudgetType = groupBy(processedData, processedData => processedData.budgetType);
+
     return {
-      data: processedData,
+      data: groupedByBudgetType,
       dataLoading: false,
       options,
       setOptions,
@@ -18,5 +19,5 @@ export const useRevenueExpenditureData = (optns: DataLoaderProps): RevenueExpend
     };
   }
 
-  return { data: [], dataLoading: false, options, setOptions, budgetTypes: [] };
+  return { data: {}, dataLoading: false, options, setOptions, budgetTypes: [] };
 };
