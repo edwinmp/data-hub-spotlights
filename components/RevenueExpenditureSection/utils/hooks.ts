@@ -1,7 +1,7 @@
 import { groupBy } from 'underscore';
 import { DataLoaderProps, useDDWData } from '../../DDWDataLoader';
 import { processRevenueExpenditureData } from './data';
-import { GroupedRevenueExpenditureData, RevenueExpenditureHook as REHook } from './types';
+import { BudgetTypeData, RevenueExpenditureHook as REHook } from './types';
 import { SpotlightIndicator, SpotlightIndicatorContent } from '../../../utils';
 
 export const useRevenueExpenditureData = (optns: DataLoaderProps, indicator: SpotlightIndicator): REHook => {
@@ -19,7 +19,7 @@ export const useRevenueExpenditureData = (optns: DataLoaderProps, indicator: Spo
     const configs = contentOptions.revenue || contentOptions.expenditure;
     const processedData = processRevenueExpenditureData(data[0].data, configs);
     const groupedByYear = groupBy(processedData, processedData => processedData.year);
-    const groupedByYearAndBudgetType: { [key: string]: GroupedRevenueExpenditureData } = {};
+    const groupedByYearAndBudgetType: { [key: string]: BudgetTypeData } = {};
     Object.keys(groupedByYear).forEach(year => {
       const groupedByBudgetType = groupBy(groupedByYear[year], processedData => processedData.budgetType);
       groupedByYearAndBudgetType[year] = groupedByBudgetType;

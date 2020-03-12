@@ -34,9 +34,10 @@ interface RevenueSectionProps {
 }
 
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
-  // const [useLocalValue, setUseLocalValue] = useState(false);
+  const [useLocalValue, setUseLocalValue] = useState(false);
   const [year, setYear] = useState<number | undefined>(indicator.start_year && indicator.start_year);
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
+  const [selectedBudgetType, setSelectedBudgetType] = useState<BudgetType | undefined>(undefined);
   const { data, dataLoading, options, setOptions } = useRevenueExpenditureData(
     {
       indicators: [indicator.ddw_id],
@@ -50,16 +51,20 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   }, [location]);
   useEffect(() => {
     if (!dataLoading && year && data.hasOwnProperty(year)) {
-      setBudgetTypes(Object.keys(data[year]) as BudgetType[]);
+      const _budgetTypes = Object.keys(data[year]) as BudgetType[];
+      setBudgetTypes(_budgetTypes);
+      setSelectedBudgetType(_budgetTypes[0]);
     }
   }, [dataLoading]);
 
-  // const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
+  const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
   const onSelectYear = (option?: SelectOption): void => {
     if (option) {
       setYear(parseInt(option.value));
       if (data && data[option.value]) {
-        setBudgetTypes(Object.keys(data[option.value]) as BudgetType[]);
+        const _budgetTypes = Object.keys(data[option.value]) as BudgetType[];
+        setBudgetTypes(_budgetTypes);
+        setSelectedBudgetType(_budgetTypes[0]);
       }
     } else {
       setYear(undefined);
@@ -99,7 +104,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         <SpotlightBannerMain>
           <SpotlightBannerForm>
             <FormField className="form-field--inline">
-              <CurrencySelector currencyCode={props.currencyCode} width="100%" />
+              <CurrencySelector currencyCode={props.currencyCode} width="100%" onChange={onChangeCurrency} />
             </FormField>
           </SpotlightBannerForm>
         </SpotlightBannerMain>
@@ -108,7 +113,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       <VisualisationSection>
         <SpotlightSidebar>
           <SpotlightInteractive background="#ffffff">
-            <RevenueExpenditureLineChart data={[]} />
+            <RevenueExpenditureLineChart data={data} budgetType={selectedBudgetType} useLocalCurrency={useLocalValue} />
           </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
