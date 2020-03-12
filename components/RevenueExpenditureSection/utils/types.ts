@@ -16,4 +16,5 @@ export interface RevenueExpenditureData {
   value: number;
   valueLocalCurrency: number;
   budgetType: BudgetType;
+  levels: string[];
 }
