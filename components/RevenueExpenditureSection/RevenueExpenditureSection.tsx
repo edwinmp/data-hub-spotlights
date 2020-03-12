@@ -11,6 +11,7 @@ import { CurrencySelector } from '../CurrencySelector';
 import { FormField } from '../FormField';
 import { FormFieldSelect } from '../FormFieldSelect';
 import { PageSection, PageSectionHeading } from '../PageSection';
+import { RevenueExpenditureLineChart } from '../RevenueExpenditureLineChart';
 import { SelectOption } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBannerMain } from '../SpotlightBanner';
 import { SpotlightInteractive } from '../SpotlightInteractive';
@@ -106,7 +107,9 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
       <VisualisationSection>
         <SpotlightSidebar>
-          <SpotlightInteractive />
+          <SpotlightInteractive background="#ffffff">
+            <RevenueExpenditureLineChart data={[]} />
+          </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
           <SpotlightInteractive />
