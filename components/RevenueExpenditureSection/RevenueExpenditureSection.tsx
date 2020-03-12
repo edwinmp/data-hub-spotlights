@@ -36,11 +36,14 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   // const [useLocalValue, setUseLocalValue] = useState(false);
   const [year, setYear] = useState<number | undefined>(indicator.start_year && indicator.start_year);
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
-  const { data, dataLoading, options, setOptions } = useRevenueExpenditureData({
-    indicators: [indicator.ddw_id],
-    geocodes: location ? [location.geocode] : [props.countryCode],
-    limit: 1000
-  });
+  const { data, dataLoading, options, setOptions } = useRevenueExpenditureData(
+    {
+      indicators: [indicator.ddw_id],
+      geocodes: location ? [location.geocode] : [props.countryCode],
+      limit: 1000
+    },
+    indicator
+  );
   useEffect(() => {
     setOptions({ ...options, geocodes: location ? [location.geocode] : [props.countryCode] });
   }, [location]);
@@ -62,6 +65,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setBudgetTypes([]);
     }
   };
+  console.log(data);
 
   return (
     <PageSection>

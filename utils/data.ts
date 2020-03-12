@@ -86,6 +86,12 @@ export interface IndicatorChart extends SharedIndicatorContentProps {
 export interface SpotlightIndicatorContent {
   stat?: IndicatorStat;
   chart?: IndicatorChart;
+  revenue?: RevenueExpenditureConfig;
+  expenditure?: RevenueExpenditureConfig;
+}
+
+export interface RevenueExpenditureConfig {
+  root: string; // the name/slug of the root level
 }
 
 export interface FetchIndicatorDataOptions {
