@@ -24,6 +24,7 @@ export type DataFormat = 'plain' | 'currency' | 'percent';
 export interface SpotlightIndicator {
   ddw_id: string;
   name: string;
+  slug: string;
   description?: string;
   start_year?: number;
   end_year?: number;
