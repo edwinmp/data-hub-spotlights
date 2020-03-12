@@ -35,8 +35,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const { dataLoading, budgetTypes, options, setOptions } = useRevenueExpenditureData({
     indicators: [indicator.ddw_id],
     geocodes: location && [location.geocode],
-    startYear: indicator.start_year,
-    limit: 500
+    limit: 1000
   });
   useEffect(() => {
     setOptions({ ...options, geocodes: location && [location.geocode] });
