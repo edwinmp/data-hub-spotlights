@@ -3,13 +3,15 @@ import { BudgetType } from '../../../utils';
 import { DataLoaderProps } from '../../DDWDataLoader';
 
 export interface RevenueExpenditureHook {
-  data: { [key: string]: GroupedRevenueExpenditureData };
+  data: YearData;
   dataLoading: boolean;
   options: DataLoaderProps;
   setOptions: Dispatch<SetStateAction<DataLoaderProps>>;
 }
 
-export type GroupedRevenueExpenditureData = { [key in BudgetType]?: RevenueExpenditureData[] };
+export type YearData = { [key: string]: BudgetTypeData };
+
+export type BudgetTypeData = { [key in BudgetType]?: RevenueExpenditureData[] };
 
 export interface RevenueExpenditureData {
   year: number;
