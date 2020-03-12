@@ -3,9 +3,8 @@ import { BudgetType } from '../../../utils';
 import { DataLoaderProps } from '../../DDWDataLoader';
 
 export interface RevenueExpenditureHook {
-  data: GroupedRevenueExpenditureData;
+  data: { [key: string]: GroupedRevenueExpenditureData };
   dataLoading: boolean;
-  budgetTypes: BudgetType[];
   options: DataLoaderProps;
   setOptions: Dispatch<SetStateAction<DataLoaderProps>>;
 }
@@ -13,6 +12,7 @@ export interface RevenueExpenditureHook {
 export type GroupedRevenueExpenditureData = { [key in BudgetType]?: RevenueExpenditureData[] };
 
 export interface RevenueExpenditureData {
+  year: number;
   value: number;
   valueLocalCurrency: number;
   budgetType: BudgetType;

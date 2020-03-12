@@ -1,23 +1,26 @@
+import { groupBy } from 'underscore';
 import { DataLoaderProps, useDDWData } from '../../DDWDataLoader';
 import { processRevenueExpenditureData } from './data';
-import { RevenueExpenditureHook } from './types';
-import { groupBy } from 'underscore';
-import { BudgetType } from '../../../utils';
+import { GroupedRevenueExpenditureData, RevenueExpenditureHook } from './types';
 
 export const useRevenueExpenditureData = (optns: DataLoaderProps): RevenueExpenditureHook => {
   const { data, dataLoading, options, setOptions } = useDDWData(optns);
   if (!dataLoading && data && data.length) {
     const processedData = processRevenueExpenditureData(data[0].data);
-    const groupedByBudgetType = groupBy(processedData, processedData => processedData.budgetType);
+    const groupedByYear = groupBy(processedData, processedData => processedData.year);
+    const groupedByYearAndBudgetType: { [key: string]: GroupedRevenueExpenditureData } = {};
+    Object.keys(groupedByYear).forEach(year => {
+      const groupedByBudgetType = groupBy(groupedByYear[year], processedData => processedData.budgetType);
+      groupedByYearAndBudgetType[year] = groupedByBudgetType;
+    });
 
     return {
-      data: groupedByBudgetType,
+      data: groupedByYearAndBudgetType,
       dataLoading: false,
       options,
-      setOptions,
-      budgetTypes: Object.keys(groupedByBudgetType) as BudgetType[]
+      setOptions
     };
   }
 
-  return { data: {}, dataLoading: false, options, setOptions, budgetTypes: [] };
+  return { data: {}, dataLoading, options, setOptions };
 };
