@@ -16,13 +16,52 @@ declare namespace ECharts {
     setOption: (options: Options) => void;
   }
 
+  export interface TooltipFormatterParams {
+    componentType: 'series';
+    // Series type
+    seriesType: string;
+    // Series index in option.series
+    seriesIndex: number;
+    // Series name
+    seriesName: string;
+    // Data name, or category name
+    name: string;
+    // Data index in input data array
+    dataIndex: number;
+    // Original data as input
+    data: Record<string, any>;
+    // Value of data. In most series it is the same as data.
+    // But in some series it is some part of the data (e.g., in map, radar)
+    value: number | Array | Record<string, any>;
+    // encoding info of coordinate system
+    // Key: coord, like ('x' 'y' 'radius' 'angle')
+    // value: Must be an array, not null/undefined. Contain dimension indices, like:
+    // {
+    //     x: [2] // values on dimension index 2 are mapped to x axis.
+    //     y: [0] // values on dimension index 0 are mapped to y axis.
+    // }
+    encode: Record<string, any>;
+    // dimension names list
+    dimensionNames: Array<string>;
+    // data dimension index, for example 0 or 1 or 2 ...
+    // Only work in `radar` series.
+    dimensionIndex: number;
+    // Color of data
+    color: string;
+
+    // the percentage of pie chart
+    percent: number;
+  }
+
+  type TFP = TooltipFormatterParams;
+
   interface Options {
     title?: {
       text: string;
     };
     tooltip?: {
       trigger?: 'item' | 'axis' | 'none';
-      formatter?: string;
+      formatter?: string | ((params: TFP | TFP[], ticket: string | number, callback?: () => void) => string);
       axisPointer?: {
         type: 'line' | 'shadow' | 'cross' | 'none';
       };
@@ -55,7 +94,7 @@ declare namespace ECharts {
     nameLocation?: 'start' | 'end' | 'center';
     nameTextStyle?: TextStyle;
     show?: boolean;
-    data?: Data[];
+    data?: Data[] | (string | number)[];
     axisLine?: AxisLine;
     axisLabel?: AxisLabel;
     axisTick?: AxisTick;
@@ -64,6 +103,12 @@ declare namespace ECharts {
     inverse?: boolean;
     offset?: number;
     gridIndex?: number;
+    boundaryGap?: boolean;
+    min?: number | string;
+    max?: number | string;
+    interval?: number;
+    minInterval?: number;
+    maxInterval?: number;
   }
 
   type AxisType = 'category' | 'value' | 'time' | 'log';
@@ -92,6 +137,7 @@ declare namespace ECharts {
   interface AxisLine {
     show?: boolean;
     lineStyle?: AxisLineStyle;
+    onZero?: boolean;
   }
 
   interface AxisLabel {
@@ -142,6 +188,7 @@ declare namespace ECharts {
     label?: SeriesLabel;
     barWidth?: number;
     barGap?: string;
+    showSymbol?: boolean;
   }
 
   interface SeriesLabel {
