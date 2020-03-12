@@ -24,6 +24,7 @@ interface SelectType {
 }
 
 interface RevenueSectionProps {
+  countryCode: string;
   countryName: string;
   currencyCode: string;
   indicator: SpotlightIndicator;
@@ -37,10 +38,12 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
   const { data, dataLoading, options, setOptions } = useRevenueExpenditureData({
     indicators: [indicator.ddw_id],
-    geocodes: location && [location.geocode],
+    geocodes: location ? [location.geocode] : [props.countryCode],
     limit: 1000
   });
-  useEffect(() => setOptions({ ...options, geocodes: location && [location.geocode] }), [location]);
+  useEffect(() => {
+    setOptions({ ...options, geocodes: location ? [location.geocode] : [props.countryCode] });
+  }, [location]);
   useEffect(() => {
     if (!dataLoading && year && data.hasOwnProperty(year)) {
       setBudgetTypes(Object.keys(data[year]) as BudgetType[]);

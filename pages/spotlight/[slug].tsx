@@ -57,6 +57,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
               <RevenueExpenditureSection
                 key={index}
                 indicator={indicator}
+                countryCode={page.country_code}
                 countryName={page.country_name}
                 currencyCode={page.currency_code || ''}
                 location={location}
