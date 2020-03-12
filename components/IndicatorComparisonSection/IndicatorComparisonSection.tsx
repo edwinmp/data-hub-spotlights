@@ -72,7 +72,7 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
           ) : (
             <VisualisationSectionMain width="100%">
               <SpotlightHeading>Locations in {toCamelCase(countryName)}</SpotlightHeading>
-              <SpotlightInteractive maxHeight="500px">
+              <SpotlightInteractive maxHeight="500px" background="#ffffff">
                 <IndicatorComparisonDataLoader
                   options={selections}
                   onLoad={onLoad}
