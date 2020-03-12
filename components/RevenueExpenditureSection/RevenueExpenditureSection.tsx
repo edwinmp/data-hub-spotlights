@@ -42,12 +42,16 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
     {
       indicators: [indicator.ddw_id],
       geocodes: location ? [location.geocode] : [props.countryCode],
-      limit: 1000
+      limit: 10000
     },
     indicator
   );
   useEffect(() => {
-    setOptions({ ...options, geocodes: location ? [location.geocode] : [props.countryCode] });
+    setOptions({
+      ...options,
+      geocodes: location ? [location.geocode] : [props.countryCode],
+      indicators: [indicator.ddw_id]
+    });
   }, [location]);
   useEffect(() => {
     if (!dataLoading && year && data.hasOwnProperty(year)) {
@@ -71,7 +75,6 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setBudgetTypes([]);
     }
   };
-  console.log(data);
 
   return (
     <PageSection>

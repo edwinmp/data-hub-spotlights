@@ -15,6 +15,14 @@ const fetchRootData = (data?: RevenueExpenditureData[], useLocalCurrency = false
     const rootData = data.find(d => d.levels.length === 1);
     if (rootData) {
       return useLocalCurrency ? rootData.valueLocalCurrency : rootData.value;
+    } else {
+      return data.reduce((prev, curr) => {
+        if (useLocalCurrency) {
+          return (curr.valueLocalCurrency || 0) + prev;
+        }
+
+        return (curr.value || 0) + prev;
+      }, 0);
     }
   }
 
@@ -25,7 +33,7 @@ const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = 
   const formattedData: [number, number][] = [];
   Object.keys(data).forEach(year => {
     const yearData = data[year];
-    if (budgetType) {
+    if (budgetType && yearData.hasOwnProperty(budgetType)) {
       const rootData = fetchRootData(yearData[budgetType], useLocalCurrency);
       if (rootData) {
         formattedData.push([parseInt(year), rootData]);
@@ -46,6 +54,8 @@ const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = 
 
 const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => {
   const data = formatData(props.data, props.budgetType, props.useLocalCurrency);
+  console.log(data, props.data);
+
   const options: ECharts.Options = {
     legend: { show: false },
     tooltip: {
@@ -65,7 +75,7 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => 
       axisLabel: {
         formatter: (value: number): number => value
       },
-      interval: 4
+      interval: data && data.length <= 12 ? 1 : 4
     },
     yAxis: {
       splitLine: { show: true },
