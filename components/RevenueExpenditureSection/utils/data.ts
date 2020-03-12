@@ -1,4 +1,4 @@
-import { BudgetType, extraValueFromMeta, LocationData } from '../../../utils';
+import { BudgetType, extraValueFromMeta, LocationData, RevenueExpenditureConfig } from '../../../utils';
 import { RevenueExpenditureData } from './types';
 
 const getLevels = (data: LocationData): string[] => {
@@ -13,8 +13,10 @@ const getLevels = (data: LocationData): string[] => {
   return levels;
 };
 
-export const processRevenueExpenditureData = (data: LocationData[]): RevenueExpenditureData[] => {
-  return data
+type REConfig = RevenueExpenditureConfig;
+
+export const processRevenueExpenditureData = (data: LocationData[], configs?: REConfig): RevenueExpenditureData[] => {
+  const processedData = data
     .filter(_data => _data.value)
     .map(_data => ({
       year: _data.year,
@@ -23,4 +25,6 @@ export const processRevenueExpenditureData = (data: LocationData[]): RevenueExpe
       budgetType: extraValueFromMeta(_data.meta, 'budgetType') as BudgetType,
       levels: getLevels(_data)
     }));
+
+  return configs && configs.root ? processedData.filter(_data => _data.levels[0] === configs.root) : processedData;
 };
