@@ -115,7 +115,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
       <VisualisationSection>
         <SpotlightSidebar>
-          <SpotlightInteractive background="#ffffff">
+          <SpotlightInteractive>
             <RevenueExpenditureLineChart data={data} budgetType={selectedBudgetType} useLocalCurrency={useLocalValue} />
           </SpotlightInteractive>
         </SpotlightSidebar>
