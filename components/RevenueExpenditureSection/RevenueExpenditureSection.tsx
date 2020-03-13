@@ -10,6 +10,7 @@ import {
 import { CurrencySelector } from '../CurrencySelector';
 import { FormField } from '../FormField';
 import { FormFieldSelect } from '../FormFieldSelect';
+import { Loading } from '../Loading';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { RevenueExpenditureLineChart } from '../RevenueExpenditureLineChart';
 import { SelectOption } from '../Select';
@@ -116,7 +117,13 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       <VisualisationSection>
         <SpotlightSidebar>
           <SpotlightInteractive>
-            <RevenueExpenditureLineChart data={data} budgetType={selectedBudgetType} useLocalCurrency={useLocalValue} />
+            <Loading active={dataLoading}>
+              <RevenueExpenditureLineChart
+                data={data}
+                budgetType={selectedBudgetType}
+                useLocalCurrency={useLocalValue}
+              />
+            </Loading>
           </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
