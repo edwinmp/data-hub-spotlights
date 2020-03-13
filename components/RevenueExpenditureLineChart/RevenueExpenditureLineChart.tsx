@@ -54,15 +54,12 @@ const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = 
 
 const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => {
   const data = formatData(props.data, props.budgetType, props.useLocalCurrency);
-  console.log(data, props.data);
 
   const options: ECharts.Options = {
     legend: { show: false },
     tooltip: {
       trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      },
+      axisPointer: { type: 'shadow' },
       formatter: (params: ECharts.TooltipFormatterParams[]): string => {
         const { value } = params[0];
 
@@ -72,9 +69,7 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => 
     xAxis: {
       type: 'value',
       min: data.length && data[0].length ? data[0][0] : undefined,
-      axisLabel: {
-        formatter: (value: number): number => value
-      },
+      axisLabel: { formatter: (value: number): number => value },
       interval: data && data.length <= 12 ? 1 : 4
     },
     yAxis: {
