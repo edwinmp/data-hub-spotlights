@@ -1,3 +1,4 @@
+import { EChartOption } from 'echarts';
 import gql from 'graphql-tag';
 import fetch from 'isomorphic-unfetch';
 import { PageScaffoldData } from '../components/DefaultLayout';
@@ -70,7 +71,7 @@ export interface IndicatorStat extends SharedIndicatorContentProps {
 
 export interface IndicatorChart extends SharedIndicatorContentProps {
   type: 'bar' | 'pie';
-  options: ECharts.Options;
+  options: EChartOption<EChartOption.SeriesBar | EChartOption.SeriesLine>;
   bar?: {
     legend: string;
     xAxis: string;

@@ -1,3 +1,4 @@
+import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
@@ -16,7 +17,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
     return <div>No Data</div>;
   }
 
-  const options: ECharts.Options = {
+  const options: EChartOption = {
     legend: { show: false },
     tooltip: {
       trigger: 'axis',
@@ -67,7 +68,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         xAxisIndex: 1,
         yAxisIndex: 1
       }
-    ]
+    ] as EChartOption.SeriesBar[]
   };
 
   return <EChartsBaseChart options={options} height={props.height} />;

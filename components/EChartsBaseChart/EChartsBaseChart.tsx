@@ -1,5 +1,5 @@
 import merge from 'deepmerge';
-import { init } from 'echarts';
+import { init, EChartOption, ECharts } from 'echarts';
 import React, { useEffect, useRef, FunctionComponent, useState } from 'react';
 import { axisDefaults, defaults } from './utils/options';
 
@@ -7,10 +7,10 @@ interface EChartBaseChartProps {
   width?: string;
   height?: string;
   classNames?: string;
-  options: ECharts.Options;
+  options: EChartOption;
 }
 
-const setOptions = (chart: ECharts.EChartsInstance, options: ECharts.Options): void => {
+const setOptions = (chart: ECharts, options: EChartOption): void => {
   if (options.xAxis && Array.isArray(options.xAxis)) {
     options.xAxis = options.xAxis.map(axis => merge(axisDefaults, axis));
   }
@@ -22,7 +22,7 @@ const setOptions = (chart: ECharts.EChartsInstance, options: ECharts.Options): v
 
 const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {
   const chartNode = useRef<HTMLDivElement>(null);
-  const [baseChart, setBaseChart] = useState<ECharts.EChartsInstance | undefined>(undefined);
+  const [baseChart, setBaseChart] = useState<ECharts | undefined>(undefined);
   useEffect(() => {
     if (chartNode && chartNode.current) {
       const chart = init(chartNode.current);
