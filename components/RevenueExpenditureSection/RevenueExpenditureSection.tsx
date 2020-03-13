@@ -19,6 +19,7 @@ import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { useRevenueExpenditureData } from './utils';
+import { RevenueExpenditureTreeMap } from '../RevenueExpenditureTreeMap';
 
 interface SelectType {
   label: string;
@@ -127,7 +128,11 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
           </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
-          <SpotlightInteractive />
+          <SpotlightInteractive>
+            <Loading active={dataLoading}>
+              <RevenueExpenditureTreeMap data={data} budgetType={selectedBudgetType} useLocalCurrency={useLocalValue} />
+            </Loading>
+          </SpotlightInteractive>
         </VisualisationSectionMain>
       </VisualisationSection>
     </PageSection>
