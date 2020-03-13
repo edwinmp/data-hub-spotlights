@@ -1,7 +1,8 @@
+import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
-import { EChartsBaseChart } from '../EChartsBaseChart';
-import { YearData, RevenueExpenditureData } from '../RevenueExpenditureSection/utils';
 import { BudgetType, formatNumber } from '../../utils';
+import { EChartsBaseChart } from '../EChartsBaseChart';
+import { RevenueExpenditureData, YearData } from '../RevenueExpenditureSection/utils';
 
 interface ComponentProps {
   data: YearData;
@@ -55,13 +56,13 @@ const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = 
 const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => {
   const data = formatData(props.data, props.budgetType, props.useLocalCurrency);
 
-  const options: ECharts.Options = {
+  const options: EChartOption = {
     legend: { show: false },
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'shadow' },
-      formatter: (params: ECharts.TooltipFormatterParams[]): string => {
-        const { value } = params[0];
+      formatter: (params: EChartOption.Tooltip.Format[]): string => {
+        const { value } = params[0] as { value: [number, number] };
 
         return `<div style="font-size:16px;"><strong>${value[0]}</strong> - ${formatNumber(value[1], 1)}</div>`;
       }
