@@ -24,6 +24,7 @@ export type DataFormat = 'plain' | 'currency' | 'percent';
 export interface SpotlightIndicator {
   ddw_id: string;
   name: string;
+  slug: string;
   description?: string;
   start_year?: number;
   end_year?: number;
@@ -85,6 +86,12 @@ export interface IndicatorChart extends SharedIndicatorContentProps {
 export interface SpotlightIndicatorContent {
   stat?: IndicatorStat;
   chart?: IndicatorChart;
+  revenue?: RevenueExpenditureConfig;
+  expenditure?: RevenueExpenditureConfig;
+}
+
+export interface RevenueExpenditureConfig {
+  root: string; // the name/slug of the root level
 }
 
 export interface FetchIndicatorDataOptions {

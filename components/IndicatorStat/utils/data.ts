@@ -1,39 +1,12 @@
 import {
   BudgetType,
+  formatNumber,
   LocationData,
   LocationDataMeta,
   LocationIndicatorData,
-  ProcessedData,
-  SpotlightLocation
+  ProcessedData
 } from '../../../utils';
-
-export interface ValueOptions {
-  useLocalValue?: boolean;
-  dataFormat: 'plain' | 'currency' | 'percent';
-  aggregation?: string;
-  prefix?: string;
-  suffix?: string;
-  location?: SpotlightLocation;
-}
-
-const DEFAULT_VALUE = 'No Data';
-
-const addPrefixAndSuffix = (value: string | number, options: ValueOptions): string => {
-  return `${options.prefix || ''} ${value} ${options.suffix || ''}`;
-};
-
-const formatNumber = (value: number): string => {
-  if (value >= 1000000000) {
-    return `${(value / 1000000000).toFixed(2)}b`;
-  }
-  if (value >= 1000000) {
-    return `${(value / 1000000).toFixed(2)}m`;
-  }
-  if (value >= 1000) {
-    return `${(value / 1000).toFixed(2)}k`;
-  }
-  return `${value.toFixed(2)}`;
-};
+import { addPrefixAndSuffix, DEFAULT_VALUE, ValueOptions } from '../../../utils';
 
 const getLocalValue = (data: LocationData, options: ValueOptions): string => {
   if (data.meta) {

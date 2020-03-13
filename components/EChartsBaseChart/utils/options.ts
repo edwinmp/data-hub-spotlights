@@ -1,6 +1,9 @@
 export const axisDefaults: Partial<ECharts.Axis> = {
   axisLine: {
-    lineStyle: { color: '#443e42' }
+    lineStyle: { color: '#ddd' }
+  },
+  axisLabel: {
+    color: '#32313f'
   },
   splitLine: {
     show: false,
