@@ -143,6 +143,8 @@ declare namespace ECharts {
   interface AxisLabel {
     show?: boolean;
     formatter?: ((value: string | number, index: number) => void) | string;
+    color?: string;
+    fontWeight?: 'normal' | 'bold' | 'bolder' | 'lighter' | number;
   }
 
   interface AxisTick {
