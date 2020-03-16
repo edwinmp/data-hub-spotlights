@@ -73,7 +73,13 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ..
           show: true,
           backgroundColor: '#8f1b13',
           padding: 8,
-          height: 30
+          height: 30,
+          formatter: (info: EChartOption.Tooltip.Format): string => {
+            const { name, treePathInfo, value } = info as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+            const percentage = `${formatNumber((value / treePathInfo[0].value) * 100, 1)}%`;
+
+            return `${name} - ${percentage} | ${formatNumber(value, 1)}`;
+          }
         },
         breadcrumb: {
           height: 30,
