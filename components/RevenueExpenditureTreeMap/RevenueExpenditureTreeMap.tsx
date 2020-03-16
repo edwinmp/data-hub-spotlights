@@ -1,6 +1,6 @@
 import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
-import { BudgetType } from '../../utils';
+import { BudgetType, formatNumber } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { YearData } from '../RevenueExpenditureSection/utils';
 
@@ -13,6 +13,14 @@ interface ComponentProps {
 
 const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = props => {
   const options: EChartOption<EChartOption.SeriesTreemap> = {
+    tooltip: {
+      formatter: (info: EChartOption.Tooltip.Format): string => {
+        const { name, treePathInfo, value } = info as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+        const percentage = `${formatNumber((value / treePathInfo[0].value) * 100, 1)}%`;
+
+        return `${name} - ${percentage}`;
+      }
+    },
     xAxis: { show: false },
     yAxis: { show: false },
     color: ['#8f1b13'],
