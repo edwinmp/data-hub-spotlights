@@ -28,3 +28,22 @@ export const processRevenueExpenditureData = (data: LocationData[], configs?: RE
 
   return configs && configs.root ? processedData.filter(_data => _data.levels[0] === configs.root) : processedData;
 };
+
+export const fetchRootData = (data?: RevenueExpenditureData[], useLocalCurrency = false): number | null => {
+  if (data) {
+    const rootData = data.find(d => d.levels.length === 1);
+    if (rootData) {
+      return useLocalCurrency ? rootData.valueLocalCurrency : rootData.value;
+    } else {
+      return data.reduce((prev, curr) => {
+        if (useLocalCurrency) {
+          return (curr.valueLocalCurrency || 0) + prev;
+        }
+
+        return (curr.value || 0) + prev;
+      }, 0);
+    }
+  }
+
+  return null;
+};

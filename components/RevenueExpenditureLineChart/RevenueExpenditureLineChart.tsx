@@ -2,7 +2,7 @@ import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
 import { BudgetType, formatNumber } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
-import { RevenueExpenditureData, YearData } from '../RevenueExpenditureSection/utils';
+import { YearData, fetchRootData } from '../RevenueExpenditureSection/utils';
 
 interface ComponentProps {
   data: YearData;
@@ -11,25 +11,12 @@ interface ComponentProps {
   height?: string;
 }
 
-const fetchRootData = (data?: RevenueExpenditureData[], useLocalCurrency = false): number | null => {
-  if (data) {
-    const rootData = data.find(d => d.levels.length === 1);
-    if (rootData) {
-      return useLocalCurrency ? rootData.valueLocalCurrency : rootData.value;
-    } else {
-      return data.reduce((prev, curr) => {
-        if (useLocalCurrency) {
-          return (curr.valueLocalCurrency || 0) + prev;
-        }
-
-        return (curr.value || 0) + prev;
-      }, 0);
-    }
-  }
-
-  return null;
-};
-
+/**
+ * Take data and return in format accepted by the series.data property
+ * @param data - Organised by Year
+ * @param budgetType - actual | proposed | projected
+ * @param useLocalCurrency - whether to use data in local currency or USD
+ */
 const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = false): [number, number][] => {
   const formattedData: [number, number][] = [];
   Object.keys(data).forEach(year => {
