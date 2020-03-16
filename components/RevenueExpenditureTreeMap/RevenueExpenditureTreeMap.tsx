@@ -13,10 +13,10 @@ interface ComponentProps {
 
 type TreemapDataObject = EChartOption.SeriesTreemap.DataObject;
 
-const getRootLevel = (data: RevenueExpenditureData[]): string | null => {
+const getRootLevel = (data: RevenueExpenditureData[], useLocalCurrency = false): [string, number] | null => {
   const rootData = data.find(d => d.levels.length === 1);
 
-  return rootData ? rootData.levels[0] : null;
+  return rootData ? [rootData.levels[0], useLocalCurrency ? rootData.valueLocalCurrency : rootData.value] : null;
 };
 
 const getBranchChildren = (
@@ -38,9 +38,9 @@ const getBranchChildren = (
 
 const getSeriesData = (data?: RevenueExpenditureData[], useLocalCurrency = false): TreemapDataObject[] => {
   if (data) {
-    const rootLevel = getRootLevel(data);
+    const rootLevel = getRootLevel(data, useLocalCurrency);
     if (rootLevel) {
-      return getBranchChildren(data, rootLevel, 0, useLocalCurrency);
+      return getBranchChildren(data, rootLevel[0], 0, useLocalCurrency);
     }
   }
 
@@ -48,7 +48,7 @@ const getSeriesData = (data?: RevenueExpenditureData[], useLocalCurrency = false
 };
 
 const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ...props }) => {
-  const rootLevel = data ? getRootLevel(data) : '';
+  const rootLevel = data ? getRootLevel(data, props.useLocalCurrency) : '';
   const options: EChartOption<EChartOption.SeriesTreemap> = {
     tooltip: {
       formatter: (info: EChartOption.Tooltip.Format): string => {
@@ -63,7 +63,7 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ..
     color: ['#8f1b13'],
     series: [
       {
-        name: rootLevel ? toCamelCase(rootLevel.split('-').join(' ')) : 'Root',
+        name: rootLevel ? `${toCamelCase(rootLevel[0].split('-').join(' '))} - ${formatNumber(rootLevel[1])}` : 'Root',
         type: 'treemap',
         leafDepth: 1,
         itemStyle: {
