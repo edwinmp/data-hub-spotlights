@@ -1,17 +1,54 @@
 import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
-import { BudgetType, formatNumber } from '../../utils';
+import { BudgetType, formatNumber, toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
-import { YearData } from '../RevenueExpenditureSection/utils';
+import { RevenueExpenditureData } from '../RevenueExpenditureSection/utils';
 
 interface ComponentProps {
-  data: YearData;
+  data?: RevenueExpenditureData[];
   budgetType?: BudgetType;
   useLocalCurrency?: boolean;
   height?: string;
 }
 
-const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = props => {
+type TreemapDataObject = EChartOption.SeriesTreemap.DataObject;
+
+const getRootLevel = (data: RevenueExpenditureData[]): string | null => {
+  const rootData = data.find(d => d.levels.length === 1);
+
+  return rootData ? rootData.levels[0] : null;
+};
+
+const getBranchChildren = (
+  data: RevenueExpenditureData[],
+  level: string,
+  index = 0,
+  useLocalCurrency = false
+): TreemapDataObject[] => {
+  const children: EChartOption.SeriesTreemap.DataObject[] = data
+    .filter(item => item.levels[index] === level && item.levels.length === index + 2)
+    .map(item => ({
+      name: toCamelCase(item.levels[item.levels.length - 1].split('-').join(' ')),
+      value: useLocalCurrency ? item.valueLocalCurrency : item.value,
+      children: getBranchChildren(data, item.levels[item.levels.length - 1], index + 1, useLocalCurrency)
+    }));
+
+  return children;
+};
+
+const getSeriesData = (data?: RevenueExpenditureData[], useLocalCurrency = false): TreemapDataObject[] => {
+  if (data) {
+    const rootLevel = getRootLevel(data);
+    if (rootLevel) {
+      return getBranchChildren(data, rootLevel, 0, useLocalCurrency);
+    }
+  }
+
+  return [];
+};
+
+const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ...props }) => {
+  const rootLevel = data ? getRootLevel(data) : '';
   const options: EChartOption<EChartOption.SeriesTreemap> = {
     tooltip: {
       formatter: (info: EChartOption.Tooltip.Format): string => {
@@ -26,7 +63,7 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = props => {
     color: ['#8f1b13'],
     series: [
       {
-        name: 'Revenue',
+        name: rootLevel ? toCamelCase(rootLevel.split('-').join(' ')) : 'Root',
         type: 'treemap',
         leafDepth: 1,
         itemStyle: {
@@ -68,56 +105,7 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = props => {
             upperLabel: { show: false }
           }
         ] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-        data: [
-          {
-            name: 'Conditional Government Transfers', // First leaf of first tree
-            value: 8,
-            children: [
-              {
-                name: 'Conditional Grants To Primary Salaries', // Son of first tree
-                value: 8,
-                children: [
-                  {
-                    name: 'Public School Primary Salaries', // Son of first tree
-                    value: 3
-                  },
-                  {
-                    name: 'Private School Primary Salaries', // Son of first tree
-                    value: 5
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            name: 'Locally Raised Revenues', // Second leaf of first tree
-            value: 12,
-            children: [
-              {
-                name: 'Inspection Fees', // Son of first tree
-                value: 9
-              },
-              {
-                name: 'Business Licenses', // Son of first tree
-                value: 3
-              }
-            ]
-          },
-          {
-            name: 'Discretionary Government Transfers', // Second leaf of first tree
-            value: 3,
-            children: [
-              {
-                name: 'Transfer of Digital Unconditional Grant Wage', // Son of first tree
-                value: 2
-              },
-              {
-                name: 'Transfer of Urban Unconditional Grant Wage', // Son of first tree
-                value: 1
-              }
-            ]
-          }
-        ]
+        data: getSeriesData(data, props.useLocalCurrency)
       }
     ]
   };

@@ -130,7 +130,11 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         <VisualisationSectionMain>
           <SpotlightInteractive>
             <Loading active={dataLoading}>
-              <RevenueExpenditureTreeMap data={data} budgetType={selectedBudgetType} useLocalCurrency={useLocalValue} />
+              <RevenueExpenditureTreeMap
+                data={data && year && selectedBudgetType ? data[year][selectedBudgetType] : []}
+                budgetType={selectedBudgetType}
+                useLocalCurrency={useLocalValue}
+              />
             </Loading>
           </SpotlightInteractive>
         </VisualisationSectionMain>
