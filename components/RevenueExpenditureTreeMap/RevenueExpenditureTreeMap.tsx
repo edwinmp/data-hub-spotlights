@@ -46,6 +46,23 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = props => {
             shadowBlur: 0
           }
         },
+        label: {
+          formatter: (info: EChartOption.Tooltip.Format): string => {
+            const { data, name, treePathInfo, value } = info as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+            const percentage = `${formatNumber((value / treePathInfo[0].value) * 100, 1)}%`;
+
+            return !data.children || data.children.length == 0
+              ? `${name || ''}\n{a|${percentage} | ${formatNumber(value as number, 1)}}`
+              : `${name || ''}\n    {a|${percentage} | ${formatNumber(value as number, 1)}}`;
+          },
+          rich: {
+            a: {
+              fontSize: 14,
+              lineHeight: 30,
+              color: '#FFFFFF'
+            }
+          }
+        },
         levels: [
           {
             upperLabel: { show: false }
