@@ -78,6 +78,13 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setBudgetTypes([]);
     }
   };
+  const onChangeBudgetType = (option?: SelectOption): void => {
+    if (option) {
+      setSelectedBudgetType(option.value as BudgetType);
+    } else {
+      setSelectedBudgetType(undefined);
+    }
+  };
 
   return (
     <PageSection>
@@ -99,9 +106,10 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
             <FormFieldSelect
               label="Budget Type"
               options={budgetTypes.map(type => ({ label: toCamelCase(type), value: type }))}
-              value={budgetTypes.length ? { label: toCamelCase(budgetTypes[0]), value: budgetTypes[0] } : null}
+              value={selectedBudgetType ? { label: toCamelCase(selectedBudgetType), value: selectedBudgetType } : null}
               isLoading={dataLoading}
               isDisabled={dataLoading}
+              onChange={onChangeBudgetType}
             />
           </FormField>
         </SpotlightBannerAside>
