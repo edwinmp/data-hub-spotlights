@@ -1,19 +1,21 @@
 import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
-import { BudgetType, formatNumber, toCamelCase } from '../../utils';
+import { BudgetType, formatNumber, toCamelCase, RevenueExpenditureConfig } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { RevenueExpenditureData } from '../RevenueExpenditureSection/utils';
-import { getRootLevel, getSeriesData } from './utils';
+import { getSeriesData, getRootLevel, isIndexBased } from './utils';
 
 interface ComponentProps {
   data?: RevenueExpenditureData[];
   budgetType?: BudgetType;
   useLocalCurrency?: boolean;
   height?: string;
+  config?: RevenueExpenditureConfig;
 }
 
 const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ...props }) => {
-  const rootLevel = data ? getRootLevel(data, props.useLocalCurrency) : '';
+  const seriesData = getSeriesData(data, props.config, props.useLocalCurrency);
+  const rootLevel = data ? getRootLevel(data, seriesData, props.useLocalCurrency) : '';
   const options: EChartOption<EChartOption.SeriesTreemap> = {
     tooltip: {
       formatter: (info: EChartOption.Tooltip.Format): string => {
@@ -76,7 +78,7 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ..
             upperLabel: { show: false }
           }
         ] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-        data: getSeriesData(data, props.useLocalCurrency)
+        data: data ? (isIndexBased(data) ? seriesData : seriesData[0].children) : []
       }
     ]
   };
@@ -84,6 +86,6 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ..
   return <EChartsBaseChart options={options} height={props.height} />;
 };
 
-RevenueExpenditureTreeMap.defaultProps = { height: '460px', useLocalCurrency: false };
+RevenueExpenditureTreeMap.defaultProps = { height: '490px', useLocalCurrency: false };
 
 export { RevenueExpenditureTreeMap };
