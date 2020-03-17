@@ -54,6 +54,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       geocodes: location ? [location.geocode] : [props.countryCode],
       indicators: [indicator.ddw_id]
     });
+    setYear(indicator.start_year);
   }, [location]);
   useEffect(() => {
     if (!dataLoading && year && data.hasOwnProperty(year)) {
@@ -90,9 +91,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
             <FormFieldSelect
               label="Year"
               options={createYearOptionsFromRange(indicator.start_year, indicator.end_year)}
-              defaultValue={
-                indicator.start_year ? { label: `${indicator.start_year}`, value: `${indicator.start_year}` } : null
-              }
+              value={year ? { label: `${year}`, value: `${year}` } : null}
               onChange={onSelectYear}
             />
           </FormField>
