@@ -18,7 +18,7 @@ import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBa
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { useRevenueExpenditureData } from './utils';
+import { useRevenueExpenditureData, getIndicatorContentOptions } from './utils';
 import { RevenueExpenditureTreeMap } from '../RevenueExpenditureTreeMap';
 
 interface SelectType {
@@ -135,6 +135,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                 }
                 budgetType={selectedBudgetType}
                 useLocalCurrency={useLocalValue}
+                config={getIndicatorContentOptions(indicator)}
               />
             </Loading>
           </SpotlightInteractive>
