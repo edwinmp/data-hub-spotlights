@@ -22,7 +22,7 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ..
         const { name, treePathInfo, value } = info as any; // eslint-disable-line @typescript-eslint/no-explicit-any
         const percentage = `${formatNumber((value / treePathInfo[0].value) * 100, 1)}%`;
 
-        return `${name} - ${percentage}`;
+        return `${name} - ${percentage} | ${formatNumber(value, 1)}`;
       }
     },
     xAxis: { show: false },
