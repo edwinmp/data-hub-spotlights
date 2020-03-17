@@ -18,7 +18,8 @@ import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBa
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { useRevenueExpenditureData } from './utils';
+import { useRevenueExpenditureData, getIndicatorContentOptions } from './utils';
+import { RevenueExpenditureTreeMap } from '../RevenueExpenditureTreeMap';
 
 interface SelectType {
   label: string;
@@ -53,6 +54,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       geocodes: location ? [location.geocode] : [props.countryCode],
       indicators: [indicator.ddw_id]
     });
+    setYear(indicator.start_year);
   }, [location]);
   useEffect(() => {
     if (!dataLoading && year && data.hasOwnProperty(year)) {
@@ -76,6 +78,13 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setBudgetTypes([]);
     }
   };
+  const onChangeBudgetType = (option?: SelectOption): void => {
+    if (option) {
+      setSelectedBudgetType(option.value as BudgetType);
+    } else {
+      setSelectedBudgetType(undefined);
+    }
+  };
 
   return (
     <PageSection>
@@ -89,9 +98,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
             <FormFieldSelect
               label="Year"
               options={createYearOptionsFromRange(indicator.start_year, indicator.end_year)}
-              defaultValue={
-                indicator.start_year ? { label: `${indicator.start_year}`, value: `${indicator.start_year}` } : null
-              }
+              value={year ? { label: `${year}`, value: `${year}` } : null}
               onChange={onSelectYear}
             />
           </FormField>
@@ -99,9 +106,10 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
             <FormFieldSelect
               label="Budget Type"
               options={budgetTypes.map(type => ({ label: toCamelCase(type), value: type }))}
-              value={budgetTypes.length ? { label: toCamelCase(budgetTypes[0]), value: budgetTypes[0] } : null}
+              value={selectedBudgetType ? { label: toCamelCase(selectedBudgetType), value: selectedBudgetType } : null}
               isLoading={dataLoading}
               isDisabled={dataLoading}
+              onChange={onChangeBudgetType}
             />
           </FormField>
         </SpotlightBannerAside>
@@ -127,7 +135,18 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
           </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
-          <SpotlightInteractive />
+          <SpotlightInteractive>
+            <Loading active={dataLoading}>
+              <RevenueExpenditureTreeMap
+                data={
+                  data && year && data.hasOwnProperty(year) && selectedBudgetType ? data[year][selectedBudgetType] : []
+                }
+                budgetType={selectedBudgetType}
+                useLocalCurrency={useLocalValue}
+                config={getIndicatorContentOptions(indicator)}
+              />
+            </Loading>
+          </SpotlightInteractive>
         </VisualisationSectionMain>
       </VisualisationSection>
     </PageSection>

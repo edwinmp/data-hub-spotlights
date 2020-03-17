@@ -1,4 +1,11 @@
-import { BudgetType, extraValueFromMeta, LocationData, RevenueExpenditureConfig } from '../../../utils';
+import {
+  BudgetType,
+  extraValueFromMeta,
+  LocationData,
+  RevenueExpenditureConfig,
+  SpotlightIndicator,
+  SpotlightIndicatorContent
+} from '../../../utils';
 import { RevenueExpenditureData } from './types';
 
 const getLevels = (data: LocationData): string[] => {
@@ -27,4 +34,37 @@ export const processRevenueExpenditureData = (data: LocationData[], configs?: RE
     }));
 
   return configs && configs.root ? processedData.filter(_data => _data.levels[0] === configs.root) : processedData;
+};
+
+export const fetchRootData = (data?: RevenueExpenditureData[], useLocalCurrency = false): number | null => {
+  if (data) {
+    const rootData = data.find(d => d.levels.length === 1);
+    if (rootData) {
+      return useLocalCurrency ? rootData.valueLocalCurrency : rootData.value;
+    } else {
+      return data.reduce((prev, curr) => {
+        if (useLocalCurrency) {
+          return (curr.valueLocalCurrency || 0) + prev;
+        }
+
+        return (curr.value || 0) + prev;
+      }, 0);
+    }
+  }
+
+  return null;
+};
+
+export const getIndicatorContentOptions = (indicator: SpotlightIndicator): REConfig | undefined => {
+  if (indicator.content_template) {
+    try {
+      const contentOptions: SpotlightIndicatorContent = JSON.parse(indicator.content_template);
+
+      return contentOptions.revenue || contentOptions.expenditure;
+    } catch (error) {
+      console.log('Invalid JSON:', error.message);
+    }
+  }
+
+  return undefined;
 };
