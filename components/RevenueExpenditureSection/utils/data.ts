@@ -1,4 +1,11 @@
-import { BudgetType, extraValueFromMeta, LocationData, RevenueExpenditureConfig } from '../../../utils';
+import {
+  BudgetType,
+  extraValueFromMeta,
+  LocationData,
+  RevenueExpenditureConfig,
+  SpotlightIndicator,
+  SpotlightIndicatorContent
+} from '../../../utils';
 import { RevenueExpenditureData } from './types';
 
 const getLevels = (data: LocationData): string[] => {
@@ -46,4 +53,18 @@ export const fetchRootData = (data?: RevenueExpenditureData[], useLocalCurrency 
   }
 
   return null;
+};
+
+export const getIndicatorContentOptions = (indicator: SpotlightIndicator): REConfig | undefined => {
+  if (indicator.content_template) {
+    try {
+      const contentOptions: SpotlightIndicatorContent = JSON.parse(indicator.content_template);
+
+      return contentOptions.revenue || contentOptions.expenditure;
+    } catch (error) {
+      console.log('Invalid JSON:', error.message);
+    }
+  }
+
+  return undefined;
 };
