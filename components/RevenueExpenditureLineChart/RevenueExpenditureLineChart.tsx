@@ -51,7 +51,7 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => 
       formatter: (params: EChartOption.Tooltip.Format[]): string => {
         const { value } = params[0] as { value: [number, number] };
 
-        return `<div style="font-size:16px;"><strong>${value[0]}</strong> / ${formatNumber(value[1], 1)}</div>`;
+        return `<div style="font-size:16px;"><strong>${value[0]}</strong> | ${formatNumber(value[1], 1)}</div>`;
       }
     },
     xAxis: {

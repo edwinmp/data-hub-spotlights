@@ -30,7 +30,7 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, ..
     color: ['#8f1b13'],
     series: [
       {
-        name: rootLevel ? `${toCamelCase(rootLevel[0].split('-').join(' '))} - ${formatNumber(rootLevel[1])}` : 'Root',
+        name: rootLevel ? `${toCamelCase(rootLevel[0].split('-').join(' '))} | ${formatNumber(rootLevel[1])}` : 'Root',
         type: 'treemap',
         leafDepth: 1,
         itemStyle: {
