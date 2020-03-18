@@ -147,8 +147,13 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                   data && year && data.hasOwnProperty(year) && selectedBudgetType ? data[year][selectedBudgetType] : []
                 }
                 budgetType={selectedBudgetType}
-                useLocalCurrency={useLocalValue}
                 config={getIndicatorContentOptions(indicator)}
+                valueOptions={{
+                  dataFormat: 'currency',
+                  useLocalValue,
+                  prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                  suffix: indicator.value_suffix
+                }}
               />
             </Loading>
           </SpotlightInteractive>
