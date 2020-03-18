@@ -1,14 +1,14 @@
 import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
-import { BudgetType, formatNumber } from '../../utils';
+import { BudgetType, formatNumber, ValueOptions, addPrefixAndSuffix } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { YearData, fetchRootData } from '../RevenueExpenditureSection/utils';
 
 interface ComponentProps {
   data: YearData;
   budgetType?: BudgetType;
-  useLocalCurrency?: boolean;
   height?: string;
+  valueOptions: ValueOptions;
 }
 
 /**
@@ -40,8 +40,8 @@ const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = 
   return formattedData;
 };
 
-const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => {
-  const data = formatData(props.data, props.budgetType, props.useLocalCurrency);
+const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueOptions, ...props }) => {
+  const data = formatData(props.data, props.budgetType, valueOptions.useLocalValue);
 
   const options: EChartOption = {
     legend: { show: false },
@@ -51,7 +51,10 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => 
       formatter: (params: EChartOption.Tooltip.Format[]): string => {
         const { value } = params[0] as { value: [number, number] };
 
-        return `<div style="font-size:16px;"><strong>${value[0]}</strong> | ${formatNumber(value[1], 1)}</div>`;
+        return `<div style="font-size:16px;"><strong>${value[0]}</strong> | ${addPrefixAndSuffix(
+          formatNumber(value[1], 1),
+          valueOptions
+        )}</div>`;
       }
     },
     xAxis: {
@@ -80,6 +83,6 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = props => 
   return <EChartsBaseChart options={options} height={props.height} />;
 };
 
-RevenueExpenditureLineChart.defaultProps = { height: '500px', useLocalCurrency: false };
+RevenueExpenditureLineChart.defaultProps = { height: '500px' };
 
 export { RevenueExpenditureLineChart };

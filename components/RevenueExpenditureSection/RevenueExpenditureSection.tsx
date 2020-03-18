@@ -129,7 +129,12 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
               <RevenueExpenditureLineChart
                 data={data}
                 budgetType={selectedBudgetType}
-                useLocalCurrency={useLocalValue}
+                valueOptions={{
+                  dataFormat: 'currency',
+                  useLocalValue,
+                  prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                  suffix: indicator.value_suffix
+                }}
               />
             </Loading>
           </SpotlightInteractive>
