@@ -4,7 +4,8 @@ import {
   LocationData,
   RevenueExpenditureConfig,
   SpotlightIndicator,
-  SpotlightIndicatorContent
+  SpotlightIndicatorContent,
+  toCamelCase
 } from '../../../utils';
 import { RevenueExpenditureData } from './types';
 
@@ -68,3 +69,6 @@ export const getIndicatorContentOptions = (indicator: SpotlightIndicator): RECon
 
   return undefined;
 };
+
+export const parseBudgetType = (budgetType: string): string =>
+  budgetType === 'proj' ? 'Projected' : toCamelCase(budgetType);

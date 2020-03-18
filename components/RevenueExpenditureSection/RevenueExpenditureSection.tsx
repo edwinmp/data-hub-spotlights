@@ -4,8 +4,7 @@ import {
   createYearOptionsFromRange,
   processTemplateString,
   SpotlightIndicator,
-  SpotlightLocation,
-  toCamelCase
+  SpotlightLocation
 } from '../../utils';
 import { CurrencySelector } from '../CurrencySelector';
 import { FormField } from '../FormField';
@@ -18,7 +17,7 @@ import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBa
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { useRevenueExpenditureData, getIndicatorContentOptions } from './utils';
+import { useRevenueExpenditureData, getIndicatorContentOptions, parseBudgetType } from './utils';
 import { RevenueExpenditureTreeMap } from '../RevenueExpenditureTreeMap';
 
 interface SelectType {
@@ -105,8 +104,10 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
           <FormField className="form-field--inline">
             <FormFieldSelect
               label="Budget Type"
-              options={budgetTypes.map(type => ({ label: toCamelCase(type), value: type }))}
-              value={selectedBudgetType ? { label: toCamelCase(selectedBudgetType), value: selectedBudgetType } : null}
+              options={budgetTypes.map(type => ({ label: parseBudgetType(type), value: type }))}
+              value={
+                selectedBudgetType ? { label: parseBudgetType(selectedBudgetType), value: selectedBudgetType } : null
+              }
               isLoading={dataLoading}
               isDisabled={dataLoading}
               onChange={onChangeBudgetType}
