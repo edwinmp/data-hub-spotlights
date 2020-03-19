@@ -1,3 +1,4 @@
+import { EChartOption } from 'echarts';
 import gql from 'graphql-tag';
 import fetch from 'isomorphic-unfetch';
 import { PageScaffoldData } from '../components/DefaultLayout';
@@ -24,6 +25,7 @@ export type DataFormat = 'plain' | 'currency' | 'percent';
 export interface SpotlightIndicator {
   ddw_id: string;
   name: string;
+  slug: string;
   description?: string;
   start_year?: number;
   end_year?: number;
@@ -69,7 +71,7 @@ export interface IndicatorStat extends SharedIndicatorContentProps {
 
 export interface IndicatorChart extends SharedIndicatorContentProps {
   type: 'bar' | 'pie';
-  options: ECharts.Options;
+  options: EChartOption<EChartOption.SeriesBar | EChartOption.SeriesLine>;
   bar?: {
     legend: string;
     xAxis: string;
@@ -85,6 +87,12 @@ export interface IndicatorChart extends SharedIndicatorContentProps {
 export interface SpotlightIndicatorContent {
   stat?: IndicatorStat;
   chart?: IndicatorChart;
+  revenue?: RevenueExpenditureConfig;
+  expenditure?: RevenueExpenditureConfig;
+}
+
+export interface RevenueExpenditureConfig {
+  root: string; // the name/slug of the root level
 }
 
 export interface FetchIndicatorDataOptions {
@@ -114,7 +122,7 @@ export interface LocationIndicatorData {
 
 export type BudgetType = 'actual' | 'approved' | 'proposed';
 
-export interface LocationDataMeta {
+export interface LocationDataMeta extends Object {
   budgetType?: BudgetType;
   valueLocalCurrency?: number;
   extra?: { [key: string]: number | string };
@@ -140,6 +148,23 @@ export const fetchSpotlightPage = async (slug: string): Promise<SpotlightPage> =
   const data = await response.json();
 
   return data;
+};
+
+export const extraValueFromMeta = (meta: string, field: string, defaultValue = ''): string | number => {
+  try {
+    const _meta: LocationDataMeta = JSON.parse(meta);
+
+    if (_meta.hasOwnProperty(field)) {
+      return (_meta as any)[field];
+    }
+    if (_meta.extra) {
+      return _meta.extra[field];
+    }
+
+    return defaultValue;
+  } catch (error) {
+    return defaultValue;
+  }
 };
 
 export const GET_INDICATOR_DATA = gql`

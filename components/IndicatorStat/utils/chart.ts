@@ -1,3 +1,4 @@
+import { EChartOption } from 'echarts';
 import { Aggregation, IndicatorChart, LocationData, LocationIndicatorData } from '../../../utils';
 import { toBasicAxisData } from '../../EChartsBaseChart/utils';
 
@@ -28,13 +29,21 @@ const extractDataByField = (data: LocationDataIndex[], field: string): string[] 
   }, []);
 };
 
-const getLegendOptions = (data: LocationData[], field: string, defaultOptions?: ECharts.Legend): ECharts.Legend => {
+const getLegendOptions = (
+  data: LocationData[],
+  field: string,
+  defaultOptions?: EChartOption.Legend
+): EChartOption.Legend => {
   const legendData = extractDataByField(data as any, field);
 
   return defaultOptions ? { ...defaultOptions, data: legendData } : { show: true, data: legendData };
 };
 
-const getXAxisOptions = (data: LocationData[], field: string, defaultOptions?: ECharts.XAxis): ECharts.XAxis => {
+const getXAxisOptions = (
+  data: LocationData[],
+  field: string,
+  defaultOptions?: EChartOption.XAxis
+): EChartOption.XAxis => {
   const xAxisData = extractDataByField(data as any, field);
 
   return defaultOptions
@@ -42,7 +51,11 @@ const getXAxisOptions = (data: LocationData[], field: string, defaultOptions?: E
     : { data: toBasicAxisData(xAxisData) };
 };
 
-const getBasicSeriesOptions = (data: LocationData[], fields: string[], series: ECharts.Series[]): ECharts.Series[] => {
+const getBasicSeriesOptions = (
+  data: LocationData[],
+  fields: string[],
+  series: (EChartOption.SeriesLine | EChartOption.SeriesBar)[]
+): (EChartOption.SeriesLine | EChartOption.SeriesBar)[] => {
   fields.forEach((field, index) => {
     const yAxisData = extractDataByField(data as any, field);
     if (series[index]) {
@@ -59,9 +72,9 @@ const getBasicSeriesOptions = (data: LocationData[], fields: string[], series: E
 const getAggregatedSeriesOptions = (
   data: LocationData[],
   fields: string[],
-  series: ECharts.Series[],
+  series: (EChartOption.SeriesLine | EChartOption.SeriesBar)[],
   aggregation: Aggregation
-): ECharts.Series[] => {
+): (EChartOption.SeriesLine | EChartOption.SeriesBar)[] => {
   if (aggregation === 'PERCENT') {
     data.forEach(_data => {
       const values = fields.reduce((prev: number[], curr) => {
@@ -74,7 +87,7 @@ const getAggregatedSeriesOptions = (
         if (series[index]) {
           const _series = series[index];
           if (_series.data) {
-            _series.data.push(percentage);
+            _series.data.push(percentage as any);
           } else {
             _series.data = [percentage];
           }
@@ -87,7 +100,7 @@ const getAggregatedSeriesOptions = (
   return series;
 };
 
-export const generateChartOptions = (configs: IndicatorChart, data: LocationIndicatorData[]): ECharts.Options => {
+export const generateChartOptions = (configs: IndicatorChart, data: LocationIndicatorData[]): EChartOption => {
   const { options, bar } = configs;
   if (data.length === 1) {
     if (bar) {
@@ -97,7 +110,7 @@ export const generateChartOptions = (configs: IndicatorChart, data: LocationIndi
       }
       // create series data based on config
       if (bar.xAxis) {
-        options.xAxis = getXAxisOptions(data[0].data, bar.xAxis, options.xAxis as ECharts.XAxis);
+        options.xAxis = getXAxisOptions(data[0].data, bar.xAxis, options.xAxis as EChartOption.XAxis);
       }
       if (bar.yAxis) {
         if (!configs.aggregation) {

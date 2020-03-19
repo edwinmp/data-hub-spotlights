@@ -36,7 +36,7 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
       : [];
 
   return (
-    <SpotlightBanner header>
+    <SpotlightBanner className="spotlight-banner--header">
       <SpotlightBannerAside>
         <BoundaryMenu countryName={props.countryName} boundaries={boundaries} onSelectLocation={onSelectLocation} />
       </SpotlightBannerAside>
