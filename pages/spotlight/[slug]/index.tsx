@@ -4,7 +4,7 @@ import { PageScaffoldData } from '../../../components/DefaultLayout';
 import { IndicatorComparisonSection } from '../../../components/IndicatorComparisonSection';
 import { KeyFactsSection } from '../../../components/KeyFactsSection';
 import { MapSection } from '../../../components/MapSection';
-import { PageSection, PageSectionHeading } from '../../../components/PageSection';
+import { PageSection } from '../../../components/PageSection';
 import { RevenueExpenditureSection } from '../../../components/RevenueExpenditureSection';
 import {
   fetchScaffoldData,
@@ -13,7 +13,6 @@ import {
   SpotlightLocation,
   SpotlightPage
 } from '../../../utils';
-import { LocationComparisonSection } from '../../../components/LocationComparisonSection';
 
 interface SpotlightProps {
   setData?: (data: PageScaffoldData) => void;
@@ -67,12 +66,6 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
               />
             ))
         )}
-
-        <LocationComparisonSection
-          themes={page.themes}
-          countryCode={page.country_code}
-          countryName={page.country_name}
-        />
       </>
     );
   }
