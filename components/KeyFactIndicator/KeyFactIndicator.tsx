@@ -42,6 +42,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                     geocodes={!stat.fetchAll ? [location.geocode] : undefined}
                     startYear={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
                     endYear={stat.endYear || stat.startYear || indicator.end_year || indicator.start_year}
+                    filter={stat.filter}
                   >
                     <IndicatorStatDataHandler
                       valueOptions={{
