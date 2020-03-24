@@ -19,6 +19,7 @@ import {
   parseIndicator,
   splitByComma
 } from './utils';
+import { useRouter } from 'next/dist/client/router';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
@@ -42,6 +43,7 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
 };
 
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
+  const router = useRouter();
   const [options, setOptions] = useState<SpotlightOptions>({});
   const onOptionsChange = (optns: SpotlightOptions): void => setOptions(optns);
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(undefined);
@@ -84,7 +86,9 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               <LegendItem>no data / not applicable</LegendItem>
             </Legend>
             <SpotlightButtons>
-              <AnchorButton link={'/spotlight/spotlight-uganda/compare'}>Compare this location to others</AnchorButton>
+              {router ? (
+                <AnchorButton href={`${router.asPath}/compare`}>Compare this location to others</AnchorButton>
+              ) : null}
             </SpotlightButtons>
           </SidebarContent>
         </SpotlightSidebar>
