@@ -15,9 +15,21 @@ import { BaseMapLayer } from './BaseMapLayer';
 export interface CoreMapProps {
   accessToken: string;
   width?: string;
-  height?: string;
   top?: number;
   bottom?: number;
+  position?:
+    | '-moz-initial'
+    | 'inherit'
+    | 'initial'
+    | 'revert'
+    | 'unset'
+    | '-webkit-sticky'
+    | 'absolute'
+    | 'fixed'
+    | 'relative'
+    | 'static'
+    | 'sticky'
+    | undefined;
   background?: string;
   showNavigationControls?: boolean;
   onLoad?: (map: mapbox.Map, event: mapbox.MapboxEvent) => void;
@@ -66,8 +78,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
         top: props.top,
         bottom: props.bottom,
         width: props.width,
-        position: 'absolute',
-        height: props.height
+        position: props.position
       }}
     >
       {renderLayers()}
@@ -108,7 +119,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
 
 BaseMap.defaultProps = {
   width: '100%', // spotlights default
-  height: '100%', // spotlights default
+  position: 'absolute',
   top: 0,
   bottom: 0,
   background: '#F3F3F3', // spotlights default

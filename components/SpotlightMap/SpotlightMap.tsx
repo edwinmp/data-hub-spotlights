@@ -190,7 +190,6 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           maxZoom: options.maxZoom || 7
         }}
         width="100%"
-        height="100%"
         onLoad={onLoad}
       >
         {renderLayers()}
