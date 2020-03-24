@@ -8,7 +8,7 @@ exports[`SpotlightSidebar renders correctly 1`] = `
     jsx={true}
   >
     
-        min-height: 500px;
+        
         
       
   </style>
@@ -23,7 +23,7 @@ exports[`SpotlightSidebar renders with the specified class name 1`] = `
     jsx={true}
   >
     
-        min-height: 500px;
+        
         
       
   </style>
@@ -38,7 +38,7 @@ exports[`SpotlightSidebar renders with the specified width 1`] = `
     jsx={true}
   >
     
-        min-height: 500px;
+        
         width: 300px;
       
   </style>
