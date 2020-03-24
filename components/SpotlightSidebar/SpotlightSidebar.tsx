@@ -7,9 +7,10 @@ import { SidebarContent } from './SidebarContent';
 interface ComponentProps {
   className?: string;
   width?: string;
+  height?: string;
 }
 
-const SpotlightSidebar: FunctionComponent<ComponentProps> = ({ children, className, width }) => {
+const SpotlightSidebar: FunctionComponent<ComponentProps> = ({ children, className, width, height }) => {
   return (
     <div className={classNames('spotlight__aside', className)}>
       {Children.map(children, child =>
@@ -19,7 +20,7 @@ const SpotlightSidebar: FunctionComponent<ComponentProps> = ({ children, classNa
           : null
       )}
       <style jsx>{`
-        min-height: 500px;
+        ${height ? `min-height: ${height};` : ''}
         ${width ? `width: ${width};` : ''}
       `}</style>
     </div>
