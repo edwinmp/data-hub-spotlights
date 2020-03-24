@@ -1,6 +1,6 @@
 import React, { Children, FunctionComponent, cloneElement, isValidElement, ReactNode, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
+import { GET_INDICATOR_DATA, LocationIndicatorData, DataFilter } from '../../utils';
 
 export interface DataLoaderProps {
   indicators?: string[];
@@ -8,6 +8,7 @@ export interface DataLoaderProps {
   startYear?: number;
   endYear?: number;
   limit?: number;
+  filter?: DataFilter[][];
   onLoad?: (data: LocationIndicatorData[]) => void;
 }
 
@@ -25,6 +26,7 @@ const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode
       geocodes: geocodes || [],
       startYear,
       endYear: props.endYear || startYear,
+      filter: props.filter || [],
       limit
     }
   });

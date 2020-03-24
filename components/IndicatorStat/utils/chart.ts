@@ -1,5 +1,5 @@
 import { EChartOption } from 'echarts';
-import { Aggregation, IndicatorChart, LocationData, LocationIndicatorData } from '../../../utils';
+import { Aggregation, IndicatorChart, LocationData, LocationIndicatorData, BarLineOptions } from '../../../utils';
 import { toBasicAxisData } from '../../EChartsBaseChart/utils';
 
 type LocationDataIndex = { [key: string]: string | number };
@@ -100,33 +100,48 @@ const getAggregatedSeriesOptions = (
   return series;
 };
 
+const createBarLineOptions = (
+  data: LocationData[],
+  custom: BarLineOptions,
+  options: EChartOption<EChartOption.SeriesBar | EChartOption.SeriesLine>,
+  aggregation?: Aggregation
+): EChartOption<EChartOption.SeriesBar | EChartOption.SeriesLine> => {
+  const optns = { ...options };
+  // create legend data based on config
+  if (custom.legend) {
+    optns.legend = getLegendOptions(data, custom.legend, options.legend);
+  }
+  // create series data based on config
+  if (custom.xAxis) {
+    optns.xAxis = getXAxisOptions(data, custom.xAxis, options.xAxis as EChartOption.XAxis);
+  }
+  if (custom.yAxis) {
+    if (!aggregation) {
+      optns.series = getBasicSeriesOptions(data, custom.yAxis, options.series ? options.series.slice() : []);
+    } else {
+      optns.series = getAggregatedSeriesOptions(
+        data,
+        custom.yAxis,
+        options.series ? options.series.slice() : [],
+        aggregation
+      );
+    }
+  }
+
+  return optns;
+};
+
 export const generateChartOptions = (configs: IndicatorChart, data: LocationIndicatorData[]): EChartOption => {
-  const { options, bar } = configs;
+  const { options, bar, line } = configs;
   if (data.length === 1) {
     if (bar) {
-      // create legend data based on config
-      if (bar.legend) {
-        options.legend = getLegendOptions(data[0].data, bar.legend, options.legend);
-      }
-      // create series data based on config
-      if (bar.xAxis) {
-        options.xAxis = getXAxisOptions(data[0].data, bar.xAxis, options.xAxis as EChartOption.XAxis);
-      }
-      if (bar.yAxis) {
-        if (!configs.aggregation) {
-          options.series = getBasicSeriesOptions(data[0].data, bar.yAxis, options.series ? options.series.slice() : []);
-        } else {
-          options.series = getAggregatedSeriesOptions(
-            data[0].data,
-            bar.yAxis,
-            options.series ? options.series.slice() : [],
-            configs.aggregation
-          );
-        }
-      }
       options.grid = options.grid || { bottom: 20, top: 40, right: 0, left: 40 };
 
-      return options;
+      return { ...options, ...createBarLineOptions(data[0].data, bar, options, configs.aggregation) };
+    } else if (line) {
+      options.grid = options.grid || { bottom: 20, top: 40, right: 20, left: 40 };
+
+      return { ...options, ...createBarLineOptions(data[0].data, line, options, configs.aggregation) };
     }
     // TODO: handle pie charts
   }

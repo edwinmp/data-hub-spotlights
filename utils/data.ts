@@ -61,27 +61,37 @@ interface SharedIndicatorContentProps {
   aggregation?: Aggregation; // this allows for simple operations on the data for more complex stats
 }
 
+export interface DataFilter {
+  field: string;
+  operator: string;
+  value: string;
+}
+
 export interface IndicatorStat extends SharedIndicatorContentProps {
   dataFormat: DataFormat;
   valuePrefix?: string;
   valueSuffix?: string;
   valueTemplate?: string;
   note?: ContentNote;
+  filter?: DataFilter[][];
 }
 
 export interface IndicatorChart extends SharedIndicatorContentProps {
   type: 'bar' | 'pie';
   options: EChartOption<EChartOption.SeriesBar | EChartOption.SeriesLine>;
-  bar?: {
-    legend: string;
-    xAxis: string;
-    yAxis: string[];
-  };
+  bar?: BarLineOptions;
+  line?: BarLineOptions;
   pie?: {
     legend: string;
     value: string;
     name: string;
   };
+}
+
+export interface BarLineOptions {
+  legend: string;
+  xAxis: string;
+  yAxis: string[];
 }
 
 export interface SpotlightIndicatorContent {
@@ -175,12 +185,14 @@ export const GET_INDICATOR_DATA = gql`
     $endYear: Int = 9999
     $limit: Int = 100
     $page: Int = 0
+    $filter: [[Filter]] = []
   ) {
     data(
       indicators: $indicators
       geocodes: $geocodes
       startYear: $startYear
       endYear: $endYear
+      filter: $filter
       limit: $limit
       page: $page
     ) {

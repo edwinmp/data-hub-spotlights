@@ -9,7 +9,7 @@ import { RevenueExpenditureSection } from '../../components/RevenueExpenditureSe
 import {
   fetchScaffoldData,
   fetchSpotlightPage,
-  filterByThemeSection,
+  filterThemesBySection,
   SpotlightLocation,
   SpotlightPage
 } from '../../utils';
@@ -28,7 +28,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
     }
   }, [setData, scaffold]);
   const onChangeLocation = (location?: SpotlightLocation): void => setLocation(location);
-  const mapThemes = filterByThemeSection(page.themes, 'map');
+  const mapThemes = filterThemesBySection(page.themes, 'map');
 
   if (page.themes && page.country_code) {
     return (
@@ -40,9 +40,11 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
           onChangeLocation={onChangeLocation}
         />
         <KeyFactsSection
+          countryCode={page.country_code}
+          countryName={page.country_name}
           currencyCode={page.currency_code || ''}
           location={location}
-          themes={filterByThemeSection(page.themes, 'facts')}
+          themes={filterThemesBySection(page.themes, location ? 'facts' : 'country-facts')}
         />
         <IndicatorComparisonSection
           location={location}
@@ -50,7 +52,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
           countryCode={page.country_code}
           countryName={page.country_name}
         />
-        {filterByThemeSection(page.themes, 'revenue-expenditure').map(theme =>
+        {filterThemesBySection(page.themes, 'revenue-expenditure').map(theme =>
           theme.indicators
             .filter(indicator => (!location ? indicator.slug.includes('country') : !indicator.slug.includes('country')))
             .map((indicator, index) => (
