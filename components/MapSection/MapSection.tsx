@@ -7,7 +7,7 @@ import { PageSection } from '../PageSection';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { SpotlightIndicatorInfo } from '../SpotlightIndicatorInfo';
 import { SpotlightInteractive } from '../SpotlightInteractive';
-import { SidebarContent, SpotlightSidebar } from '../SpotlightSidebar';
+import { SidebarContent, SpotlightSidebar, SpotlightHide, SpotlightSidebarInfo } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import {
   getDataPrefix,
@@ -59,7 +59,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
       <MapSectionHeader onSelectLocation={onSelectLocation} countryCode={countryCode} countryName={props.countryName} />
 
       <VisualisationSection>
-        <SpotlightSidebar className="spotlight__aside--no-margin">
+        <SpotlightSidebar>
           <SidebarContent>
             <SpotlightFilters
               themes={props.themes}
@@ -68,14 +68,16 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               indicatorClassName="form-field--spaced-minor"
               yearClassName="form-field--inline"
             />
-            <SpotlightIndicatorInfo
-              heading={options.indicator && options.indicator.name}
-              description={options.indicator && options.indicator.description}
-            />
-            <Legend>
-              {renderLegendItems(range, colours)}
-              <LegendItem>no data / not applicable</LegendItem>
-            </Legend>
+            <SpotlightHide>
+              <SpotlightIndicatorInfo
+                heading={options.indicator && options.indicator.name}
+                description={options.indicator && options.indicator.description}
+              />
+              <Legend>
+                {renderLegendItems(range, colours)}
+                <LegendItem>no data / not applicable</LegendItem>
+              </Legend>
+            </SpotlightHide>
           </SidebarContent>
         </SpotlightSidebar>
 
@@ -99,6 +101,19 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
             </DynamicMapDataLoader>
           </SpotlightInteractive>
         </VisualisationSectionMain>
+
+        <SpotlightSidebar className="spotlight__aside--ss">
+          <SidebarContent>
+            <SpotlightSidebarInfo
+              heading={options.indicator && options.indicator.name}
+              description={options.indicator && options.indicator.description}
+            />
+            <Legend>
+              {renderLegendItems(range, colours)}
+              <LegendItem>no data / not applicable</LegendItem>
+            </Legend>
+          </SidebarContent>
+        </SpotlightSidebar>
       </VisualisationSection>
     </PageSection>
   );
