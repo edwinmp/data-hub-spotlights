@@ -357,7 +357,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
           accessToken="pk.eyJ1IjoiZWR3aW5tcCIsImEiOiJjazFsdHVtcG0wOG9mM2RueWJscHhmcXZqIn0.cDR43UvfMaOY9cNJsEKsvg"
           options={baseMapOptions}
           onLoad={onMapLoad}
-          width="100%"
+          style={{ width: '100%' }}
         />
       </div>
       <EChartsBaseChart options={options1} />

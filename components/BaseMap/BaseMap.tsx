@@ -14,22 +14,7 @@ import { BaseMapLayer } from './BaseMapLayer';
 
 export interface CoreMapProps {
   accessToken: string;
-  width?: string;
-  top?: number;
-  bottom?: number;
-  position?:
-    | '-moz-initial'
-    | 'inherit'
-    | 'initial'
-    | 'revert'
-    | 'unset'
-    | '-webkit-sticky'
-    | 'absolute'
-    | 'fixed'
-    | 'relative'
-    | 'static'
-    | 'sticky'
-    | undefined;
+  style?: React.CSSProperties;
   background?: string;
   showNavigationControls?: boolean;
   onLoad?: (map: mapbox.Map, event: mapbox.MapboxEvent) => void;
@@ -37,6 +22,14 @@ export interface CoreMapProps {
 interface BaseMapProps extends CoreMapProps {
   options: Partial<mapbox.MapboxOptions>;
 }
+
+const defaultStyles: React.CSSProperties = {
+  width: '100%', // spotlights default
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  background: '#F3F3F3' // spotlights default
+};
 
 const BaseMap: FunctionComponent<BaseMapProps> = props => {
   mapbox.accessToken = props.accessToken;
@@ -72,15 +65,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
   };
 
   return (
-    <div
-      ref={mapNode}
-      style={{
-        top: props.top,
-        bottom: props.bottom,
-        width: props.width,
-        position: props.position
-      }}
-    >
+    <div ref={mapNode} style={{ ...defaultStyles, ...props.style }}>
       {renderLayers()}
       <style jsx>{`
         background: ${props.background};
@@ -118,11 +103,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
 };
 
 BaseMap.defaultProps = {
-  width: '100%', // spotlights default
-  position: 'absolute',
-  top: 0,
-  bottom: 0,
-  background: '#F3F3F3', // spotlights default
+  style: defaultStyles,
   options: {
     minZoom: 6,
     zoom: 6.1
