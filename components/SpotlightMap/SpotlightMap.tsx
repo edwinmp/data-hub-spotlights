@@ -1,7 +1,8 @@
 import center from '@turf/center';
 import { Feature, featureCollection, point, Point, Position, Properties } from '@turf/helpers';
-import { LngLat, Map, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
+import { LngLat, Map, MapboxEvent, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import { debounce } from 'underscore';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
 import {
@@ -108,13 +109,26 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           flyToLocation(map, locationName, options);
         }
       };
+      const onResize = debounce((event: MapboxEvent) => {
+        const container = event.target.getContainer();
+        if (container.clientWidth < 700) {
+          map.setZoom(options.zoom ? options.zoom - 1 : 5);
+        } else if (container.clientWidth < 900) {
+          map.setZoom(options.minZoom ? options.minZoom + 0.8 : 5.8);
+        } else {
+          map.setZoom(options.zoom || 6.1);
+        }
+        onResize.cancel();
+      }, 300);
 
       map.on('click', COLOURED_LAYER, onClick);
+      map.on('resize', onResize);
 
       return (): void => {
         map.off('mousemove', COLOURED_LAYER, onHover);
         map.off('mouseleave', COLOURED_LAYER, onBlur);
         map.off('click', COLOURED_LAYER, onClick);
+        map.off('resize', onResize);
         popup.remove();
       };
     }
