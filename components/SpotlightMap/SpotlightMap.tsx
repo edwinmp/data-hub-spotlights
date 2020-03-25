@@ -71,6 +71,16 @@ const flyToLocation = (map: Map, locationName: string, options: LayerConfig, rec
   }
 };
 
+const setZoomByContainerWidth = (map: Map, container: HTMLElement, options: LayerConfig): void => {
+  if (container.clientWidth < 700) {
+    map.setZoom(options.zoom ? options.zoom - 1 : 5);
+  } else if (container.clientWidth < 900) {
+    map.setZoom(options.minZoom ? options.minZoom + 0.8 : 5.8);
+  } else {
+    map.setZoom(options.zoom || 6.1);
+  }
+};
+
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const { countryCode, level, data, dataLoading, range, colours } = props;
   const [loading, setLoading] = useState<boolean>(true);
@@ -80,6 +90,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 
   useEffect(() => {
     if (map) {
+      setZoomByContainerWidth(map, map.getContainer(), options);
       const popup = new Popup({
         offset: 5,
         closeButton: false
@@ -111,13 +122,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       };
       const onResize = debounce((event: MapboxEvent) => {
         const container = event.target.getContainer();
-        if (container.clientWidth < 700) {
-          map.setZoom(options.zoom ? options.zoom - 1 : 5);
-        } else if (container.clientWidth < 900) {
-          map.setZoom(options.minZoom ? options.minZoom + 0.8 : 5.8);
-        } else {
-          map.setZoom(options.zoom || 6.1);
-        }
+        setZoomByContainerWidth(map, container, options);
         onResize.cancel();
       }, 300);
 
