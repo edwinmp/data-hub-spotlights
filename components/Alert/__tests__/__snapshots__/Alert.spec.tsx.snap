@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Alert renders correctly 1`] = `
+<div
+  className="alert alert--notice"
+/>
+`;
+
+exports[`Alert renders with children 1`] = `
+<div
+  className="alert alert--notice"
+>
+  <p>
+    Warning
+  </p>
+</div>
+`;
