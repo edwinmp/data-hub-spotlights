@@ -79,6 +79,7 @@ const getAggregatedSeriesOptions = (
     data.forEach(_data => {
       const values = fields.reduce((prev: number[], curr) => {
         const value = getFieldValue(_data as any, curr);
+
         return prev.concat([parseFloat(`${value || 0}`)]);
       }, []);
       const total = values.reduce((prev, curr) => prev + curr, 0);
@@ -97,6 +98,7 @@ const getAggregatedSeriesOptions = (
       });
     });
   }
+
   return series;
 };
 

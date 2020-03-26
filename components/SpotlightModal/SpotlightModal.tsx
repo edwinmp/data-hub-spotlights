@@ -15,6 +15,7 @@ const SpotlightModal: FunctionComponent<SpotlightModalProps> = props => {
       popup.classList.add('hide');
     });
   };
+
   return (
     <Popup
       trigger={

@@ -26,6 +26,7 @@ const getValue = (data: LocationData, options: ValueOptions): string => {
   if (options.useLocalValue) {
     return getLocalValue(data, options);
   }
+
   return addPrefixAndSuffix(formatNumber(data.value), options);
 };
 
@@ -39,6 +40,7 @@ const filterDataByBudgetType = (data: LocationData[], budgetType: BudgetType): L
     if (_data.meta) {
       try {
         const meta: LocationDataMeta = JSON.parse(_data.meta);
+
         return meta.budgetType && meta.budgetType === budgetType;
       } catch (error) {
         console.log(error);
@@ -82,6 +84,7 @@ const aggregateProcessedData = (data: ProcessedData[], options: ValueOptions): n
     }
     if (options.aggregation === 'AVG') {
       const sum = getSum(data, options);
+
       return sum / data.length;
     }
     if (options.aggregation === 'POSN ASC' && options.location) {
