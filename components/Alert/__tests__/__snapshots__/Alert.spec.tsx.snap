@@ -15,3 +15,9 @@ exports[`Alert renders with children 1`] = `
   </p>
 </div>
 `;
+
+exports[`Alert renders with the specified className 1`] = `
+<div
+  className="alert alert--success alert-maximum"
+/>
+`;

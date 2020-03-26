@@ -22,4 +22,10 @@ describe('Alert', () => {
 
     expect(renderer).toMatchSnapshot();
   });
+
+  test('renders with the specified className', () => {
+    const renderer = TestRenderer.create(<Alert variant="success" className="alert-maximum" />).toJSON();
+
+    expect(renderer).toMatchSnapshot();
+  });
 });
