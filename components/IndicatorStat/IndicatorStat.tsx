@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { ContentMeta } from '../../utils';
+import { Icon } from '../Icon';
 
 interface IndicatorStatProps {
   heading?: string;
@@ -13,7 +14,7 @@ const IndicatorStat: FunctionComponent<IndicatorStatProps> = ({ meta = {}, headi
         {heading}
         {meta.description || meta.source ? (
           <span className="spotlight__stat-icon">
-            <i role="presentation" aria-hidden="true" className="ico ico--12 ico-info-slate"></i>
+            <Icon name="info-slate" className="ico--12" />
             <style jsx>{`
               .spotlight__stat-icon {
                 display: none;
