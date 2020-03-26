@@ -12,4 +12,10 @@ describe('Icon', () => {
 
     expect(renderer).toMatchSnapshot();
   });
+
+  test('renders with the specified className', () => {
+    const renderer = TestRenderer.create(<Icon name="info-slate" className="ico--12" />).toJSON();
+
+    expect(renderer).toMatchSnapshot();
+  });
 });
