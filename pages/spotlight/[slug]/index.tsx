@@ -20,9 +20,10 @@ interface SpotlightProps {
   setData?: (data: PageScaffoldData) => void;
   scaffold: PageScaffoldData;
   page: SpotlightPage;
+  currentUrl?: string;
 }
 
-const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
+const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page, currentUrl }) => {
   const [location, setLocation] = useState<SpotlightLocation | undefined>();
   useEffect(() => {
     if (setData) {
@@ -40,6 +41,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
           countryCode={page.country_code}
           countryName={page.country_name}
           onChangeLocation={onChangeLocation}
+          url={currentUrl}
         />
         <KeyFactsSection
           countryCode={page.country_code}
@@ -85,8 +87,16 @@ Spotlight.getInitialProps = async (context): Promise<SpotlightProps> => {
   const { slug } = context.query;
   const scaffold = await fetchScaffoldData();
   const page = await fetchSpotlightPage(slug as string);
+  const host = context.req
+    ? context.req.headers['x-forwarded-host'] || context.req.headers['host']
+    : window.location.host;
+  const query = context.asPath;
+  let currentUrl = '';
+  if (host) {
+    currentUrl = host.indexOf('localhost') > -1 ? 'http://' + host + query : 'https://' + host + query;
+  }
 
-  return { scaffold, page };
+  return { scaffold, page, currentUrl };
 };
 
 export default Spotlight;
