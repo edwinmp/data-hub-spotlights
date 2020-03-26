@@ -32,3 +32,6 @@
   background: #ffffff;
   color: #333131;
 }
+.hide {
+  display: none;
+}

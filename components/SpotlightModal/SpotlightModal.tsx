@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import Popup from 'reactjs-popup';
 import { SpotlightModalContent } from './SpotlightModalContent';
 import './styles.css';
@@ -9,17 +9,17 @@ interface SpotlightModalProps {
 }
 
 const SpotlightModal: FunctionComponent<SpotlightModalProps> = props => {
-  const [open, toggleOpen] = useState(false);
-  const onMouseLeaveModal = (): void => {
-    console.log('Onclick');
-    toggleOpen(false);
+  const hideAllPopups = (): void => {
+    const popups = document.querySelectorAll('.popup-content ');
+    popups.forEach(function(popup) {
+      popup.classList.add('hide');
+    });
   };
-
   return (
     <Popup
       trigger={
-        <span className="spotlight__stat-icon" onClick={onMouseLeaveModal}>
-          <i role="presentation" aria-hidden="true" className="ico ico--12 ico-info-slate"></i>
+        <span className="spotlight__stat-icon">
+          <i onClick={hideAllPopups} role="presentation" aria-hidden="true" className="ico ico--12 ico-info-slate"></i>
           <style jsx>{`
             .spotlight__stat-icon {
               display: inline-block;
@@ -31,7 +31,6 @@ const SpotlightModal: FunctionComponent<SpotlightModalProps> = props => {
       }
       position="top center"
       closeOnDocumentClick
-      open={open}
     >
       {close => <SpotlightModalContent close={close} description={props.description} source={props.source} />}
     </Popup>
