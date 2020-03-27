@@ -90,7 +90,6 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 
   useEffect(() => {
     if (map) {
-      setZoomByContainerWidth(map, map.getContainer(), options);
       const popup = new Popup({
         offset: 5,
         closeButton: false
@@ -152,6 +151,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const onLoad = (_map: Map): void => {
     setLoading(false);
     setMap(_map);
+    setZoomByContainerWidth(_map, _map.getContainer(), options);
     if (props.onLoad) {
       props.onLoad(_map);
     }
