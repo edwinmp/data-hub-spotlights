@@ -14,6 +14,7 @@ import {
   SpotlightPage
 } from '../../utils';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { DataSourcesSection } from '../../components/DataSourcesSection';
 
 interface SpotlightProps {
   setData?: (data: PageScaffoldData) => void;
@@ -68,6 +69,13 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
               </ErrorBoundary>
             ))
         )}
+        <DataSourcesSection
+          description={page.datasources_description}
+          methodologyUrlText={'Read about the methodologies used'}
+          datasourcesUrlText={page.datasources_url_title}
+          methodologyUrl={'#'}
+          datasourcesUrl={page.datasources_url ? page.datasources_url : '#'}
+        />
       </>
     );
   }
