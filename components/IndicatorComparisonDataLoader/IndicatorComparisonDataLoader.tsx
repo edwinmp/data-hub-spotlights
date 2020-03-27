@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import React, { Children, cloneElement, FunctionComponent, isValidElement, useEffect, useState } from 'react';
 import { LocationIndicatorData, SpotlightIndicator, SpotlightLocation, SpotlightOptions } from '../../utils';
+import { ErrorBoundary } from '../ErrorBoundary';
 import { Loading } from '../Loading';
 import { parseIndicator } from '../MapSection/utils';
 
@@ -19,9 +20,6 @@ const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = props =
   const [dataOne, setDataOne] = useState<LocData | undefined>(undefined);
   const [dataTwo, setDataTwo] = useState<LocData | undefined>(undefined);
 
-  if (!props.options) {
-    return <div>No Data</div>;
-  }
   useEffect(() => setLoading(props.loading), [props.loading]);
   useEffect(() => {
     if (dataOne && dataTwo) {
@@ -32,6 +30,10 @@ const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = props =
     }
   }, [dataOne, dataTwo]);
 
+  if (!props.options) {
+    return <div>No Data</div>;
+  }
+
   const onLoad = (index: number) => (data: LocData[]): void => {
     if (index === 0) {
       setDataOne(data[0]);
@@ -41,19 +43,24 @@ const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = props =
   };
 
   if (loading) {
+    const geocodes = props.locations && props.locations.map(loc => loc.geocode);
+
     return (
       <Loading active>
         {props.options.map(({ indicator, year }, index) => {
           const _indicators = [parseIndicator(indicator as SpotlightIndicator) as string];
+          const onLoadByIndex = onLoad(index);
 
           return (
             <div key={index}>
-              <DynamicDataLoader
-                indicators={_indicators}
-                startYear={year}
-                onLoad={onLoad(index)}
-                geocodes={props.locations && props.locations.map(loc => loc.geocode)}
-              />
+              <ErrorBoundary>
+                <DynamicDataLoader
+                  indicators={_indicators}
+                  startYear={year}
+                  onLoad={onLoadByIndex}
+                  geocodes={geocodes}
+                />
+              </ErrorBoundary>
             </div>
           );
         })}
