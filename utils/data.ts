@@ -10,6 +10,9 @@ export interface SpotlightPage {
   country_code: string;
   country_name: string;
   currency_code: string;
+  datasources_description: string;
+  datasources_url_title: string;
+  datasources_url: string;
   themes: SpotlightTheme[];
 }
 
