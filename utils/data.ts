@@ -177,6 +177,9 @@ export const extraValueFromMeta = (meta: string, field: string, defaultValue = '
   }
 };
 
+export const hasData = (data: LocationIndicatorData[]): boolean =>
+  !!data.reduce((prev, curr) => prev + curr.data.length, 0);
+
 export const GET_INDICATOR_DATA = gql`
   query GetIndicatorData(
     $indicators: [String]!

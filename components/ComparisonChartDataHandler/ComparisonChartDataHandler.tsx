@@ -1,12 +1,23 @@
-import React, { FunctionComponent, useState, useEffect, Children, isValidElement, cloneElement } from 'react';
+import React, {
+  Children,
+  cloneElement,
+  FunctionComponent,
+  isValidElement,
+  useEffect,
+  useState,
+  ReactNode
+} from 'react';
 import {
-  LocationIndicatorData,
-  SpotlightLocation,
   getBoundariesByCountryCode,
   getBoundariesByDepth,
+  hasData,
   LocationData,
-  SpotlightIndicator
+  LocationIndicatorData,
+  SpotlightIndicator,
+  SpotlightLocation
 } from '../../utils';
+import { Alert } from '../Alert';
+import { Icon } from '../Icon';
 
 interface ComparisonChartDataHandlerProps {
   data?: [LocationIndicatorData, LocationIndicatorData];
@@ -24,6 +35,20 @@ const getLocationData = (locations: string[], data: LocationData[]): number[] =>
 
 const getHeightFromCount = (count = 12): string => (count >= 12 ? `${((count / 12) * 500).toFixed()}px` : '500px');
 
+const renderPaddedAlert = (message: string): ReactNode => (
+  <div>
+    <Alert variant="notice">
+      <Icon name="warning-warning" />
+      <p>{message}</p>
+    </Alert>
+    <style jsx>{`
+      div {
+        padding: 8px;
+      }
+    `}</style>
+  </div>
+);
+
 const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerProps> = ({ data, ...props }) => {
   const [locations, setLocations] = useState<string[]>(
     (props.locations || [])
@@ -31,9 +56,6 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
       .sort()
       .reverse() // eCharts stacks the data, first down last up. So reverse is necessary to show it properly
   );
-  if (!data) {
-    return <div>No Data</div>;
-  }
 
   useEffect(() => {
     if (!props.locations || !props.locations.length) {
@@ -48,6 +70,10 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
       });
     }
   }, []);
+
+  if (!data || !hasData(data)) {
+    return <>{renderPaddedAlert('Unfortunately, we do not have data for this location.')}</>;
+  }
 
   if (locations.length && data.length) {
     return (
@@ -69,7 +95,7 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
     );
   }
 
-  return <div>No Data</div>;
+  return <>{renderPaddedAlert('Unfortunately, we do not have data for this location.')}</>;
 };
 
 export { ComparisonChartDataHandler };
