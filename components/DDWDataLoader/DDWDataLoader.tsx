@@ -1,4 +1,4 @@
-import React, { Children, FunctionComponent, cloneElement, isValidElement, ReactNode, useEffect } from 'react';
+import React, { Children, FunctionComponent, cloneElement, isValidElement, ReactNode } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_INDICATOR_DATA, LocationIndicatorData, DataFilter } from '../../utils';
 
@@ -33,11 +33,9 @@ const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode
   if (error) {
     throw Error(error.message);
   }
-  useEffect(() => {
-    if (props.onLoad && !loading && data) {
-      props.onLoad(data.data);
-    }
-  }, [loading]);
+  if (props.onLoad && !loading && data) {
+    props.onLoad(data.data);
+  }
 
   return <>{renderChildren(loading, data && data.data)}</>;
 };
