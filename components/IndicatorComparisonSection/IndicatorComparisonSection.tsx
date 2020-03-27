@@ -42,54 +42,54 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
   useEffect(() => setLoading(true), [location]);
 
   return (
-    <PageSection wide dark={!location}>
+    <PageSection wide>
       <PageSectionHeading>
         Compare indicators for {toCamelCase(location ? location.name : countryName)}
       </PageSectionHeading>
       <IndicatorSelectionBanner themes={themes} onCompare={onCompare} compareOnLoad />
       {selections ? (
         <VisualisationSection className="spotlight--leader">
-          {location ? (
-            <SpotlightSidebar width="100%">
-              <SpotlightHeading>{toCamelCase(location ? location.name : countryName)}</SpotlightHeading>
-              <SpotlightInteractive>
-                <IndicatorComparisonDataLoader
-                  options={selections}
-                  onLoad={onLoad}
-                  loading={loading}
-                  locations={location && [location]}
+          <SpotlightSidebar>
+            <SpotlightHeading>{toCamelCase(location ? location.name : countryName)}</SpotlightHeading>
+            <SpotlightInteractive maxHeight="500px" background="#ffffff">
+              <IndicatorComparisonDataLoader
+                options={selections}
+                onLoad={onLoad}
+                loading={loading}
+                locations={location ? [location] : [{ geocode: countryCode, name: countryName }]}
+              >
+                <ComparisonChartDataHandler
+                  countryCode={countryCode}
+                  locations={location ? [location] : [{ geocode: countryCode, name: countryName }]}
+                  indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
                 >
-                  <ComparisonChartDataHandler
-                    countryCode={countryCode}
-                    locations={props.location && [props.location]}
-                    indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
-                  >
-                    <IndicatorComparisonColumnChart height="500px" />
-                  </ComparisonChartDataHandler>
-                </IndicatorComparisonDataLoader>
-              </SpotlightInteractive>
-            </SpotlightSidebar>
-          ) : (
-            <VisualisationSectionMain width="100%">
-              <SpotlightHeading>Locations in {toCamelCase(countryName)}</SpotlightHeading>
-              <SpotlightInteractive maxHeight="500px" background="#ffffff">
-                <IndicatorComparisonDataLoader
-                  options={selections}
-                  onLoad={onLoad}
-                  loading={loading}
+                  <IndicatorComparisonColumnChart height="500px" />
+                </ComparisonChartDataHandler>
+              </IndicatorComparisonDataLoader>
+            </SpotlightInteractive>
+          </SpotlightSidebar>
+
+          <VisualisationSectionMain>
+            <SpotlightHeading>
+              Locations in {location ? toCamelCase(location.name) : toCamelCase(countryName)}
+            </SpotlightHeading>
+            <SpotlightInteractive maxHeight="500px" background="#ffffff">
+              <IndicatorComparisonDataLoader
+                options={selections}
+                onLoad={onLoad}
+                loading={loading}
+                locations={location && [location]}
+              >
+                <ComparisonChartDataHandler
+                  countryCode={countryCode}
                   locations={location && [location]}
+                  indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
                 >
-                  <ComparisonChartDataHandler
-                    countryCode={countryCode}
-                    locations={props.location && [props.location]}
-                    indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
-                  >
-                    <LocationComparisonBarChart />
-                  </ComparisonChartDataHandler>
-                </IndicatorComparisonDataLoader>
-              </SpotlightInteractive>
-            </VisualisationSectionMain>
-          )}
+                  <LocationComparisonBarChart />
+                </ComparisonChartDataHandler>
+              </IndicatorComparisonDataLoader>
+            </SpotlightInteractive>
+          </VisualisationSectionMain>
         </VisualisationSection>
       ) : null}
     </PageSection>

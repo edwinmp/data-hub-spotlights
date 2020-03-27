@@ -10,7 +10,7 @@ interface ComparisonWrapperProps {
   onCompare: (indicators: [SpotlightOptions, SpotlightOptions]) => void;
 }
 
-const DEFAULT_INDEXES: [number, number] = [1, 0];
+const DEFAULT_INDEXES: [number, number] = [1, 2];
 
 const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ themes, onCompare, ...props }) => {
   const [filterOne, setFilterOne] = useState<SpotlightOptions | undefined>(undefined);
