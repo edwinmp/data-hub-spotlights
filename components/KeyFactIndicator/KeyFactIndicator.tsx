@@ -7,6 +7,7 @@ import {
   SpotlightLocation,
   TemplateOptions
 } from '../../utils';
+import { ErrorBoundary } from '../ErrorBoundary';
 import { IndicatorChartDataHandler, IndicatorStat, IndicatorStatDataHandler } from '../IndicatorStat';
 
 interface KeyFactIndicatorProps {
@@ -37,28 +38,30 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   heading={processTemplateString(stat.title || '', templateOptions)}
                   meta={stat.meta || { description: indicator.description, source: indicator.source }}
                 >
-                  <DynamicDataLoader
-                    indicators={stat.indicators}
-                    geocodes={!stat.fetchAll ? [location.geocode] : undefined}
-                    startYear={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
-                    endYear={stat.endYear || stat.startYear || indicator.end_year || indicator.start_year}
-                    filter={stat.filter}
-                  >
-                    <IndicatorStatDataHandler
-                      valueOptions={{
-                        location,
-                        useLocalValue: props.useLocalValue,
-                        prefix:
-                          stat.dataFormat === 'currency' && props.useLocalValue
-                            ? props.currencyCode
-                            : stat.valuePrefix || indicator.value_prefix,
-                        suffix: stat.valueSuffix || indicator.value_suffix,
-                        dataFormat: stat.dataFormat || indicator.data_format,
-                        aggregation: stat.aggregation
-                      }}
-                      note={stat.note}
-                    />
-                  </DynamicDataLoader>
+                  <ErrorBoundary>
+                    <DynamicDataLoader
+                      indicators={stat.indicators}
+                      geocodes={!stat.fetchAll ? [location.geocode] : undefined}
+                      startYear={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
+                      endYear={stat.endYear || stat.startYear || indicator.end_year || indicator.start_year}
+                      filter={stat.filter}
+                    >
+                      <IndicatorStatDataHandler
+                        valueOptions={{
+                          location,
+                          useLocalValue: props.useLocalValue,
+                          prefix:
+                            stat.dataFormat === 'currency' && props.useLocalValue
+                              ? props.currencyCode
+                              : stat.valuePrefix || indicator.value_prefix,
+                          suffix: stat.valueSuffix || indicator.value_suffix,
+                          dataFormat: stat.dataFormat || indicator.data_format,
+                          aggregation: stat.aggregation
+                        }}
+                        note={stat.note}
+                      />
+                    </DynamicDataLoader>
+                  </ErrorBoundary>
                 </IndicatorStat>
               );
             }

@@ -1,6 +1,7 @@
-import React, { Children, FunctionComponent, cloneElement, isValidElement, ReactNode } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_INDICATOR_DATA, LocationIndicatorData, DataFilter } from '../../utils';
+import React, { Children, cloneElement, FunctionComponent, isValidElement, ReactNode } from 'react';
+import { DataFilter, GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
+import { Alert } from '../Alert';
 
 export interface DataLoaderProps {
   indicators?: string[];
@@ -31,7 +32,9 @@ const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode
     }
   });
   if (error) {
-    throw Error(error.message);
+    console.log('DDWDataLoader:', error.message);
+
+    return <Alert variant="error">Something went wrong while rendering this widget</Alert>;
   }
   if (props.onLoad && !loading && data) {
     props.onLoad(data.data);

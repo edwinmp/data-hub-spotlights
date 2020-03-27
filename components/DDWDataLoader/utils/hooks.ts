@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/react-hooks';
+import { ApolloError } from 'apollo-client';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { DataLoaderProps } from '..';
 import { GET_INDICATOR_DATA, LocationIndicatorData } from '../../../utils';
@@ -8,6 +9,7 @@ interface DDWData {
   dataLoading: boolean;
   options: DataLoaderProps;
   setOptions: Dispatch<SetStateAction<DataLoaderProps>>;
+  error?: ApolloError;
 }
 
 export const useDDWData = (_options: DataLoaderProps): DDWData => {
@@ -24,7 +26,9 @@ export const useDDWData = (_options: DataLoaderProps): DDWData => {
       }
     });
     if (error) {
-      throw Error(error.message);
+      console.log('useDDWData:', error.message);
+
+      return { data: [], dataLoading: false, options, setOptions, error };
     }
 
     return { data: data && data.data, dataLoading: loading, options, setOptions };

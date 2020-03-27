@@ -13,6 +13,7 @@ import {
   SpotlightLocation,
   SpotlightPage
 } from '../../utils';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 
 interface SpotlightProps {
   setData?: (data: PageScaffoldData) => void;
@@ -56,14 +57,15 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
           theme.indicators
             .filter(indicator => (!location ? indicator.slug.includes('country') : !indicator.slug.includes('country')))
             .map((indicator, index) => (
-              <RevenueExpenditureSection
-                key={index}
-                indicator={indicator}
-                countryCode={page.country_code}
-                countryName={page.country_name}
-                currencyCode={page.currency_code || ''}
-                location={location}
-              />
+              <ErrorBoundary key={index}>
+                <RevenueExpenditureSection
+                  indicator={indicator}
+                  countryCode={page.country_code}
+                  countryName={page.country_name}
+                  currencyCode={page.currency_code || ''}
+                  location={location}
+                />
+              </ErrorBoundary>
             ))
         )}
       </>

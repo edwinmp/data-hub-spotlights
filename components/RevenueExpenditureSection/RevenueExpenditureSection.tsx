@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import {
   BudgetType,
   createYearOptionsFromRange,
@@ -6,19 +6,21 @@ import {
   SpotlightIndicator,
   SpotlightLocation
 } from '../../utils';
+import { Alert } from '../Alert';
 import { CurrencySelector } from '../CurrencySelector';
 import { FormField } from '../FormField';
 import { FormFieldSelect } from '../FormFieldSelect';
+import { Icon } from '../Icon';
 import { Loading } from '../Loading';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { RevenueExpenditureLineChart } from '../RevenueExpenditureLineChart';
+import { RevenueExpenditureTreeMap } from '../RevenueExpenditureTreeMap';
 import { SelectOption } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBannerMain } from '../SpotlightBanner';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { useRevenueExpenditureData, getIndicatorContentOptions, parseBudgetType } from './utils';
-import { RevenueExpenditureTreeMap } from '../RevenueExpenditureTreeMap';
+import { getIndicatorContentOptions, parseBudgetType, useRevenueExpenditureData } from './utils';
 
 interface SelectType {
   label: string;
@@ -34,12 +36,26 @@ interface RevenueSectionProps {
   budgetTypeOptions?: SelectType[];
 }
 
+const renderPaddedAlert = (message: string): ReactNode => (
+  <div>
+    <Alert variant="error">
+      <Icon name="error-error" />
+      <p>{message}</p>
+    </Alert>
+    <style jsx>{`
+      div {
+        padding: 8px;
+      }
+    `}</style>
+  </div>
+);
+
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
   const [useLocalValue, setUseLocalValue] = useState(false);
   const [year, setYear] = useState<number | undefined>(indicator.start_year && indicator.start_year);
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
   const [selectedBudgetType, setSelectedBudgetType] = useState<BudgetType | undefined>(undefined);
-  const { data, dataLoading, options, setOptions } = useRevenueExpenditureData(
+  const { data, dataLoading, options, setOptions, error } = useRevenueExpenditureData(
     {
       indicators: [indicator.ddw_id],
       geocodes: location ? [location.geocode] : [props.countryCode],
@@ -126,37 +142,47 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       <VisualisationSection>
         <SpotlightSidebar>
           <SpotlightInteractive>
-            <Loading active={dataLoading}>
-              <RevenueExpenditureLineChart
-                data={data}
-                budgetType={selectedBudgetType}
-                valueOptions={{
-                  dataFormat: 'currency',
-                  useLocalValue,
-                  prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
-                  suffix: indicator.value_suffix
-                }}
-              />
-            </Loading>
+            {error ? (
+              renderPaddedAlert('Something went wrong while loading this widget')
+            ) : (
+              <Loading active={dataLoading}>
+                <RevenueExpenditureLineChart
+                  data={data}
+                  budgetType={selectedBudgetType}
+                  valueOptions={{
+                    dataFormat: 'currency',
+                    useLocalValue,
+                    prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                    suffix: indicator.value_suffix
+                  }}
+                />
+              </Loading>
+            )}
           </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
           <SpotlightInteractive>
-            <Loading active={dataLoading}>
-              <RevenueExpenditureTreeMap
-                data={
-                  data && year && data.hasOwnProperty(year) && selectedBudgetType ? data[year][selectedBudgetType] : []
-                }
-                budgetType={selectedBudgetType}
-                config={getIndicatorContentOptions(indicator)}
-                valueOptions={{
-                  dataFormat: 'currency',
-                  useLocalValue,
-                  prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
-                  suffix: indicator.value_suffix
-                }}
-              />
-            </Loading>
+            {error ? (
+              renderPaddedAlert('Something went wrong while loading this widget')
+            ) : (
+              <Loading active={dataLoading}>
+                <RevenueExpenditureTreeMap
+                  data={
+                    data && year && data.hasOwnProperty(year) && selectedBudgetType
+                      ? data[year][selectedBudgetType]
+                      : []
+                  }
+                  budgetType={selectedBudgetType}
+                  config={getIndicatorContentOptions(indicator)}
+                  valueOptions={{
+                    dataFormat: 'currency',
+                    useLocalValue,
+                    prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                    suffix: indicator.value_suffix
+                  }}
+                />
+              </Loading>
+            )}
           </SpotlightInteractive>
         </VisualisationSectionMain>
       </VisualisationSection>
