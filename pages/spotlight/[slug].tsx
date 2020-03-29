@@ -32,6 +32,8 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
   const onChangeLocation = (location?: SpotlightLocation): void => setLocation(location);
   const mapThemes = filterThemesBySection(page.themes, 'map');
 
+  console.log('Page is ' + JSON.stringify(page));
+
   if (page.themes && page.country_code) {
     return (
       <>
@@ -69,13 +71,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
               </ErrorBoundary>
             ))
         )}
-        <DataSourcesSection
-          description={page.datasources_description}
-          methodologyUrlText={'Read about the methodologies used'}
-          datasourcesUrlText={page.datasources_url_title}
-          methodologyUrl={'#'}
-          datasourcesUrl={page.datasources_url ? page.datasources_url : '#'}
-        />
+        <DataSourcesSection description={page.datasources_description} dataSourceLinks={page.datasource_links} />
       </>
     );
   }

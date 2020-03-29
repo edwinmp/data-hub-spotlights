@@ -2,6 +2,9 @@ import { EChartOption } from 'echarts';
 import gql from 'graphql-tag';
 import fetch from 'isomorphic-unfetch';
 import { PageScaffoldData } from '../components/DefaultLayout';
+import { DataSourcesLink } from '../components/DataSourcesSection';
+
+export const WebsiteUrl = 'http://devinit.org';
 
 export interface SpotlightPage {
   title: string;
@@ -11,8 +14,7 @@ export interface SpotlightPage {
   country_name: string;
   currency_code: string;
   datasources_description: string;
-  datasources_url_title: string;
-  datasources_url: string;
+  datasource_links: DataSourcesLink[];
   themes: SpotlightTheme[];
 }
 
