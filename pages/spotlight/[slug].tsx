@@ -32,8 +32,6 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
   const onChangeLocation = (location?: SpotlightLocation): void => setLocation(location);
   const mapThemes = filterThemesBySection(page.themes, 'map');
 
-  console.log('Page is ' + JSON.stringify(page));
-
   if (page.themes && page.country_code) {
     return (
       <>
