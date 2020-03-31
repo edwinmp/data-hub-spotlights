@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import { PageSection, PageSectionHeading } from '../PageSection';
-import { WebsiteUrl } from '../../utils';
 
 export interface DataSourcesLink {
   caption: string;
@@ -23,7 +22,7 @@ const DataSourcesSection: FunctionComponent<DataSourcesSectionProps> = ({ descri
         {urlLinks.map((item, index) => {
           return (
             <p key={index}>
-              <a href={item.url.length > 0 ? item.url : WebsiteUrl + item.page_url}>{item.caption}</a>
+              <a href={item.url.length > 0 ? item.url : item.page_url}>{item.caption}</a>
             </p>
           );
         })}

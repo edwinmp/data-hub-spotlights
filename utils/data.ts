@@ -4,8 +4,6 @@ import fetch from 'isomorphic-unfetch';
 import { PageScaffoldData } from '../components/DefaultLayout';
 import { DataSourcesLink } from '../components/DataSourcesSection';
 
-export const WebsiteUrl = 'http://devinit.org';
-
 export interface SpotlightPage {
   title: string;
   full_url: string;
