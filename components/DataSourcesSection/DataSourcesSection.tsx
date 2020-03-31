@@ -14,19 +14,19 @@ interface DataSourcesSectionProps {
 }
 
 const DataSourcesSection: FunctionComponent<DataSourcesSectionProps> = ({ description, dataSourceLinks }) => {
-  const links = dataSourceLinks?.map((item, index) => {
-    return (
-      <p key={index}>
-        <a href={item.url.length > 0 ? item.url : WebsiteUrl + item.page_url}>{item.caption}</a>
-      </p>
-    );
-  });
+  const urlLinks = dataSourceLinks ? dataSourceLinks : [];
   return (
     <PageSection wide>
       <PageSectionHeading>Data & Sources</PageSectionHeading>
       <div className="is-typeset max-meter">
         <p>{description}</p>
-        {links}
+        {urlLinks.map((item, index) => {
+          return (
+            <p key={index}>
+              <a href={item.url.length > 0 ? item.url : WebsiteUrl + item.page_url}>{item.caption}</a>
+            </p>
+          );
+        })}
       </div>
     </PageSection>
   );
