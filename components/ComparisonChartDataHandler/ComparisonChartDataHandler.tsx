@@ -1,12 +1,4 @@
-import React, {
-  Children,
-  cloneElement,
-  FunctionComponent,
-  isValidElement,
-  useEffect,
-  useState,
-  ReactNode
-} from 'react';
+import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import {
   getBoundariesByCountryCode,
   getBoundariesByDepth,
@@ -14,15 +6,25 @@ import {
   LocationData,
   LocationIndicatorData,
   SpotlightIndicator,
-  SpotlightLocation
+  SpotlightLocation,
+  toCamelCase
 } from '../../utils';
 import { Alert } from '../Alert';
 import { Icon } from '../Icon';
+import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
+import { LocationComparisonBarChart } from '../LocationComparisonBarChart';
+import { SpotlightHeading } from '../SpotlightHeading';
+import { SpotlightInteractive } from '../SpotlightInteractive';
+import { SpotlightSidebar } from '../SpotlightSidebar';
+import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
+import { Loading } from '../Loading';
 
-interface ComparisonChartDataHandlerProps {
-  data?: [LocationIndicatorData, LocationIndicatorData];
-  locations?: SpotlightLocation[];
+interface ComponentProps {
+  data?: LocationIndicatorData[];
+  dataLoading?: boolean;
+  location?: SpotlightLocation;
   countryCode: string;
+  countryName: string;
   indicators: [SpotlightIndicator, SpotlightIndicator];
 }
 
@@ -30,7 +32,7 @@ const getLocationData = (locations: string[], data: LocationData[]): number[] =>
   locations.map(location => {
     const match = data.find(_data => _data.name.toLowerCase() === location.toLowerCase());
 
-    return match ? match.value : 0;
+    return match && match.value > 0 ? match.value : 0; // FIXME: how do we handle -ve values?
   });
 
 const getHeightFromCount = (count = 12): string => (count >= 12 ? `${((count / 12) * 500).toFixed()}px` : '500px');
@@ -49,16 +51,11 @@ const renderPaddedAlert = (message: string): ReactNode => (
   </div>
 );
 
-const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerProps> = ({ data, ...props }) => {
-  const [locations, setLocations] = useState<string[]>(
-    (props.locations || [])
-      .map(location => location.name)
-      .sort()
-      .reverse() // eCharts stacks the data, first down last up. So reverse is necessary to show it properly
-  );
+const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, location, ...props }) => {
+  const [locations, setLocations] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!props.locations || !props.locations.length) {
+    if (!location) {
       getBoundariesByCountryCode(props.countryCode).then(boundaries => {
         const requiredBoundaries = getBoundariesByDepth(boundaries, 'd');
         setLocations(
@@ -68,34 +65,59 @@ const ComparisonChartDataHandler: FunctionComponent<ComparisonChartDataHandlerPr
             .reverse()
         );
       });
+    } else {
+      setLocations([location.name]); // TODO: get sub-locations here e.g. sub-county/parish
     }
-  }, []);
+  }, [location]);
 
   if (!data || !hasData(data)) {
     return <>{renderPaddedAlert('Unfortunately, we do not have data for this location.')}</>;
   }
 
-  if (locations.length && data.length) {
-    return (
-      <>
-        {Children.map(
-          props.children,
-          child =>
-            isValidElement(child) &&
-            cloneElement(child, {
-              labels: locations,
-              series: {
-                names: [props.indicators[0].name, props.indicators[1].name],
-                data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
-              },
-              height: getHeightFromCount(locations.length)
-            })
+  return (
+    <VisualisationSection className="spotlight--leader">
+      <SpotlightSidebar>
+        <SpotlightHeading>{toCamelCase(location ? location.name : props.countryName)}</SpotlightHeading>
+        {location ? (
+          <SpotlightInteractive>
+            <Loading active={!!props.dataLoading}>
+              <IndicatorComparisonColumnChart
+                height="500px"
+                series={{
+                  names: [props.indicators[0].name, props.indicators[1].name],
+                  data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
+                }}
+              />
+            </Loading>
+          </SpotlightInteractive>
+        ) : (
+          renderPaddedAlert('Unfortunately, we do not have data for this location.')
         )}
-      </>
-    );
-  }
+      </SpotlightSidebar>
 
-  return <>{renderPaddedAlert('Unfortunately, we do not have data for this location.')}</>;
+      <VisualisationSectionMain>
+        <SpotlightHeading>
+          Locations in {location ? toCamelCase(location.name) : toCamelCase(props.countryName)}
+        </SpotlightHeading>
+        {locations.length > 1 ? (
+          <SpotlightInteractive maxHeight="500px" background="#ffffff">
+            <Loading active={!!props.dataLoading}>
+              <LocationComparisonBarChart
+                labels={locations}
+                series={{
+                  names: [props.indicators[0].name, props.indicators[1].name],
+                  data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
+                }}
+                height={getHeightFromCount(locations.length)}
+              />
+            </Loading>
+          </SpotlightInteractive>
+        ) : (
+          renderPaddedAlert('Unfortunately, we do not have data for this location.')
+        )}
+      </VisualisationSectionMain>
+    </VisualisationSection>
+  );
 };
 
 export { ComparisonChartDataHandler };
