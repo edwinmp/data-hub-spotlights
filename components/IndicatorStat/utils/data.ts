@@ -12,22 +12,21 @@ const getLocalValue = (data: LocationData, options: ValueOptions): string => {
   if (data.meta) {
     const meta: LocationDataMeta = JSON.parse(data.meta);
     if (meta.valueLocalCurrency) {
-      return addPrefixAndSuffix(formatNumber(meta.valueLocalCurrency), options);
+      return addPrefixAndSuffix(formatNumber(meta.valueLocalCurrency, 1), options);
     }
   }
 
-  return addPrefixAndSuffix(formatNumber(data.value), {
+  return addPrefixAndSuffix(formatNumber(data.value, 1), {
     ...options,
     prefix: options.dataFormat === 'currency' ? 'US$' : options.prefix
   });
 };
 
-const getValue = (data: LocationData, options: ValueOptions): string => {
+const getValue = (data: LocationData, options: ValueOptions, decimalCount: number): string => {
   if (options.useLocalValue) {
     return getLocalValue(data, options);
   }
-
-  return addPrefixAndSuffix(formatNumber(data.value), options);
+  return addPrefixAndSuffix(formatNumber(data.value, decimalCount), options);
 };
 
 /**
@@ -107,37 +106,45 @@ const aggregateProcessedData = (data: ProcessedData[], options: ValueOptions): n
   return data;
 };
 
-const processMultipleData = (data: LocationData[], options: ValueOptions = { dataFormat: 'plain' }): string => {
+const processMultipleData = (
+  data: LocationData[],
+  options: ValueOptions = { dataFormat: 'plain' },
+  decimalCount: number
+): string => {
   const sortedData = data.sort((a, b) => a.year - b.year);
   const latest = sortedData.filter(d => d.year === sortedData[data.length - 1].year);
   if (latest && latest.length > 1) {
     const _data = getOneFromMultipleBudgetTypes(data);
     if (_data) {
-      return getValue(_data, options);
+      return getValue(_data, options, decimalCount);
     }
   }
 
   if (!options.aggregation) {
     if (sortedData[data.length - 1].value) {
-      return getValue(sortedData[data.length - 1], options);
+      return getValue(sortedData[data.length - 1], options, decimalCount);
     }
   } else {
     const aggregate = aggregateProcessedData(data.map(locationDataToProcessedData), options);
     if (typeof aggregate === 'number') {
-      return addPrefixAndSuffix(formatNumber(aggregate), options);
+      return addPrefixAndSuffix(formatNumber(aggregate, decimalCount), options);
     }
   }
 
   return DEFAULT_VALUE;
 };
 
-export const getIndicatorValue = (data?: LocationData[], options: ValueOptions = { dataFormat: 'plain' }): string => {
+export const getIndicatorValue = (
+  data?: LocationData[],
+  options: ValueOptions = { dataFormat: 'plain' },
+  decimalCount?: number
+): string => {
   if (data && data.length) {
     if (data.length === 1 && data[0].value) {
-      return getValue(data[0], options);
+      return getValue(data[0], options, typeof decimalCount == 'number' ? decimalCount : 1);
     }
 
-    return processMultipleData(data, options);
+    return processMultipleData(data, options, typeof decimalCount == 'number' ? decimalCount : 1);
   }
 
   return DEFAULT_VALUE;
@@ -145,7 +152,8 @@ export const getIndicatorValue = (data?: LocationData[], options: ValueOptions =
 
 export const getIndicatorsValue = (
   data: LocationIndicatorData[],
-  options: ValueOptions = { dataFormat: 'plain' }
+  options: ValueOptions = { dataFormat: 'plain' },
+  decimalCount?: number
 ): string => {
   if (options.aggregation) {
     const values: ProcessedData[] = data.map(_data => {
@@ -166,7 +174,7 @@ export const getIndicatorsValue = (
     });
     const aggregate = aggregateProcessedData(values, options);
     if (typeof aggregate === 'number') {
-      return addPrefixAndSuffix(formatNumber(aggregate), options);
+      return addPrefixAndSuffix(formatNumber(aggregate, typeof decimalCount == 'number' ? decimalCount : 1), options);
     }
 
     return DEFAULT_VALUE; // TODO: remove when properly handled

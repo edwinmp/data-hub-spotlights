@@ -8,20 +8,44 @@ interface DataHandlerProps {
   dataLoading?: boolean;
   valueOptions?: ValueOptions;
   note?: ContentNote;
+  decimalCount?: number;
 }
 
-const IndicatorStatDataHandler: FunctionComponent<DataHandlerProps> = ({ data, dataLoading, ...props }) => {
+const IndicatorStatDataHandler: FunctionComponent<DataHandlerProps> = ({
+  data,
+  dataLoading,
+  decimalCount,
+  ...props
+}) => {
   if (!dataLoading && data) {
     if (data.length === 1) {
-      return <IndicatorStatDataViewer value={getIndicatorValue(data[0].data, props.valueOptions)} note={props.note} />;
+      return (
+        <IndicatorStatDataViewer
+          value={getIndicatorValue(
+            data[0].data,
+            props.valueOptions,
+            props.valueOptions?.suffix?.indexOf('th') === 0 ? 0 : decimalCount
+          )}
+          note={props.note}
+        />
+      );
     }
 
-    return <IndicatorStatDataViewer value={getIndicatorsValue(data, props.valueOptions)} note={props.note} />;
+    return (
+      <IndicatorStatDataViewer
+        value={getIndicatorsValue(
+          data,
+          props.valueOptions,
+          props.valueOptions?.suffix?.indexOf('th') === 0 ? 0 : decimalCount
+        )}
+        note={props.note}
+      />
+    );
   }
 
   return <div>Loading ...</div>;
 };
 
-IndicatorStatDataHandler.defaultProps = { valueOptions: { dataFormat: 'plain' } };
+IndicatorStatDataHandler.defaultProps = { valueOptions: { dataFormat: 'plain' }, decimalCount: 1 };
 
 export { IndicatorStatDataHandler };
