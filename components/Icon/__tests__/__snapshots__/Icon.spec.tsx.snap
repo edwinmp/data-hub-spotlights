@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icon renders correctly 1`] = `
+<i
+  aria-hidden="true"
+  className="ico ico-warning-warning"
+  role="presentation"
+/>
+`;
+
+exports[`Icon renders with the specified className 1`] = `
+<i
+  aria-hidden="true"
+  className="ico ico-info-slate ico--12"
+  role="presentation"
+/>
+`;

@@ -5,7 +5,7 @@ import { getIndicatorContentOptions, processRevenueExpenditureData } from './dat
 import { BudgetTypeData, RevenueExpenditureHook as REHook } from './types';
 
 export const useRevenueExpenditureData = (optns: DataLoaderProps, indicator: SpotlightIndicator): REHook => {
-  const { data, dataLoading, options, setOptions } = useDDWData(optns);
+  const { data, dataLoading, options, setOptions, error } = useDDWData(optns);
   if (!dataLoading && data && data.length) {
     const configs = getIndicatorContentOptions(indicator);
     const processedData = processRevenueExpenditureData(data[0].data, configs);
@@ -24,5 +24,5 @@ export const useRevenueExpenditureData = (optns: DataLoaderProps, indicator: Spo
     };
   }
 
-  return { data: {}, dataLoading, options, setOptions };
+  return { data: {}, dataLoading, options, setOptions, error };
 };

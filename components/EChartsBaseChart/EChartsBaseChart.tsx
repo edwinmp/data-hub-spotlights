@@ -35,6 +35,11 @@ const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {
       setOptions(baseChart, props.options);
     }
   }, [props.options]);
+  useEffect(() => {
+    if (props.height && baseChart) {
+      baseChart.resize({ height: props.height });
+    }
+  }, [props.height]);
 
   return <div ref={chartNode} style={{ width: props.width, height: props.height }} className={props.classNames} />;
 };

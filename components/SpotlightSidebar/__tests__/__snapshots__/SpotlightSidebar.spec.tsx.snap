@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`SpotlightSidebar renders children 1`] = `
+<div
+  className="spotlight__aside"
+>
+  <div>
+    My Child
+  </div>
+  <style
+    jsx={true}
+  >
+    
+        
+        
+      
+  </style>
+</div>
+`;
+
 exports[`SpotlightSidebar renders correctly 1`] = `
 <div
   className="spotlight__aside"

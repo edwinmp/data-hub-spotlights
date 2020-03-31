@@ -1,5 +1,6 @@
 import React, { FunctionComponent, ReactText } from 'react';
 import { ContentNote } from '../../utils';
+import { Icon } from '../Icon';
 
 interface IndicatorStatDataProps {
   note?: ContentNote;
@@ -16,7 +17,7 @@ const IndicatorStatDataViewer: FunctionComponent<IndicatorStatDataProps> = ({ va
           {note.content}{' '}
           {note.meta ? (
             <span className="spotlight__stat-icon">
-              <i role="presentation" aria-hidden="true" className="ico ico--12 ico-info-slate"></i>
+              <Icon name="info-slate" className="ico--12" />
             </span>
           ) : null}
         </span>

@@ -24,4 +24,14 @@ describe('SpotlightSidebar', () => {
 
     expect(renderer).toMatchSnapshot();
   });
+
+  test('renders children', () => {
+    const renderer = TestRenderer.create(
+      <SpotlightSidebar>
+        <div>My Child</div>
+      </SpotlightSidebar>
+    ).toJSON();
+
+    expect(renderer).toMatchSnapshot();
+  });
 });

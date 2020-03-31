@@ -1,13 +1,14 @@
 import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useState } from 'react';
 import { SpotlightLocation, SpotlightOptions } from '../../utils';
+import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
 import { MapSectionHeader } from '../MapSectionHeader';
 import { PageSection } from '../PageSection';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { SpotlightIndicatorInfo } from '../SpotlightIndicatorInfo';
 import { SpotlightInteractive } from '../SpotlightInteractive';
-import { SidebarContent, SpotlightSidebar, SpotlightHide, SpotlightSidebarInfo } from '../SpotlightSidebar';
+import { SidebarContent, SpotlightHide, SpotlightSidebar, SpotlightSidebarInfo } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import {
   getDataPrefix,
@@ -83,22 +84,24 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
 
         <VisualisationSectionMain>
           <SpotlightInteractive height="100%">
-            <DynamicMapDataLoader
-              indicators={indicatorID ? [indicatorID] : undefined}
-              geocodes={activeLocation && [activeLocation.geocode]}
-              startYear={options.year ? options.year : options.indicator && options.indicator.start_year}
-              limit={10000}
-            >
-              <DynamicMap
-                countryCode={countryCode}
-                range={range}
-                colours={colours}
-                dataPrefix={getDataPrefix(options)}
-                dataSuffix={getDataSuffix(options)}
-                location={activeLocation}
-                locationHandling="flyto"
-              />
-            </DynamicMapDataLoader>
+            <ErrorBoundary>
+              <DynamicMapDataLoader
+                indicators={indicatorID ? [indicatorID] : undefined}
+                geocodes={activeLocation && [activeLocation.geocode]}
+                startYear={options.year ? options.year : options.indicator && options.indicator.start_year}
+                limit={10000}
+              >
+                <DynamicMap
+                  countryCode={countryCode}
+                  range={range}
+                  colours={colours}
+                  dataPrefix={getDataPrefix(options)}
+                  dataSuffix={getDataSuffix(options)}
+                  location={activeLocation}
+                  locationHandling="flyto"
+                />
+              </DynamicMapDataLoader>
+            </ErrorBoundary>
           </SpotlightInteractive>
         </VisualisationSectionMain>
 

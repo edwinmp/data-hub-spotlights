@@ -3,12 +3,7 @@ import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme
 import { ComparisonChartDataHandler } from '../ComparisonChartDataHandler';
 import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
 import { IndicatorComparisonDataLoader } from '../IndicatorComparisonDataLoader';
-import { LocationComparisonBarChart } from '../LocationComparisonBarChart';
 import { PageSection, PageSectionHeading } from '../PageSection';
-import { SpotlightHeading } from '../SpotlightHeading';
-import { SpotlightInteractive } from '../SpotlightInteractive';
-import { SpotlightSidebar } from '../SpotlightSidebar';
-import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { IndicatorSelectionBanner } from './IndicatorSelectionBanner';
 
 export interface IndicatorComparisonSectionProps {
@@ -38,60 +33,28 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
       setLoading(true);
     }
   };
-  const onLoad = (): void => setLoading(false);
   useEffect(() => setLoading(true), [location]);
 
   return (
-    <PageSection wide dark={!location}>
+    <PageSection wide>
       <PageSectionHeading>
         Compare indicators for {toCamelCase(location ? location.name : countryName)}
       </PageSectionHeading>
       <IndicatorSelectionBanner themes={themes} onCompare={onCompare} compareOnLoad />
       {selections ? (
-        <VisualisationSection className="spotlight--leader">
-          {location ? (
-            <SpotlightSidebar width="100%">
-              <SpotlightHeading>{toCamelCase(location ? location.name : countryName)}</SpotlightHeading>
-              <SpotlightInteractive>
-                <IndicatorComparisonDataLoader
-                  options={selections}
-                  onLoad={onLoad}
-                  loading={loading}
-                  locations={location && [location]}
-                >
-                  <ComparisonChartDataHandler
-                    countryCode={countryCode}
-                    locations={props.location && [props.location]}
-                    indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
-                  >
-                    <IndicatorComparisonColumnChart height="500px" />
-                  </ComparisonChartDataHandler>
-                </IndicatorComparisonDataLoader>
-              </SpotlightInteractive>
-            </SpotlightSidebar>
-          ) : (
-            <VisualisationSectionMain width="100%">
-              <SpotlightHeading>Locations in {toCamelCase(countryName)}</SpotlightHeading>
-              <SpotlightInteractive maxHeight="500px" background="#ffffff">
-                <IndicatorComparisonDataLoader
-                  options={selections}
-                  onLoad={onLoad}
-                  loading={loading}
-                  locations={location && [location]}
-                >
-                  <ComparisonChartDataHandler
-                    countryCode={countryCode}
-                    locations={props.location && [props.location]}
-                    indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
-                  >
-                    <LocationComparisonBarChart />
-                  </ComparisonChartDataHandler>
-                </IndicatorComparisonDataLoader>
-              </SpotlightInteractive>
-            </VisualisationSectionMain>
-          )}
-        </VisualisationSection>
-      ) : null}
+        <IndicatorComparisonDataLoader options={selections} loading={loading} locations={location ? [location] : []}>
+          <ComparisonChartDataHandler
+            countryCode={countryCode}
+            countryName={countryName}
+            location={location}
+            indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
+          >
+            <IndicatorComparisonColumnChart height="500px" />
+          </ComparisonChartDataHandler>
+        </IndicatorComparisonDataLoader>
+      ) : (
+        <div>Please Select to Compare</div>
+      )}
     </PageSection>
   );
 };

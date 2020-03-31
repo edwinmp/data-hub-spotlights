@@ -4,7 +4,6 @@ import { toBasicAxisData } from '../EChartsBaseChart/utils';
 import { EChartOption } from 'echarts';
 
 interface ComponentProps {
-  labels?: string[];
   series?: {
     names: [string, string];
     data: [number[], number[]];
