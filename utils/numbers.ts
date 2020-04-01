@@ -34,5 +34,6 @@ export const setKeyfactsDecimalCount = (flag: string | undefined): number => {
   if (flag) {
     return flag.indexOf('th') == 0 ? 0 : 1;
   }
+
   return 1;
 };

@@ -26,6 +26,7 @@ const getValue = (data: LocationData, options: ValueOptions): string => {
   if (options.useLocalValue) {
     return getLocalValue(data, options);
   }
+
   return addPrefixAndSuffix(formatNumber(data.value, options.decimalCount), options);
 };
 

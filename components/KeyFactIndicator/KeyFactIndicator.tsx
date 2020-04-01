@@ -8,7 +8,6 @@ import {
   TemplateOptions,
   setKeyfactsDecimalCount
 } from '../../utils';
-import { ErrorBoundary } from '../ErrorBoundary';
 import { IndicatorChartDataHandler, IndicatorStat, IndicatorStatDataHandler } from '../IndicatorStat';
 
 interface KeyFactIndicatorProps {

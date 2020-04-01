@@ -13,20 +13,10 @@ interface DataHandlerProps {
 const IndicatorStatDataHandler: FunctionComponent<DataHandlerProps> = ({ data, dataLoading, ...props }) => {
   if (!dataLoading && data) {
     if (data.length === 1) {
-      return (
-        <IndicatorStatDataViewer
-          value={getIndicatorValue(data[0].data, props.valueOptions)}
-          note={props.note}
-        />
-      );
+      return <IndicatorStatDataViewer value={getIndicatorValue(data[0].data, props.valueOptions)} note={props.note} />;
     }
 
-    return (
-      <IndicatorStatDataViewer
-        value={getIndicatorsValue(data, props.valueOptions)}
-        note={props.note}
-      />
-    );
+    return <IndicatorStatDataViewer value={getIndicatorsValue(data, props.valueOptions)} note={props.note} />;
   }
 
   return <div>Loading ...</div>;
