@@ -4,18 +4,20 @@ import { BoundaryMenu } from '../BoundaryMenu';
 import { AsyncSelect, SelectOption, SelectOptions } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain } from '../SpotlightBanner';
 import { MenuListItem } from '../SpotlightMenu';
-import { ValueType, OptionTypeBase } from 'react-select';
+import { ValueType, OptionTypeBase, Styles } from 'react-select';
 
-interface MapSectionHeaderProps {
+interface LocationSelectionBannerProps {
   countryCode: string;
   countryName: string;
+  className?: string;
   onSelectLocation: (location?: SpotlightLocation) => void;
+  selectStyles?: Partial<Styles>;
 }
 
 const noOptionsMessage = (obj: { inputValue: string }): string =>
   obj.inputValue ? `No results for ${obj.inputValue}` : 'Type to search ...';
 
-const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
+const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> = props => {
   const [boundaries, setBoundaries] = useState<SpotlightBoundary[]>([]);
   const [options, setOptions] = useState<SelectOptions>([]);
   useEffect(() => {
@@ -36,31 +38,38 @@ const MapSectionHeader: FunctionComponent<MapSectionHeaderProps> = props => {
       : [];
 
   return (
-    <SpotlightBanner className="spotlight-banner--header">
+    <SpotlightBanner className={props.className}>
       <SpotlightBannerAside>
         <BoundaryMenu countryName={props.countryName} boundaries={boundaries} onSelectLocation={onSelectLocation} />
       </SpotlightBannerAside>
       <SpotlightBannerMain>
-        {options && options.length ? (
-          <AsyncSelect
-            loadOptions={loadOptions}
-            placeholder="Search for a location"
-            isLoading={!(options && options.length)}
-            chooseTheme="dark"
-            isClearable
-            defaultOptions
-            styles={{
-              dropdownIndicator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
-              indicatorSeparator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
-              singleValue: (provided): CSSProperties => ({ ...provided, textTransform: 'capitalize' })
-            }}
-            noOptionsMessage={noOptionsMessage}
-            onChange={onSelectLocation as (options: ValueType<OptionTypeBase>) => void}
-          />
-        ) : null}
+        <div>
+          {options && options.length ? (
+            <AsyncSelect
+              loadOptions={loadOptions}
+              placeholder="Search for a location"
+              isLoading={!(options && options.length)}
+              chooseTheme="dark"
+              isClearable
+              defaultOptions
+              styles={{
+                dropdownIndicator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
+                indicatorSeparator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
+                singleValue: (provided): CSSProperties => ({ ...provided, textTransform: 'capitalize' }),
+                ...props.selectStyles
+              }}
+              noOptionsMessage={noOptionsMessage}
+              onChange={onSelectLocation as (options: ValueType<OptionTypeBase>) => void}
+            />
+          ) : null}
+          {props.children}
+          <style jsx>{`
+            display: flex;
+          `}</style>
+        </div>
       </SpotlightBannerMain>
     </SpotlightBanner>
   );
 };
 
-export { MapSectionHeader };
+export { LocationSelectionBanner };

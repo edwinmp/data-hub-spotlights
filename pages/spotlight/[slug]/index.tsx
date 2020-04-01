@@ -1,20 +1,20 @@
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
-import { PageScaffoldData } from '../../components/DefaultLayout';
-import { IndicatorComparisonSection } from '../../components/IndicatorComparisonSection';
-import { KeyFactsSection } from '../../components/KeyFactsSection';
-import { MapSection } from '../../components/MapSection';
-import { PageSection } from '../../components/PageSection';
-import { RevenueExpenditureSection } from '../../components/RevenueExpenditureSection';
+import { DataSourcesSection } from '../../../components/DataSourcesSection';
+import { PageScaffoldData } from '../../../components/DefaultLayout';
+import { ErrorBoundary } from '../../../components/ErrorBoundary';
+import { IndicatorComparisonSection } from '../../../components/IndicatorComparisonSection';
+import { KeyFactsSection } from '../../../components/KeyFactsSection';
+import { MapSection } from '../../../components/MapSection';
+import { PageSection } from '../../../components/PageSection';
+import { RevenueExpenditureSection } from '../../../components/RevenueExpenditureSection';
 import {
   fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
   SpotlightLocation,
   SpotlightPage
-} from '../../utils';
-import { ErrorBoundary } from '../../components/ErrorBoundary';
-import { DataSourcesSection } from '../../components/DataSourcesSection';
+} from '../../../utils';
 
 interface SpotlightProps {
   setData?: (data: PageScaffoldData) => void;

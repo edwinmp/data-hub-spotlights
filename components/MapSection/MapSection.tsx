@@ -2,9 +2,11 @@ import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useState } from 'react';
 import { SpotlightLocation, SpotlightOptions } from '../../utils';
 import { ErrorBoundary } from '../ErrorBoundary';
+import { AnchorButton } from '../AnchorButton';
 import { Legend, LegendItem } from '../Legend';
-import { MapSectionHeader } from '../MapSectionHeader';
+import { LocationSelectionBanner } from '../LocationSelectionBanner';
 import { PageSection } from '../PageSection';
+import { SpotlightButtons } from '../SpotlightButtons';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { SpotlightIndicatorInfo } from '../SpotlightIndicatorInfo';
 import { SpotlightInteractive } from '../SpotlightInteractive';
@@ -18,6 +20,7 @@ import {
   parseIndicator,
   splitByComma
 } from './utils';
+import { useRouter } from 'next/dist/client/router';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
@@ -41,6 +44,7 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
 };
 
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
+  const router = useRouter();
   const [options, setOptions] = useState<SpotlightOptions>({});
   const onOptionsChange = (optns: SpotlightOptions): void => setOptions(optns);
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(undefined);
@@ -57,7 +61,12 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
 
   return (
     <PageSection>
-      <MapSectionHeader onSelectLocation={onSelectLocation} countryCode={countryCode} countryName={props.countryName} />
+      <LocationSelectionBanner
+        className="spotlight-banner--header"
+        onSelectLocation={onSelectLocation}
+        countryCode={countryCode}
+        countryName={props.countryName}
+      />
 
       <VisualisationSection>
         <SpotlightSidebar>
@@ -78,6 +87,11 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 {renderLegendItems(range, colours)}
                 <LegendItem>no data / not applicable</LegendItem>
               </Legend>
+              <SpotlightButtons>
+                {router ? (
+                  <AnchorButton href={`${router.asPath}compare`}>Compare this location to others</AnchorButton>
+                ) : null}
+              </SpotlightButtons>
             </SpotlightHide>
           </SidebarContent>
         </SpotlightSidebar>
