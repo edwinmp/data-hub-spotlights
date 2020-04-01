@@ -2,6 +2,7 @@ import { EChartOption } from 'echarts';
 import gql from 'graphql-tag';
 import fetch from 'isomorphic-unfetch';
 import { PageScaffoldData } from '../components/DefaultLayout';
+import { DataSourcesLink } from '../components/DataSourcesSection';
 
 export interface SpotlightPage {
   title: string;
@@ -10,6 +11,8 @@ export interface SpotlightPage {
   country_code: string;
   country_name: string;
   currency_code: string;
+  datasources_description: string;
+  datasource_links: DataSourcesLink[];
   themes: SpotlightTheme[];
 }
 
