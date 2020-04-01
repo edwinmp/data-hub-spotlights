@@ -4,7 +4,6 @@ import { PageSection, PageSectionHeading } from '../PageSection';
 export interface DataSourcesLink {
   caption: string;
   url: string;
-  page_url: string;
 }
 
 interface DataSourcesSectionProps {
@@ -12,23 +11,21 @@ interface DataSourcesSectionProps {
   dataSourceLinks?: DataSourcesLink[];
 }
 
-const DataSourcesSection: FunctionComponent<DataSourcesSectionProps> = ({ description, dataSourceLinks }) => {
-  const urlLinks = dataSourceLinks ? dataSourceLinks : [];
-  return (
-    <PageSection wide>
-      <PageSectionHeading>Data & Sources</PageSectionHeading>
-      <div className="is-typeset max-meter">
-        <p>{description}</p>
-        {urlLinks.map((item, index) => {
+const DataSourcesSection: FunctionComponent<DataSourcesSectionProps> = ({ description, dataSourceLinks }) => (
+  <PageSection wide>
+    <PageSectionHeading>Data & Sources</PageSectionHeading>
+    <div className="is-typeset max-meter">
+      <p>{description}</p>
+      {dataSourceLinks &&
+        dataSourceLinks.map((item, index) => {
           return (
             <p key={index}>
               <a href={item.url}>{item.caption}</a>
             </p>
           );
         })}
-      </div>
-    </PageSection>
-  );
-};
+    </div>
+  </PageSection>
+);
 
 export { DataSourcesSection };
