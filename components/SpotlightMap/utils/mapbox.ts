@@ -69,6 +69,7 @@ export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOpt
   if (locationName) {
     const location = data.find(_location => {
       const name = format ? format(_location.name) : _location.name;
+
       return locationName === name;
     });
     popup

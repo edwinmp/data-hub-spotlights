@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { ContentMeta } from '../../utils';
-import { Icon } from '../Icon';
+import { SpotlightPopup } from '../SpotlightPopup';
 
 interface IndicatorStatProps {
   heading?: string;
@@ -13,14 +13,7 @@ const IndicatorStat: FunctionComponent<IndicatorStatProps> = ({ meta = {}, headi
       <h3 className="spotlight__stat-heading">
         {heading}
         {meta.description || meta.source ? (
-          <span className="spotlight__stat-icon">
-            <Icon name="info-slate" className="ico--12" />
-            <style jsx>{`
-              .spotlight__stat-icon {
-                display: none;
-              }
-            `}</style>
-          </span>
+          <SpotlightPopup description={meta.description} source={meta.source} />
         ) : null}
       </h3>
       {children}
