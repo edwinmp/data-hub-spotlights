@@ -7,6 +7,7 @@ export interface ValueOptions {
   prefix?: string;
   suffix?: string;
   location?: SpotlightLocation;
+  decimalCount?: number;
 }
 
 export const DEFAULT_VALUE = 'No Data';

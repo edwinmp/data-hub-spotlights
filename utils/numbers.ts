@@ -29,3 +29,10 @@ export const formatNumber = (value: number, decimals = 1): string => {
 
   return `${value.toFixed(decimals)}`;
 };
+
+export const setKeyfactsDecimalCount = (flag: string | undefined): number => {
+  if (flag) {
+    return flag.indexOf('th') == 0 ? 0 : 1;
+  }
+  return 1;
+};
