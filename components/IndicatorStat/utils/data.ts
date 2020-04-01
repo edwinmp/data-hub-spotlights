@@ -12,11 +12,11 @@ const getLocalValue = (data: LocationData, options: ValueOptions): string => {
   if (data.meta) {
     const meta: LocationDataMeta = JSON.parse(data.meta);
     if (meta.valueLocalCurrency) {
-      return addPrefixAndSuffix(formatNumber(meta.valueLocalCurrency, 1), options);
+      return addPrefixAndSuffix(formatNumber(meta.valueLocalCurrency, options.decimalCount), options);
     }
   }
 
-  return addPrefixAndSuffix(formatNumber(data.value, 1), {
+  return addPrefixAndSuffix(formatNumber(data.value, options.decimalCount), {
     ...options,
     prefix: options.dataFormat === 'currency' ? 'US$' : options.prefix
   });
