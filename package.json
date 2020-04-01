@@ -42,7 +42,7 @@
     "leaflet": "^1.6.0",
     "mapbox-gl": "^1.7.0",
     "mmenu-js": "^8.4.6",
-    "next": "9.2.1",
+    "next": "9.3.2",
     "node-fetch": "^2.6.0",
     "plottable": "^3.8.6",
     "react": "16.12.0",
