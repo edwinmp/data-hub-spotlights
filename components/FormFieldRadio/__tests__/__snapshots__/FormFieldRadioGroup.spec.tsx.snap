@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormFieldRadioGroup renders correctly 1`] = `
+<div
+  className="form-radio-group cp-form-radio-group-share"
+  onClick={[Function]}
+>
+  <input
+    className="form-radio"
+    defaultValue="this-that"
+    name="that"
+    type="radio"
+  />
+  <label
+    className="form-label"
+    htmlFor="that"
+  >
+    this
+  </label>
+</div>
+`;

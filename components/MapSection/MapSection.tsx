@@ -1,8 +1,9 @@
+import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
-import React, { FunctionComponent, ReactNode, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useState, useEffect } from 'react';
 import { SpotlightLocation, SpotlightOptions } from '../../utils';
-import { ErrorBoundary } from '../ErrorBoundary';
 import { AnchorButton } from '../AnchorButton';
+import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
 import { PageSection } from '../PageSection';
@@ -18,12 +19,14 @@ import {
   getIndicatorColours,
   MapSectionProps,
   parseIndicator,
-  splitByComma
+  splitByComma,
+  setQuery,
+  getDefaultLocationFromQuery
 } from './utils';
-import { useRouter } from 'next/dist/client/router';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
+const SpotlightShare = dynamic(() => import('../SpotlightShare').then(mod => mod.SpotlightShare), { ssr: false });
 
 const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
   if (range && colours) {
@@ -46,9 +49,21 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
   const router = useRouter();
   const [options, setOptions] = useState<SpotlightOptions>({});
-  const onOptionsChange = (optns: SpotlightOptions): void => setOptions(optns);
-  const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(undefined);
+  const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(
+    router ? getDefaultLocationFromQuery(router.query) : undefined
+  );
+  useEffect(() => {
+    if (onChangeLocation) {
+      onChangeLocation(activeLocation);
+    }
+  }, []);
+
+  const onOptionsChange = (optns: SpotlightOptions): void => {
+    setQuery(router, optns, activeLocation);
+    setOptions(optns);
+  };
   const onSelectLocation = (location?: SpotlightLocation): void => {
+    setQuery(router, options, location);
     setActiveLocation(location);
     if (onChangeLocation) {
       onChangeLocation(location);
@@ -66,6 +81,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
         onSelectLocation={onSelectLocation}
         countryCode={countryCode}
         countryName={props.countryName}
+        defaultLocation={activeLocation}
       />
 
       <VisualisationSection>
@@ -89,8 +105,15 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               </Legend>
               <SpotlightButtons>
                 {router ? (
-                  <AnchorButton href={`${router.asPath}compare`}>Compare this location to others</AnchorButton>
+                  <AnchorButton href={`${router.asPath.split('?')[0]}${router.asPath.endsWith('/') ? '' : '/'}compare`}>
+                    Compare this location to others
+                  </AnchorButton>
                 ) : null}
+                <SpotlightShare
+                  countryName={props.countryName}
+                  location={activeLocation}
+                  buttonCaption="Share this visualisation"
+                />
               </SpotlightButtons>
             </SpotlightHide>
           </SidebarContent>
@@ -129,6 +152,13 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               {renderLegendItems(range, colours)}
               <LegendItem>no data / not applicable</LegendItem>
             </Legend>
+            <SpotlightButtons>
+              <SpotlightShare
+                countryName={props.countryName}
+                location={activeLocation}
+                buttonCaption="Share this visualisation"
+              />
+            </SpotlightButtons>
           </SidebarContent>
         </SpotlightSidebar>
       </VisualisationSection>
