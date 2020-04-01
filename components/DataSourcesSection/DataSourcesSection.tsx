@@ -22,7 +22,7 @@ const DataSourcesSection: FunctionComponent<DataSourcesSectionProps> = ({ descri
         {urlLinks.map((item, index) => {
           return (
             <p key={index}>
-              <a href={item.url.length > 0 ? item.url : item.page_url}>{item.caption}</a>
+              <a href={item.url}>{item.caption}</a>
             </p>
           );
         })}
