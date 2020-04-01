@@ -48,7 +48,9 @@ const SpotlightPopup: FunctionComponent<SpotlightPopupProps> = props => {
       closeOnDocumentClick
       contentStyle={popUpContentStyles}
     >
-      {close => <SpotlightPopupContent close={close} description={props.description} source={props.source} />}
+      {(close): React.ReactElement => (
+        <SpotlightPopupContent close={close} description={props.description} source={props.source} />
+      )}
     </Popup>
   );
 };

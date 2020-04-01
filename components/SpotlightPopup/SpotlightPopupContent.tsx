@@ -11,12 +11,10 @@ const SpotlightPopupContent: FunctionComponent<SpotlightPopupContentProps> = ({ 
     if (source) {
       return (
         <>
-          <b className="source-element">
-            Source:
+          <b>
+            Source:{' '}
             <style jsx>{`
-              .source-element {
-                font-weight: 900;
-              }
+              font-family: Geomanist Bold, sans-serif;
             `}</style>
           </b>
           {source}
@@ -27,10 +25,17 @@ const SpotlightPopupContent: FunctionComponent<SpotlightPopupContentProps> = ({ 
 
   return (
     <div className="spotlight-modal">
+      <a className="close" onClick={close}>
+        &times;
+      </a>
+      <div className="content">
+        <p className="description">{description}</p>
+        <br />
+        <p className="source">{renderSourceText()}</p>
+      </div>
       <style jsx>{`
-        .spotlight-modal {
-          font-size: 12px;
-        }
+        font-size: 12px;
+
         .spotlight-modal > .close {
           cursor: pointer;
           position: absolute;
@@ -47,20 +52,14 @@ const SpotlightPopupContent: FunctionComponent<SpotlightPopupContentProps> = ({ 
         .spotlight-modal > .content {
           width: 100%;
           padding: 35px 14px 5px 14px;
-          font-size: 14px;
         }
         .content > .description {
           font-size: 14px;
         }
+        .spotlight-modal > source {
+          text-align: left;
+        }
       `}</style>
-      <a className="close" onClick={close}>
-        &times;
-      </a>
-      <div className="content">
-        <p className="description">{description}</p>
-        <br />
-        <p className="source">{renderSourceText()}</p>
-      </div>
     </div>
   );
 };
