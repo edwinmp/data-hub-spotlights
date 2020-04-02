@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 ARG CMS_URL
 
 ENV CMS_URL=$CMS_URL
+ENV BITLY_API_KEY=$BITLY_API_KEY
 
 COPY package*.json ./
 
