@@ -1,4 +1,4 @@
-import { useRouter } from 'next/dist/client/router';
+import { useRouter, NextRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useState, useEffect } from 'react';
 import { SpotlightLocation, SpotlightOptions } from '../../utils';
@@ -44,6 +44,12 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
   }
 
   return null;
+};
+
+const getComparePath = (router: NextRouter): string => {
+  const pathname = router.asPath.split('?')[0].split('#')[0];
+
+  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare`;
 };
 
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
@@ -105,9 +111,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               </Legend>
               <SpotlightButtons>
                 {router ? (
-                  <AnchorButton href={`${router.asPath.split('?')[0]}${router.asPath.endsWith('/') ? '' : '/'}compare`}>
-                    Compare this location to others
-                  </AnchorButton>
+                  <AnchorButton href={getComparePath(router)}>Compare this location to others</AnchorButton>
                 ) : null}
                 <SpotlightShare
                   countryName={props.countryName}
