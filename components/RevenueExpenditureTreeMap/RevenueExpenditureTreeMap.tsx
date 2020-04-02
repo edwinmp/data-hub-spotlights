@@ -74,7 +74,7 @@ const RevenueExpenditureTreeMap: FunctionComponent<ComponentProps> = ({ data, va
             const { data, name, treePathInfo, value } = info as any; // eslint-disable-line @typescript-eslint/no-explicit-any
             const percentage = `${formatNumber((value / treePathInfo[0].value) * 100, 1)}%`;
 
-            return !data.children || data.children.length == 0
+            return !data.children || data.children.length === 0
               ? `${name || ''}\n{a|${percentage} | ${addPrefixAndSuffix(
                   formatNumber(value as number, 1),
                   valueOptions
