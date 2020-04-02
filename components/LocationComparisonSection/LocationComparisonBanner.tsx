@@ -1,20 +1,30 @@
-import React, { CSSProperties, FunctionComponent, useState } from 'react';
+import React, { CSSProperties, FunctionComponent, useEffect, useState } from 'react';
 import { SpotlightLocation } from '../../utils';
 import { Button } from '../Button';
 import { ButtonBanner } from '../ButtonBanner';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { TagList, TagListItem } from '../Tags';
+import { Alert } from '../Alert';
+import { Icon } from '../Icon';
 
 interface ComparisonWrapperProps {
   countryName: string;
   countryCode: string;
   onCompare?: (locations: SpotlightLocation[]) => void;
+  activeLocation?: SpotlightLocation;
 }
 
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
   const [addLocation, setAddLocation] = useState(false);
   const [locations, setLocations] = useState<SpotlightLocation[]>([]);
+  useEffect(() => {
+    console.log('Its on 2 ' + JSON.stringify(props.activeLocation));
+    if (props.activeLocation) {
+      const queryLocation: any = [props.activeLocation];
+      setLocations(queryLocation);
+    }
+  }, []);
 
   const toggleAddLocation = (): void => setAddLocation(!addLocation);
   const onSelectLocation = (location?: SpotlightLocation): void => {
@@ -69,7 +79,12 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
             </Button>
           ) : null}
         </SpotlightBanner>
-      ) : null}
+      ) : (
+        <Alert variant="notice">
+          <Icon name="arrow-up-slate" />
+          <p>To get started add a location</p>
+        </Alert>
+      )}
     </>
   );
 };

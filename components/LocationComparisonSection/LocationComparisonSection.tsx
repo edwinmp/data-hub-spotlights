@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { SpotlightLocation, SpotlightTheme } from '../../utils';
 import { ButtonBanner } from '../ButtonBanner';
 import { PageSection, PageSectionHeading } from '../PageSection';
@@ -11,6 +11,7 @@ interface ComponentProps {
   countryCode: string;
   countryName: string;
   themes: SpotlightTheme[];
+  activeLocation?: SpotlightLocation;
 }
 
 export interface LocationTagProps {
@@ -20,9 +21,21 @@ export interface LocationTagProps {
 
 export type LocationTagType = LocationTagProps[];
 
-const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
+const LocationComparisonSection: FunctionComponent<ComponentProps> = ({
+  countryCode,
+  countryName,
+  themes,
+  activeLocation
+}) => {
   const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>([]);
-  const [chartCount, setChartCount] = useState<number>(0);
+  const [chartCount, setChartCount] = useState<number>(1);
+  useEffect(() => {
+    console.log('Its on ' + JSON.stringify(activeLocation));
+    if (activeLocation) {
+      const queryLocation: any = [activeLocation];
+      setSelectedLocations(queryLocation);
+    }
+  }, []);
 
   const onAddComparison = (): void => {
     setChartCount(chartCount + 1);
@@ -54,7 +67,12 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
     <>
       <PageSection>
         <PageSectionHeading>Location Comparison</PageSectionHeading>
-        <LocationComparisonBanner countryName={countryName} countryCode={countryCode} onCompare={onCompare} />
+        <LocationComparisonBanner
+          countryName={countryName}
+          countryCode={countryCode}
+          onCompare={onCompare}
+          activeLocation={activeLocation}
+        />
       </PageSection>
       {renderSections()}
       {chartCount ? (

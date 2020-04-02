@@ -19,6 +19,8 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ themes, 
   const [loading, setLoading] = useState(false);
   useEffect(() => setLoading(true), [locations, selections]);
 
+  console.log('Its on 4 ' + JSON.stringify(loading));
+
   const onFilterChange = () => (options: SpotlightOptions): void => {
     if (options.indicator) {
       setSelections(options);

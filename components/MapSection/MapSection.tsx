@@ -79,6 +79,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
   const range = options.indicator && splitByComma(options.indicator.range);
   const colours = getIndicatorColours(options.indicator, range);
   const indicatorID = options.indicator && parseIndicator(options.indicator);
+  const locationQuery = activeLocation ? `?location=${activeLocation.name}&geocode=${activeLocation.geocode}` : '';
 
   return (
     <PageSection>
@@ -110,6 +111,15 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 <LegendItem>no data / not applicable</LegendItem>
               </Legend>
               <SpotlightButtons>
+                {router ? (
+                  <AnchorButton
+                    href={`${router.asPath.split('?')[0]}${
+                      router.asPath.endsWith('/') ? '' : '/'
+                    }compare${locationQuery}`}
+                  >
+                    Compare this location to others
+                  </AnchorButton>
+                ) : null}
                 <SpotlightShare
                   countryName={props.countryName}
                   location={activeLocation}
