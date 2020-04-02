@@ -5,10 +5,11 @@ import {
   SpotlightIndicator,
   SpotlightIndicatorContent,
   SpotlightLocation,
-  TemplateOptions,
-  setKeyfactsDecimalCount
+  TemplateOptions
 } from '../../utils';
 import { IndicatorChartDataHandler, IndicatorStat, IndicatorStatDataHandler } from '../IndicatorStat';
+import { setDecimalCount } from '../IndicatorStat/utils';
+import { ErrorBoundary } from '../ErrorBoundary';
 
 interface KeyFactIndicatorProps {
   location: SpotlightLocation;
@@ -40,29 +41,31 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   heading={processTemplateString(stat.title || '', templateOptions)}
                   meta={stat.meta || { description: indicator.description, source: indicator.source }}
                 >
-                  <DynamicDataLoader
-                    indicators={stat.indicators}
-                    geocodes={!stat.fetchAll ? [location.geocode] : undefined}
-                    startYear={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
-                    endYear={stat.endYear || stat.startYear || indicator.end_year || indicator.start_year}
-                    filter={stat.filter}
-                  >
-                    <IndicatorStatDataHandler
-                      valueOptions={{
-                        location,
-                        useLocalValue: props.useLocalValue,
-                        prefix:
-                          stat.dataFormat === 'currency' && props.useLocalValue
-                            ? props.currencyCode
-                            : stat.valuePrefix || indicator.value_prefix,
-                        suffix: suffix,
-                        dataFormat: stat.dataFormat || indicator.data_format,
-                        aggregation: stat.aggregation,
-                        decimalCount: setKeyfactsDecimalCount(suffix)
-                      }}
-                      note={stat.note}
-                    />
-                  </DynamicDataLoader>
+                  <ErrorBoundary>
+                    <DynamicDataLoader
+                      indicators={stat.indicators}
+                      geocodes={!stat.fetchAll ? [location.geocode] : undefined}
+                      startYear={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
+                      endYear={stat.endYear || stat.startYear || indicator.end_year || indicator.start_year}
+                      filter={stat.filter}
+                    >
+                      <IndicatorStatDataHandler
+                        valueOptions={{
+                          location,
+                          useLocalValue: props.useLocalValue,
+                          prefix:
+                            stat.dataFormat === 'currency' && props.useLocalValue
+                              ? props.currencyCode
+                              : stat.valuePrefix || indicator.value_prefix,
+                          suffix: suffix,
+                          dataFormat: stat.dataFormat || indicator.data_format,
+                          aggregation: stat.aggregation,
+                          decimalCount: setDecimalCount(suffix)
+                        }}
+                        note={stat.note}
+                      />
+                    </DynamicDataLoader>
+                  </ErrorBoundary>
                 </IndicatorStat>
               );
             }
@@ -116,7 +119,8 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                 indicator.data_format === 'currency' && props.useLocalValue
                   ? props.currencyCode
                   : indicator.value_prefix,
-              suffix: indicator.value_suffix
+              suffix: indicator.value_suffix,
+              decimalCount: setDecimalCount(indicator.value_suffix)
             }}
           />
         </DynamicDataLoader>

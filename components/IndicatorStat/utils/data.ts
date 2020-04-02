@@ -176,3 +176,11 @@ export const getIndicatorsValue = (
 
   return 'Invalid Configuration';
 };
+
+export const setDecimalCount = (flag: string | undefined): number => {
+  if (flag) {
+    return flag.indexOf('th') == 0 ? 0 : 1;
+  }
+
+  return 1;
+};
