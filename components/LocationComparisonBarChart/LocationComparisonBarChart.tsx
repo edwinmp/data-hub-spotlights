@@ -3,6 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
+import { formatNumber } from '../../utils';
 
 interface LocationComparisonChartProps {
   labels?: string[];
@@ -29,13 +30,23 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
     xAxis: [
       {
         type: 'value',
-        position: 'top'
+        position: 'top',
+        axisLabel: {
+          formatter: (value: number): string => {
+            return formatNumber(value, 0);
+          }
+        }
       },
       {
         type: 'value',
         gridIndex: 1,
         position: 'top',
-        inverse: true
+        inverse: true,
+        axisLabel: {
+          formatter: (value: number): string => {
+            return formatNumber(value, 0);
+          }
+        }
       }
     ],
     yAxis: [
