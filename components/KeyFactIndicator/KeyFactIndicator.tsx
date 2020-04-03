@@ -60,7 +60,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                           suffix: suffix,
                           dataFormat: stat.dataFormat || indicator.data_format,
                           aggregation: stat.aggregation,
-                          decimalCount: setDecimalCount(suffix)
+                          decimalCount: setDecimalCount(suffix, stat.decimalCount)
                         }}
                         note={stat.note}
                       />
@@ -120,7 +120,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   ? props.currencyCode
                   : indicator.value_prefix,
               suffix: indicator.value_suffix,
-              decimalCount: setDecimalCount(indicator.value_suffix)
+              decimalCount: setDecimalCount(indicator.value_suffix, undefined)
             }}
           />
         </DynamicDataLoader>
