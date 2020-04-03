@@ -12,7 +12,7 @@ interface LocationComparisonChartProps {
     data: [number[], number[]];
   };
   height?: string;
-  valueOptions: ValueOptions;
+  valueOptions: [ValueOptions, ValueOptions];
 }
 
 const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = ({ valueOptions, ...props }) => {
@@ -34,7 +34,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         position: 'top',
         axisLabel: {
           formatter: (value: number): string => {
-            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions);
+            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0]);
           }
         }
       },
@@ -45,7 +45,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         inverse: true,
         axisLabel: {
           formatter: (value: number): string => {
-            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions);
+            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1]);
           }
         }
       }
