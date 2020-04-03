@@ -12,11 +12,11 @@ const getLocalValue = (data: LocationData, options: ValueOptions): string => {
   if (data.meta) {
     const meta: LocationDataMeta = JSON.parse(data.meta);
     if (meta.valueLocalCurrency) {
-      return addPrefixAndSuffix(formatNumber(meta.valueLocalCurrency), options);
+      return addPrefixAndSuffix(formatNumber(meta.valueLocalCurrency, options.decimalCount), options);
     }
   }
 
-  return addPrefixAndSuffix(formatNumber(data.value), {
+  return addPrefixAndSuffix(formatNumber(data.value, options.decimalCount), {
     ...options,
     prefix: options.dataFormat === 'currency' ? 'US$' : options.prefix
   });
@@ -27,7 +27,7 @@ const getValue = (data: LocationData, options: ValueOptions): string => {
     return getLocalValue(data, options);
   }
 
-  return addPrefixAndSuffix(formatNumber(data.value), options);
+  return addPrefixAndSuffix(formatNumber(data.value, options.decimalCount), options);
 };
 
 /**
@@ -124,7 +124,7 @@ const processMultipleData = (data: LocationData[], options: ValueOptions = { dat
   } else {
     const aggregate = aggregateProcessedData(data.map(locationDataToProcessedData), options);
     if (typeof aggregate === 'number') {
-      return addPrefixAndSuffix(formatNumber(aggregate), options);
+      return addPrefixAndSuffix(formatNumber(aggregate, options.decimalCount), options);
     }
   }
 
@@ -166,7 +166,7 @@ export const getIndicatorsValue = (
     });
     const aggregate = aggregateProcessedData(values, options);
     if (typeof aggregate === 'number') {
-      return addPrefixAndSuffix(formatNumber(aggregate), options);
+      return addPrefixAndSuffix(formatNumber(aggregate, options.decimalCount), options);
     }
 
     return DEFAULT_VALUE; // TODO: remove when properly handled
@@ -175,4 +175,8 @@ export const getIndicatorsValue = (
   console.log('An aggregation property is required to handle data from multiple indicators');
 
   return 'Invalid Configuration';
+};
+
+export const setDecimalCount = (flag: string | undefined, defaultCount: number | undefined): number | undefined => {
+  return flag && flag.indexOf('th') === 0 ? 0 : defaultCount;
 };

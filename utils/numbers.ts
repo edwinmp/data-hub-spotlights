@@ -1,4 +1,4 @@
-export const formatNumber = (value: number, decimals = 2): string => {
+export const formatNumber = (value: number, decimals = 1): string => {
   if (value >= 1000000000000) {
     return `${(value / 1000000000000).toFixed(decimals)}tn`;
   }

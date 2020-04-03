@@ -77,6 +77,7 @@ export interface IndicatorStat extends SharedIndicatorContentProps {
   valueTemplate?: string;
   note?: ContentNote;
   filter?: DataFilter[][];
+  decimalCount?: number;
 }
 
 export interface IndicatorChart extends SharedIndicatorContentProps {

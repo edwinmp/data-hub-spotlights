@@ -18,7 +18,8 @@ module.exports = {
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     "react/prop-types": [0],
     "@typescript-eslint/camelcase":[1],
-    "newline-before-return": "error"
+    "newline-before-return": "error",
+    "eqeqeq": ["error", "always"]
   },
   settings: {
     react: {

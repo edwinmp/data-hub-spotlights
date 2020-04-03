@@ -7,8 +7,9 @@ import {
   SpotlightLocation,
   TemplateOptions
 } from '../../utils';
-import { ErrorBoundary } from '../ErrorBoundary';
 import { IndicatorChartDataHandler, IndicatorStat, IndicatorStatDataHandler } from '../IndicatorStat';
+import { setDecimalCount } from '../IndicatorStat/utils';
+import { ErrorBoundary } from '../ErrorBoundary';
 
 interface KeyFactIndicatorProps {
   location: SpotlightLocation;
@@ -32,6 +33,8 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
         <div className="l-2up-3up__col">
           {contentOptions.map(({ stat, chart }, index) => {
             if (stat) {
+              const suffix = stat.valueSuffix || indicator.value_suffix;
+
               return (
                 <IndicatorStat
                   key={index}
@@ -54,9 +57,10 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                             stat.dataFormat === 'currency' && props.useLocalValue
                               ? props.currencyCode
                               : stat.valuePrefix || indicator.value_prefix,
-                          suffix: stat.valueSuffix || indicator.value_suffix,
+                          suffix: suffix,
                           dataFormat: stat.dataFormat || indicator.data_format,
-                          aggregation: stat.aggregation
+                          aggregation: stat.aggregation,
+                          decimalCount: setDecimalCount(suffix, stat.decimalCount)
                         }}
                         note={stat.note}
                       />
@@ -115,7 +119,8 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                 indicator.data_format === 'currency' && props.useLocalValue
                   ? props.currencyCode
                   : indicator.value_prefix,
-              suffix: indicator.value_suffix
+              suffix: indicator.value_suffix,
+              decimalCount: setDecimalCount(indicator.value_suffix, undefined)
             }}
           />
         </DynamicDataLoader>
