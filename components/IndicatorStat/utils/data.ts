@@ -178,9 +178,5 @@ export const getIndicatorsValue = (
 };
 
 export const setDecimalCount = (flag: string | undefined, defaultCount: number | undefined): number | undefined => {
-  if (flag && flag.indexOf('th') === 0) {
-    return 0;
-  } else {
-    return defaultCount;
-  }
+  return flag && flag.indexOf('th') === 0 ? 0 : defaultCount;
 };
