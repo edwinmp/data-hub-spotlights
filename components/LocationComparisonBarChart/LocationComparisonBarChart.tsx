@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
-import { formatNumber } from '../../utils';
+import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
 
 interface LocationComparisonChartProps {
   labels?: string[];
@@ -12,9 +12,10 @@ interface LocationComparisonChartProps {
     data: [number[], number[]];
   };
   height?: string;
+  valueOptions: ValueOptions;
 }
 
-const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = props => {
+const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = ({ valueOptions, ...props }) => {
   if (!props.series || !props.labels) {
     return <div>No Data</div>;
   }
@@ -33,7 +34,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         position: 'top',
         axisLabel: {
           formatter: (value: number): string => {
-            return formatNumber(value, 0);
+            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions);
           }
         }
       },
@@ -44,7 +45,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         inverse: true,
         axisLabel: {
           formatter: (value: number): string => {
-            return formatNumber(value, 0);
+            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions);
           }
         }
       }

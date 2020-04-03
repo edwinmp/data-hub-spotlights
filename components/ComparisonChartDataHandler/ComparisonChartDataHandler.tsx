@@ -109,6 +109,11 @@ const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, l
                   data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
                 }}
                 height={getHeightFromCount(locations.length)}
+                valueOptions={{
+                  dataFormat: props.indicators[1].data_format,
+                  prefix: props.indicators[1].value_prefix,
+                  suffix: props.indicators[1].value_suffix
+                }}
               />
             </Loading>
           ) : (
