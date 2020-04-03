@@ -26,6 +26,11 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
       trigger: 'axis',
       axisPointer: {
         type: 'shadow'
+      },
+      formatter: (params: EChartOption.Tooltip.Format[]): string => {
+        const { value, seriesName, name } = params[0];
+
+        return `<div>${name} <ul><li>${seriesName}: ${value}</li></ul></div>`;
       }
     },
     xAxis: [
