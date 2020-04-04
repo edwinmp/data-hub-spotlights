@@ -1,16 +1,19 @@
-import React, { Children, FunctionComponent, cloneElement, isValidElement, ReactNode, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
+import React, { Children, cloneElement, FunctionComponent, isValidElement, ReactNode } from 'react';
+import { DataFilter, GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
+import { Alert } from '../Alert';
 
 export interface DataLoaderProps {
   indicators?: string[];
   geocodes?: string[];
-  year?: number;
+  startYear?: number;
+  endYear?: number;
   limit?: number;
+  filter?: DataFilter[][];
   onLoad?: (data: LocationIndicatorData[]) => void;
 }
 
-const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocodes, year, limit, ...props }) => {
+const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocodes, startYear, limit, ...props }) => {
   const renderChildren = (dataLoading: boolean, data?: LocationIndicatorData[]): ReactNode =>
     Children.map(props.children, child => (isValidElement(child) ? cloneElement(child, { data, dataLoading }) : null));
 
@@ -22,19 +25,20 @@ const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode
     variables: {
       indicators,
       geocodes: geocodes || [],
-      startYear: year,
-      endYear: year,
+      startYear,
+      endYear: props.endYear || startYear,
+      filter: props.filter || [],
       limit
     }
   });
   if (error) {
-    throw Error(error.message);
+    console.log('DDWDataLoader:', error.message);
+
+    return <Alert variant="error">Something went wrong while rendering this widget</Alert>;
   }
-  useEffect(() => {
-    if (props.onLoad && !loading && data) {
-      props.onLoad(data.data);
-    }
-  }, [loading]);
+  if (props.onLoad && !loading && data) {
+    props.onLoad(data.data);
+  }
 
   return <>{renderChildren(loading, data && data.data)}</>;
 };

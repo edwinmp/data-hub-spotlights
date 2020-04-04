@@ -1,8 +1,9 @@
+import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 
 interface IndicatorStatChartProps {
-  options: ECharts.Options;
+  options: EChartOption;
 }
 
 const IndicatorStatChart: FunctionComponent<IndicatorStatChartProps> = ({ options }) => {

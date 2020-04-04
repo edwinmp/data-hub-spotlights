@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 import { SpotlightLocation, SpotlightTheme } from '../../utils';
+import { CurrencySelector } from '../CurrencySelector';
 import { KeyFactIndicator } from '../KeyFactIndicator';
-import { CurrencySelector } from '../KeyFactsSection/CurrencySelector';
 import { TabContainer } from '../SpotlightTab/TabContainer';
 import { TabContent } from '../SpotlightTab/TabContent';
 import { TabContentHeader } from '../SpotlightTab/TabContentHeader';

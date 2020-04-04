@@ -8,6 +8,8 @@ import {
   TemplateOptions
 } from '../../utils';
 import { IndicatorChartDataHandler, IndicatorStat, IndicatorStatDataHandler } from '../IndicatorStat';
+import { setDecimalCount } from '../IndicatorStat/utils';
+import { ErrorBoundary } from '../ErrorBoundary';
 
 interface KeyFactIndicatorProps {
   location: SpotlightLocation;
@@ -31,32 +33,39 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
         <div className="l-2up-3up__col">
           {contentOptions.map(({ stat, chart }, index) => {
             if (stat) {
+              const suffix = stat.valueSuffix || indicator.value_suffix;
+
               return (
                 <IndicatorStat
                   key={index}
                   heading={processTemplateString(stat.title || '', templateOptions)}
                   meta={stat.meta || { description: indicator.description, source: indicator.source }}
                 >
-                  <DynamicDataLoader
-                    indicators={stat.indicators}
-                    geocodes={!stat.fetchAll ? [location.geocode] : undefined}
-                    year={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
-                  >
-                    <IndicatorStatDataHandler
-                      valueOptions={{
-                        location,
-                        useLocalValue: props.useLocalValue,
-                        prefix:
-                          stat.dataFormat === 'currency' && props.useLocalValue
-                            ? props.currencyCode
-                            : stat.valuePrefix || indicator.value_prefix,
-                        suffix: stat.valueSuffix || indicator.value_suffix,
-                        dataFormat: stat.dataFormat || indicator.data_format,
-                        aggregation: stat.aggregation
-                      }}
-                      note={stat.note}
-                    />
-                  </DynamicDataLoader>
+                  <ErrorBoundary>
+                    <DynamicDataLoader
+                      indicators={stat.indicators}
+                      geocodes={!stat.fetchAll ? [location.geocode] : undefined}
+                      startYear={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
+                      endYear={stat.endYear || stat.startYear || indicator.end_year || indicator.start_year}
+                      filter={stat.filter}
+                    >
+                      <IndicatorStatDataHandler
+                        valueOptions={{
+                          location,
+                          useLocalValue: props.useLocalValue,
+                          prefix:
+                            stat.dataFormat === 'currency' && props.useLocalValue
+                              ? props.currencyCode
+                              : stat.valuePrefix || indicator.value_prefix,
+                          suffix: suffix,
+                          dataFormat: stat.dataFormat || indicator.data_format,
+                          aggregation: stat.aggregation,
+                          decimalCount: setDecimalCount(suffix, stat.decimalCount)
+                        }}
+                        note={stat.note}
+                      />
+                    </DynamicDataLoader>
+                  </ErrorBoundary>
                 </IndicatorStat>
               );
             }
@@ -70,7 +79,8 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   <DynamicDataLoader
                     indicators={chart.indicators}
                     geocodes={!chart.fetchAll ? [location.geocode] : undefined}
-                    year={chart.startYear || chart.endYear || indicator.start_year || indicator.end_year}
+                    startYear={chart.startYear || chart.endYear || indicator.start_year || indicator.end_year}
+                    endYear={chart.endYear || chart.startYear || indicator.end_year || indicator.start_year}
                   >
                     <IndicatorChartDataHandler {...chart} />
                   </DynamicDataLoader>
@@ -98,7 +108,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
         <DynamicDataLoader
           indicators={[indicator.ddw_id]}
           geocodes={[location.geocode]}
-          year={indicator.start_year || indicator.end_year}
+          startYear={indicator.start_year || indicator.end_year}
         >
           <IndicatorStatDataHandler
             valueOptions={{
@@ -109,7 +119,8 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                 indicator.data_format === 'currency' && props.useLocalValue
                   ? props.currencyCode
                   : indicator.value_prefix,
-              suffix: indicator.value_suffix
+              suffix: indicator.value_suffix,
+              decimalCount: setDecimalCount(indicator.value_suffix, undefined)
             }}
           />
         </DynamicDataLoader>

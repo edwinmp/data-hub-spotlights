@@ -14,8 +14,7 @@ import { BaseMapLayer } from './BaseMapLayer';
 
 export interface CoreMapProps {
   accessToken: string;
-  width?: string;
-  height?: string;
+  style?: React.CSSProperties;
   background?: string;
   showNavigationControls?: boolean;
   onLoad?: (map: mapbox.Map, event: mapbox.MapboxEvent) => void;
@@ -23,6 +22,14 @@ export interface CoreMapProps {
 interface BaseMapProps extends CoreMapProps {
   options: Partial<mapbox.MapboxOptions>;
 }
+
+const defaultStyles: React.CSSProperties = {
+  width: '100%', // spotlights default
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  background: '#F3F3F3' // spotlights default
+};
 
 const BaseMap: FunctionComponent<BaseMapProps> = props => {
   mapbox.accessToken = props.accessToken;
@@ -58,7 +65,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
   };
 
   return (
-    <div ref={mapNode} style={{ width: props.width, height: props.height }}>
+    <div ref={mapNode} style={{ ...defaultStyles, ...props.style }}>
       {renderLayers()}
       <style jsx>{`
         background: ${props.background};
@@ -96,9 +103,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
 };
 
 BaseMap.defaultProps = {
-  width: '940px', // spotlights default
-  height: '596px', // spotlights default
-  background: '#F3F3F3', // spotlights default
+  style: defaultStyles,
   options: {
     minZoom: 6,
     zoom: 6.1

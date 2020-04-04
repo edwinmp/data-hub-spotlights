@@ -9,6 +9,7 @@ exports[`SpotlightMenuList It is not rendered when active prop is false 1`] = `
   >
     
         display: none;
+        text-transform: capitalize;
       
   </style>
 </ul>
@@ -26,6 +27,7 @@ exports[`SpotlightMenuList renders children correctly 1`] = `
   >
     
         display: block !important;
+        text-transform: capitalize;
       
   </style>
 </ul>
@@ -40,6 +42,7 @@ exports[`SpotlightMenuList renders correctly 1`] = `
   >
     
         display: block !important;
+        text-transform: capitalize;
       
   </style>
 </ul>

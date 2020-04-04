@@ -22,7 +22,7 @@ exports[`SpotlightBanner renders correctly 1`] = `
 />
 `;
 
-exports[`SpotlightBanner renders the class spotlight-banner--header when configured as a header 1`] = `
+exports[`SpotlightBanner renders the specified class 1`] = `
 <div
   className="spotlight-banner spotlight-banner--header"
 />

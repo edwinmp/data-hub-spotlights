@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SpotlightSidebarInfo renders correctly 1`] = `
+<div
+  className="spotlight-description"
+>
+  <h3
+    className="spotlight__subheading"
+  >
+    The Title
+  </h3>
+  <p
+    className="spotlight__excerpt"
+  >
+    A short excerpt
+  </p>
+</div>
+`;

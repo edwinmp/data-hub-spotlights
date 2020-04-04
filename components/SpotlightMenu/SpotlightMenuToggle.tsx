@@ -14,6 +14,7 @@ const SpotlightMenuToggle: FunctionComponent<ComponentProps> = ({ show, caption,
         <span>{caption}</span>
         <style jsx>{`
           cursor: pointer;
+          text-transform: capitalize;
         `}</style>
       </a>
     </nav>

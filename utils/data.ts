@@ -1,6 +1,8 @@
+import { EChartOption } from 'echarts';
 import gql from 'graphql-tag';
 import fetch from 'isomorphic-unfetch';
 import { PageScaffoldData } from '../components/DefaultLayout';
+import { DataSourcesLink } from '../components/DataSourcesSection';
 
 export interface SpotlightPage {
   title: string;
@@ -9,6 +11,8 @@ export interface SpotlightPage {
   country_code: string;
   country_name: string;
   currency_code: string;
+  datasources_description: string;
+  datasource_links: DataSourcesLink[];
   themes: SpotlightTheme[];
 }
 
@@ -24,6 +28,7 @@ export type DataFormat = 'plain' | 'currency' | 'percent';
 export interface SpotlightIndicator {
   ddw_id: string;
   name: string;
+  slug: string;
   description?: string;
   start_year?: number;
   end_year?: number;
@@ -59,22 +64,27 @@ interface SharedIndicatorContentProps {
   aggregation?: Aggregation; // this allows for simple operations on the data for more complex stats
 }
 
+export interface DataFilter {
+  field: string;
+  operator: string;
+  value: string;
+}
+
 export interface IndicatorStat extends SharedIndicatorContentProps {
   dataFormat: DataFormat;
   valuePrefix?: string;
   valueSuffix?: string;
   valueTemplate?: string;
   note?: ContentNote;
+  filter?: DataFilter[][];
+  decimalCount?: number;
 }
 
 export interface IndicatorChart extends SharedIndicatorContentProps {
   type: 'bar' | 'pie';
-  options: ECharts.Options;
-  bar?: {
-    legend: string;
-    xAxis: string;
-    yAxis: string[];
-  };
+  options: EChartOption<EChartOption.SeriesBar | EChartOption.SeriesLine>;
+  bar?: BarLineOptions;
+  line?: BarLineOptions;
   pie?: {
     legend: string;
     value: string;
@@ -82,9 +92,21 @@ export interface IndicatorChart extends SharedIndicatorContentProps {
   };
 }
 
+export interface BarLineOptions {
+  legend: string;
+  xAxis: string;
+  yAxis: string[];
+}
+
 export interface SpotlightIndicatorContent {
   stat?: IndicatorStat;
   chart?: IndicatorChart;
+  revenue?: RevenueExpenditureConfig;
+  expenditure?: RevenueExpenditureConfig;
+}
+
+export interface RevenueExpenditureConfig {
+  root: string; // the name/slug of the root level
 }
 
 export interface FetchIndicatorDataOptions {
@@ -114,7 +136,7 @@ export interface LocationIndicatorData {
 
 export type BudgetType = 'actual' | 'approved' | 'proposed';
 
-export interface LocationDataMeta {
+export interface LocationDataMeta extends Object {
   budgetType?: BudgetType;
   valueLocalCurrency?: number;
   extra?: { [key: string]: number | string };
@@ -142,6 +164,26 @@ export const fetchSpotlightPage = async (slug: string): Promise<SpotlightPage> =
   return data;
 };
 
+export const extraValueFromMeta = (meta: string, field: string, defaultValue = ''): string | number => {
+  try {
+    const _meta: LocationDataMeta = JSON.parse(meta);
+
+    if (_meta.hasOwnProperty(field)) {
+      return (_meta as any)[field];
+    }
+    if (_meta.extra) {
+      return _meta.extra[field];
+    }
+
+    return defaultValue;
+  } catch (error) {
+    return defaultValue;
+  }
+};
+
+export const hasData = (data: LocationIndicatorData[]): boolean =>
+  !!data.reduce((prev, curr) => prev + curr.data.length, 0);
+
 export const GET_INDICATOR_DATA = gql`
   query GetIndicatorData(
     $indicators: [String]!
@@ -150,12 +192,14 @@ export const GET_INDICATOR_DATA = gql`
     $endYear: Int = 9999
     $limit: Int = 100
     $page: Int = 0
+    $filter: [[Filter]] = []
   ) {
     data(
       indicators: $indicators
       geocodes: $geocodes
       startYear: $startYear
       endYear: $endYear
+      filter: $filter
       limit: $limit
       page: $page
     ) {

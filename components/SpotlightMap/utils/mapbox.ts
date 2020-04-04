@@ -17,7 +17,7 @@ export const getLocationStyles = (
   if (data && range && colours) {
     return data.map<LocationStyle>(location => {
       const locationID = getProperLocationName(location.name, format);
-      const matchingRange = range.find(rng => location.value <= parseFloat(rng));
+      const matchingRange = range.find(rng => location.value !== null && location.value <= parseFloat(rng));
 
       if (matchingRange) {
         return [locationID, colours[range.indexOf(matchingRange)]];
@@ -69,6 +69,7 @@ export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOpt
   if (locationName) {
     const location = data.find(_location => {
       const name = format ? format(_location.name) : _location.name;
+
       return locationName === name;
     });
     popup

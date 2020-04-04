@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { LocationIndicatorData, ContentNote } from '../../utils';
-import { getIndicatorValue, ValueOptions, getIndicatorsValue } from './utils';
+import { LocationIndicatorData, ContentNote, ValueOptions } from '../../utils';
+import { getIndicatorValue, getIndicatorsValue } from './utils';
 import { IndicatorStatDataViewer } from './IndicatorStatDataViewer';
 
 interface DataHandlerProps {

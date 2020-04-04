@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
+import { EChartOption } from 'echarts';
 
 interface ComponentProps {
-  labels?: string[];
   series?: {
     names: [string, string];
     data: [number[], number[]];
@@ -16,7 +16,7 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = props 
     return <div>No Data</div>;
   }
 
-  const options: ECharts.Options = {
+  const options: EChartOption = {
     tooltip: {
       formatter: '{a} - {c}'
     },
@@ -58,7 +58,7 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = props 
         yAxisIndex: 1,
         data: toBasicAxisData(props.series.data[1])
       }
-    ]
+    ] as EChartOption.SeriesBar[]
   };
 
   return <EChartsBaseChart options={options} height={props.height} />;

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { SpotlightOptions, SpotlightTheme, getDefaults } from '../../utils';
+import { SpotlightOptions, SpotlightTheme, getDefaultsByIndex } from '../../utils';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightComparison } from '../SpotlightComparison';
 import { SpotlightFilters } from '../SpotlightFilters';
@@ -10,14 +10,14 @@ interface ComparisonWrapperProps {
   onCompare: (indicators: [SpotlightOptions, SpotlightOptions]) => void;
 }
 
-const DEFAULT_INDEXES: [number, number] = [1, 0];
+const DEFAULT_INDEXES: [number, number] = [1, 2];
 
 const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ themes, onCompare, ...props }) => {
   const [filterOne, setFilterOne] = useState<SpotlightOptions | undefined>(undefined);
   const [filterTwo, setFilterTwo] = useState<SpotlightOptions | undefined>(undefined);
   useEffect(() => {
     if (props.compareOnLoad) {
-      onCompare([getDefaults(themes).selected, getDefaults(themes, DEFAULT_INDEXES).selected]);
+      onCompare([getDefaultsByIndex(themes).selected, getDefaultsByIndex(themes, DEFAULT_INDEXES).selected]);
     }
   }, []);
   const onFilterChange = (index: number) => (options: SpotlightOptions): void => {

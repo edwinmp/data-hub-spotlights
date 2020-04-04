@@ -1,49 +1,22 @@
 import {
   BudgetType,
+  formatNumber,
   LocationData,
   LocationDataMeta,
   LocationIndicatorData,
-  ProcessedData,
-  SpotlightLocation
+  ProcessedData
 } from '../../../utils';
-
-export interface ValueOptions {
-  useLocalValue?: boolean;
-  dataFormat: 'plain' | 'currency' | 'percent';
-  aggregation?: string;
-  prefix?: string;
-  suffix?: string;
-  location?: SpotlightLocation;
-}
-
-const DEFAULT_VALUE = 'No Data';
-
-const addPrefixAndSuffix = (value: string | number, options: ValueOptions): string => {
-  return `${options.prefix || ''} ${value} ${options.suffix || ''}`;
-};
-
-const formatNumber = (value: number): string => {
-  if (value >= 1000000000) {
-    return `${(value / 1000000000).toFixed(2)}b`;
-  }
-  if (value >= 1000000) {
-    return `${(value / 1000000).toFixed(2)}m`;
-  }
-  if (value >= 1000) {
-    return `${(value / 1000).toFixed(2)}k`;
-  }
-  return `${value.toFixed(2)}`;
-};
+import { addPrefixAndSuffix, DEFAULT_VALUE, ValueOptions } from '../../../utils';
 
 const getLocalValue = (data: LocationData, options: ValueOptions): string => {
   if (data.meta) {
     const meta: LocationDataMeta = JSON.parse(data.meta);
     if (meta.valueLocalCurrency) {
-      return addPrefixAndSuffix(formatNumber(meta.valueLocalCurrency), options);
+      return addPrefixAndSuffix(formatNumber(meta.valueLocalCurrency, options.decimalCount), options);
     }
   }
 
-  return addPrefixAndSuffix(formatNumber(data.value), {
+  return addPrefixAndSuffix(formatNumber(data.value, options.decimalCount), {
     ...options,
     prefix: options.dataFormat === 'currency' ? 'US$' : options.prefix
   });
@@ -53,7 +26,8 @@ const getValue = (data: LocationData, options: ValueOptions): string => {
   if (options.useLocalValue) {
     return getLocalValue(data, options);
   }
-  return addPrefixAndSuffix(formatNumber(data.value), options);
+
+  return addPrefixAndSuffix(formatNumber(data.value, options.decimalCount), options);
 };
 
 /**
@@ -66,6 +40,7 @@ const filterDataByBudgetType = (data: LocationData[], budgetType: BudgetType): L
     if (_data.meta) {
       try {
         const meta: LocationDataMeta = JSON.parse(_data.meta);
+
         return meta.budgetType && meta.budgetType === budgetType;
       } catch (error) {
         console.log(error);
@@ -109,6 +84,7 @@ const aggregateProcessedData = (data: ProcessedData[], options: ValueOptions): n
     }
     if (options.aggregation === 'AVG') {
       const sum = getSum(data, options);
+
       return sum / data.length;
     }
     if (options.aggregation === 'POSN ASC' && options.location) {
@@ -148,7 +124,7 @@ const processMultipleData = (data: LocationData[], options: ValueOptions = { dat
   } else {
     const aggregate = aggregateProcessedData(data.map(locationDataToProcessedData), options);
     if (typeof aggregate === 'number') {
-      return addPrefixAndSuffix(formatNumber(aggregate), options);
+      return addPrefixAndSuffix(formatNumber(aggregate, options.decimalCount), options);
     }
   }
 
@@ -190,7 +166,7 @@ export const getIndicatorsValue = (
     });
     const aggregate = aggregateProcessedData(values, options);
     if (typeof aggregate === 'number') {
-      return addPrefixAndSuffix(formatNumber(aggregate), options);
+      return addPrefixAndSuffix(formatNumber(aggregate, options.decimalCount), options);
     }
 
     return DEFAULT_VALUE; // TODO: remove when properly handled
@@ -199,4 +175,8 @@ export const getIndicatorsValue = (
   console.log('An aggregation property is required to handle data from multiple indicators');
 
   return 'Invalid Configuration';
+};
+
+export const setDecimalCount = (flag: string | undefined, defaultCount: number | undefined): number | undefined => {
+  return flag && flag.indexOf('th') === 0 ? 0 : defaultCount;
 };

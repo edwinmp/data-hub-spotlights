@@ -1,28 +1,29 @@
 import chroma, { scale } from 'chroma-js';
 import merge from 'deepmerge';
+import { EChartOption } from 'echarts';
 import { Map, MapboxOptions } from 'mapbox-gl';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
+import ugBoundaries from '../boundaries/UG.json';
 import { PageScaffoldData } from '../components/DefaultLayout';
 import { EChartsBaseChart } from '../components/EChartsBaseChart';
 import { toBasicAxisData } from '../components/EChartsBaseChart/utils';
 import { Legend, LegendItem } from '../components/Legend';
 import { PageSection } from '../components/PageSection';
-import { SpotlightTab } from '../components/SpotlightTab';
-import { TabContainer } from '../components/SpotlightTab/TabContainer';
-import { TabContent } from '../components/SpotlightTab/TabContent';
-import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
 import { Select } from '../components/Select';
-import { fetchScaffoldData } from '../utils';
 import {
   SpotlightMenu,
   SpotlightMenuList,
   SpotlightMenuListItem,
   SpotlightMenuToggle
 } from '../components/SpotlightMenu';
-import ugBoundaries from '../boundaries/UG.json';
 import SpotlightMenuNav from '../components/SpotlightMenu/SpotlightMenuNav';
+import { SpotlightTab } from '../components/SpotlightTab';
+import { TabContainer } from '../components/SpotlightTab/TabContainer';
+import { TabContent } from '../components/SpotlightTab/TabContent';
+import { TabContentHeader } from '../components/SpotlightTab/TabContentHeader';
+import { fetchScaffoldData } from '../utils';
 
 interface PlaygroundProps {
   setData?: (data: PageScaffoldData) => void;
@@ -40,7 +41,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     }
   }, [setData, scaffold]);
 
-  const options1: ECharts.Options = {
+  const options1: EChartOption<EChartOption.SeriesBar> = {
     title: {
       text: 'Basic Bar Chart'
     },
@@ -66,7 +67,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     ]
   };
 
-  const options2: ECharts.Options = {
+  const options2: EChartOption = {
     title: {
       text: 'Inverted Bar Chart - Via Dataset'
     },
@@ -88,7 +89,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     }
   };
 
-  const options3 = merge<ECharts.Options>(options2, {
+  const options3 = merge<EChartOption>(options2, {
     title: {
       text: 'Bar Chart - Reverse Axis'
     },
@@ -96,7 +97,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     yAxis: { position: 'right' }
   });
 
-  const options4 = merge<ECharts.Options>(options2, {
+  const options4 = merge<EChartOption>(options2, {
     title: {
       text: 'Bar Chart Grid v1'
     },
@@ -121,7 +122,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
     { type: 'bar', xAxisIndex: 1, yAxisIndex: 1 }
   ];
 
-  const options5 = merge<ECharts.Options>(options1, {
+  const options5 = merge<EChartOption<EChartOption.SeriesBar>>(options1, {
     title: {
       text: 'Bar Chart Grid - Cool Data Comparison'
     },
@@ -165,9 +166,9 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
       xAxisIndex: 1,
       yAxisIndex: 1
     }
-  ];
+  ] as EChartOption.SeriesBar[];
 
-  const options6: ECharts.Options = {
+  const options6: EChartOption = {
     title: {
       text: 'Basic Pie Chart'
     },
@@ -356,7 +357,7 @@ const Playground: NextPage<PlaygroundProps> = ({ setData, scaffold }) => {
           accessToken="pk.eyJ1IjoiZWR3aW5tcCIsImEiOiJjazFsdHVtcG0wOG9mM2RueWJscHhmcXZqIn0.cDR43UvfMaOY9cNJsEKsvg"
           options={baseMapOptions}
           onLoad={onMapLoad}
-          width="100%"
+          style={{ width: '100%' }}
         />
       </div>
       <EChartsBaseChart options={options1} />

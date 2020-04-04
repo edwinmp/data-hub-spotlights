@@ -1,6 +1,8 @@
+import { ParsedUrlQuery } from 'querystring';
 import { SpotlightIndicator, SpotlightTheme } from '.';
 import { SelectOption, SelectOptions } from '../components/Select';
 import { defaultSelectOptions, FilterDefaults, FilterSelectOptions } from '../components/SpotlightFilters';
+import { INDICATOR_QUERY, THEME_QUERY, YEAR_QUERY } from './themes';
 
 export interface SpotlightOptions {
   theme?: SpotlightTheme;
@@ -25,10 +27,9 @@ const createIndicatorOptionsFromTheme = (theme: SpotlightTheme): SelectOptions =
   return [];
 };
 
-export const createYearOptionsFromIndicator = ({ start_year, end_year }: SpotlightIndicator): SelectOptions => {
+// TODO: exclude specified years
+export const createYearOptionsFromRange = (startYear = 0, endYear = 0, _exclude?: number[]): SelectOptions => {
   const options: SelectOption[] = [];
-  const startYear = start_year || end_year || 0;
-  const endYear = end_year || start_year || 0;
   if (startYear || endYear) {
     const difference = Math.abs(endYear - startYear);
     for (let i = 0; i <= difference; i++) {
@@ -40,12 +41,19 @@ export const createYearOptionsFromIndicator = ({ start_year, end_year }: Spotlig
   return options;
 };
 
+export const createYearOptionsFromIndicator = ({ start_year, end_year }: SpotlightIndicator): SelectOptions => {
+  const startYear = start_year || end_year || 0;
+  const endYear = end_year || start_year || 0;
+
+  return createYearOptionsFromRange(startYear, endYear);
+};
+
 export const parseIndicatorToOption = (indicator: SpotlightIndicator): SelectOption => ({
   label: indicator.name,
   value: indicator.ddw_id
 });
 
-export const getThemeDefaults = (
+export const getThemeDefaultsByIndex = (
   theme: SpotlightTheme,
   currentOptions: FilterSelectOptions,
   defaultIndicatorIndex = 0
@@ -63,7 +71,20 @@ export const getThemeDefaults = (
   return { options, selected };
 };
 
-export const getDefaults = (themes: SpotlightTheme[], defaultIndexes: [number, number] = [0, 0]): FilterDefaults => {
+export const getThemeDefaultsBySlug = (
+  theme: SpotlightTheme,
+  currentOptions: FilterSelectOptions,
+  indicatorDBId: string
+): FilterDefaults => {
+  const indicatorIndex = theme.indicators.findIndex(_indicator => _indicator.ddw_id === indicatorDBId);
+
+  return getThemeDefaultsByIndex(theme, currentOptions, indicatorIndex !== -1 ? indicatorIndex : 0);
+};
+
+export const getDefaultsByIndex = (
+  themes: SpotlightTheme[],
+  defaultIndexes: [number, number] = [0, 0]
+): FilterDefaults => {
   const defaultOptions: FilterSelectOptions = {
     ...defaultSelectOptions,
     themes: createThemeOptions(themes)
@@ -71,8 +92,42 @@ export const getDefaults = (themes: SpotlightTheme[], defaultIndexes: [number, n
   const defaultTheme = themes[defaultIndexes[0]];
   const defaultSelected: SpotlightOptions = { theme: defaultTheme };
   if (defaultTheme) {
-    return getThemeDefaults(defaultTheme, defaultOptions, defaultIndexes[1]);
+    return getThemeDefaultsByIndex(defaultTheme, defaultOptions, defaultIndexes[1]);
   }
 
   return { options: defaultOptions, selected: defaultSelected };
+};
+
+export const getDefaultsFromQuery = (themes: SpotlightTheme[], query: ParsedUrlQuery): FilterDefaults => {
+  const defaultOptions: FilterSelectOptions = {
+    ...defaultSelectOptions,
+    themes: createThemeOptions(themes)
+  };
+  const themeSlug = Array.isArray(query[THEME_QUERY]) ? query[THEME_QUERY][0] : (query[THEME_QUERY] as string);
+  const defaultTheme = themes.find(theme => theme.slug === themeSlug);
+  if (defaultTheme) {
+    const indicatorSlug = Array.isArray(query[INDICATOR_QUERY])
+      ? query[INDICATOR_QUERY][0]
+      : (query[INDICATOR_QUERY] as string);
+
+    const themeDefaults = getThemeDefaultsBySlug(defaultTheme, defaultOptions, indicatorSlug);
+    const year = Array.isArray(query[YEAR_QUERY]) ? query[YEAR_QUERY][0] : (query[YEAR_QUERY] as string);
+    themeDefaults.selected.year = year ? parseInt(year) : themeDefaults.selected.year;
+
+    return themeDefaults;
+  }
+
+  return getDefaultsByIndex(themes);
+};
+
+export const getOptionByIndexOrValue = (
+  options: SelectOptions,
+  index = 0,
+  value?: string
+): SelectOption | undefined => {
+  if (!options) {
+    return undefined;
+  }
+
+  return value ? options.find(option => option.value === value) : options[index];
 };

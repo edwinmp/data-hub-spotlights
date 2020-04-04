@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SpotlightHide renders children correctly 1`] = `
+<div
+  className="spotlight__hide-ss"
+  style={
+    Object {
+      "height": undefined,
+    }
+  }
+>
+  <div>
+    My Child
+  </div>
+  <style
+    jsx={true}
+  >
+    
+        height: 100%;
+      
+  </style>
+</div>
+`;
+
+exports[`SpotlightHide renders correctly 1`] = `
+<div
+  className="spotlight__hide-ss"
+  style={
+    Object {
+      "height": undefined,
+    }
+  }
+>
+  <style
+    jsx={true}
+  >
+    
+        height: 100%;
+      
+  </style>
+</div>
+`;
