@@ -27,10 +27,22 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
       axisPointer: {
         type: 'shadow'
       },
-      formatter: (params: EChartOption.Tooltip.Format[]): string => {
-        const { value, seriesName, name } = params[0];
 
-        return `<div>${name} <ul><li>${seriesName}: ${value}</li></ul></div>`;
+      formatter: (params: EChartOption.Tooltip.Format[]): string => {
+        const { seriesName, name, seriesIndex } = params[0];
+        const { value } = params[0] as { value: number };
+
+        if (seriesIndex === 1) {
+          return `<div>${name} <ul><li>${seriesName}: ${addPrefixAndSuffix(
+            formatNumber(value, 1),
+            valueOptions[1]
+          )}</li></ul></div>`;
+        }
+
+        return `<div>${name} <ul><li>${seriesName}: ${addPrefixAndSuffix(
+          formatNumber(value, 1),
+          valueOptions[0]
+        )}</li></ul></div>`;
       }
     },
     xAxis: [
