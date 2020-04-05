@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic';
 import React, { FunctionComponent } from 'react';
 import {
   processTemplateString,
@@ -17,8 +16,6 @@ interface KeyFactIndicatorProps {
   currencyCode: string;
   useLocalValue: boolean;
 }
-
-const DynamicDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
 
 const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator, location, ...props }) => {
   const templateOptions: TemplateOptions = {
@@ -75,14 +72,15 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   heading={processTemplateString(chart.title || '', templateOptions)}
                   meta={chart.meta || { description: indicator.description, source: indicator.source }}
                 >
-                  <DynamicDataLoader
-                    indicators={chart.indicators}
-                    geocodes={!chart.fetchAll ? [location.geocode] : undefined}
-                    startYear={chart.startYear || chart.endYear || indicator.start_year || indicator.end_year}
-                    endYear={chart.endYear || chart.startYear || indicator.end_year || indicator.start_year}
-                  >
-                    <IndicatorChartDataHandler {...chart} />
-                  </DynamicDataLoader>
+                  <IndicatorChartDataHandler
+                    dataOptions={{
+                      indicators: chart.indicators,
+                      geocodes: !chart.fetchAll ? [location.geocode] : undefined,
+                      startYear: chart.startYear || chart.endYear || indicator.start_year || indicator.end_year,
+                      endYear: chart.endYear || chart.startYear || indicator.end_year || indicator.start_year
+                    }}
+                    {...chart}
+                  />
                 </IndicatorStat>
               );
             }

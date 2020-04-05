@@ -1,9 +1,9 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { ContentNote, ValueOptions } from '../../utils';
-import { getIndicatorValue, getIndicatorsValue } from './utils';
-import { IndicatorStatDataViewer } from './IndicatorStatDataViewer';
-import { DataLoaderProps, useDDWData } from '../DDWDataLoader';
 import { Alert } from '../Alert';
+import { DataLoaderProps, useDDWData } from '../DDWDataLoader';
+import { IndicatorStatDataViewer } from './IndicatorStatDataViewer';
+import { getIndicatorsValue, getIndicatorValue } from './utils';
 
 interface DataHandlerProps {
   dataOptions: DataLoaderProps;
