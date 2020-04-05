@@ -51,11 +51,12 @@ const renderPaddedAlert = (message: string): ReactNode => (
 );
 
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
+  const [retryCount, setRetryCount] = useState(0);
   const [useLocalValue, setUseLocalValue] = useState(false);
   const [year, setYear] = useState<number | undefined>(indicator.start_year && indicator.start_year);
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
   const [selectedBudgetType, setSelectedBudgetType] = useState<BudgetType | undefined>(undefined);
-  const { data, dataLoading, options, setOptions, error } = useRevenueExpenditureData(
+  const { data, dataLoading, options, setOptions, refetch, error } = useRevenueExpenditureData(
     {
       indicators: [indicator.ddw_id],
       geocodes: location ? [location.geocode] : [props.countryCode],
@@ -77,7 +78,21 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setBudgetTypes(_budgetTypes);
       setSelectedBudgetType(_budgetTypes[0]);
     }
+    if (retryCount > 0 && !dataLoading) {
+      setRetryCount(0);
+    }
   }, [dataLoading]);
+  useEffect(() => {
+    if (error) {
+      const { message } = error;
+      if (message.includes('relation') && message.includes('does not exist') && retryCount === 0 && refetch) {
+        refetch();
+        setRetryCount(retryCount + 1);
+      }
+    } else if (retryCount > 0) {
+      setRetryCount(0);
+    }
+  }, [error]);
 
   const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
   const onSelectYear = (option?: SelectOption): void => {

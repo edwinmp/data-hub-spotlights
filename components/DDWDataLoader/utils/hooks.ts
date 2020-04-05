@@ -10,6 +10,7 @@ interface DDWData {
   options: DataLoaderProps;
   filter?: DataFilter[][];
   setOptions: Dispatch<SetStateAction<DataLoaderProps>>;
+  refetch?: () => void;
   error?: ApolloError;
 }
 
@@ -17,23 +18,27 @@ export const useDDWData = (_options: DataLoaderProps): DDWData => {
   const [options, setOptions] = useState(_options);
   const { indicators, geocodes, startYear, endYear, filter, limit } = options;
   if (indicators && indicators.length) {
-    const { data, loading, error } = useQuery<{ data: LocationIndicatorData[] }>(GET_INDICATOR_DATA, {
-      variables: {
-        indicators,
-        geocodes,
-        startYear,
-        endYear,
-        filter,
-        limit
+    const { data, loading, error, refetch, networkStatus } = useQuery<{ data: LocationIndicatorData[] }>(
+      GET_INDICATOR_DATA,
+      {
+        variables: {
+          indicators,
+          geocodes,
+          startYear,
+          endYear,
+          filter,
+          limit
+        },
+        notifyOnNetworkStatusChange: true
       }
-    });
+    );
     if (error) {
       console.log('useDDWData:', error.message);
 
-      return { data: [], dataLoading: false, options, setOptions, error };
+      return { data: [], dataLoading: false, options, setOptions, refetch, error };
     }
 
-    return { data: data && data.data, dataLoading: loading, options, setOptions };
+    return { data: data && data.data, dataLoading: networkStatus === 4 || loading, options, refetch, setOptions };
   }
 
   return { data: [], dataLoading: false, options, setOptions };
