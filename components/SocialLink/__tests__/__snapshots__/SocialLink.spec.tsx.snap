@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SocialLink renders correctly 1`] = `
+<a
+  rel="noopener noreferrer"
+  target="_blank"
+>
+  <img
+    alt="twitter"
+    src="/assets/svg/source/twitter.svg"
+  />
+  <style
+    jsx={true}
+  >
+    
+        img {
+          float: left;
+          margin: 0 5px;
+          height: 3em;
+          width: 3em;
+        }
+      
+  </style>
+</a>
+`;
