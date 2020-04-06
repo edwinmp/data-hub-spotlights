@@ -91,7 +91,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
       />
 
       <VisualisationSection>
-        <SpotlightSidebar>
+        <SpotlightSidebar className="spotlight__aside--no-margin">
           <SidebarContent>
             <SpotlightFilters
               themes={props.themes}
@@ -120,7 +120,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
           </SidebarContent>
         </SpotlightSidebar>
 
-        <VisualisationSectionMain>
+        <VisualisationSectionMain className="spotlight__main--map">
           <SpotlightInteractive height="100%">
             {router ? (
               <div>
