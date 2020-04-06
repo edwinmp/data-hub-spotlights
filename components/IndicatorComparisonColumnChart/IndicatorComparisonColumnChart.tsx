@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
 import { EChartOption } from 'echarts';
+import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
 
 interface ComponentProps {
   series?: {
@@ -9,9 +10,10 @@ interface ComponentProps {
     data: [number[], number[]];
   };
   height?: string;
+  valueOptions: ValueOptions[];
 }
 
-const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = props => {
+const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = ({ valueOptions, ...props }) => {
   if (!props.series) {
     return <div>No Data</div>;
   }
@@ -31,14 +33,24 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = props 
         nameLocation: 'center',
         nameTextStyle: { padding: 30 },
         type: 'value',
-        position: 'left'
+        position: 'left',
+        axisLabel: {
+          formatter: (value: number): string => {
+            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0]);
+          }
+        }
       },
       {
         name: props.series.names[1],
         type: 'value',
         position: 'right',
         nameLocation: 'center',
-        nameTextStyle: { padding: 30 }
+        nameTextStyle: { padding: 30 },
+        axisLabel: {
+          formatter: (value: number): string => {
+            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1]);
+          }
+        }
       }
     ],
     color: ['#0089cc', '#eb642b'], // TODO: perhaps configure these in CMS
