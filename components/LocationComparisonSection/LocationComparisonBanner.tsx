@@ -79,10 +79,15 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
         </SpotlightBanner>
       ) : (
         <SpotlightBanner>
-          <Alert variant="notice" width="30%">
-            <Icon name="arrow-up-slate" />
-            <p>To get started, add a location</p>
-          </Alert>
+          <div>
+            <style jsx>{`
+              width: 45%;
+            `}</style>
+            <Alert variant="notice">
+              <Icon name="arrow-up-slate" />
+              <p>To get started, add a location</p>
+            </Alert>
+          </div>
         </SpotlightBanner>
       )}
     </>
