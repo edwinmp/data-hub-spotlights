@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic';
 import React, { FunctionComponent } from 'react';
 import {
   processTemplateString,
@@ -17,8 +16,6 @@ interface KeyFactIndicatorProps {
   currencyCode: string;
   useLocalValue: boolean;
 }
-
-const DynamicDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
 
 const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator, location, ...props }) => {
   const templateOptions: TemplateOptions = {
@@ -42,29 +39,28 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   meta={stat.meta || { description: indicator.description, source: indicator.source }}
                 >
                   <ErrorBoundary>
-                    <DynamicDataLoader
-                      indicators={stat.indicators}
-                      geocodes={!stat.fetchAll ? [location.geocode] : undefined}
-                      startYear={stat.startYear || stat.endYear || indicator.start_year || indicator.end_year}
-                      endYear={stat.endYear || stat.startYear || indicator.end_year || indicator.start_year}
-                      filter={stat.filter}
-                    >
-                      <IndicatorStatDataHandler
-                        valueOptions={{
-                          location,
-                          useLocalValue: props.useLocalValue,
-                          prefix:
-                            stat.dataFormat === 'currency' && props.useLocalValue
-                              ? props.currencyCode
-                              : stat.valuePrefix || indicator.value_prefix,
-                          suffix: suffix,
-                          dataFormat: stat.dataFormat || indicator.data_format,
-                          aggregation: stat.aggregation,
-                          decimalCount: setDecimalCount(suffix, stat.decimalCount)
-                        }}
-                        note={stat.note}
-                      />
-                    </DynamicDataLoader>
+                    <IndicatorStatDataHandler
+                      dataOptions={{
+                        indicators: stat.indicators,
+                        geocodes: stat.fetchAll ? [location.geocode] : undefined,
+                        startYear: stat.startYear || stat.endYear || indicator.start_year || indicator.end_year,
+                        endYear: stat.endYear || stat.startYear || indicator.end_year || indicator.start_year,
+                        filter: stat.filter
+                      }}
+                      valueOptions={{
+                        location,
+                        useLocalValue: props.useLocalValue,
+                        prefix:
+                          stat.dataFormat === 'currency' && props.useLocalValue
+                            ? props.currencyCode
+                            : stat.valuePrefix || indicator.value_prefix,
+                        suffix: suffix,
+                        dataFormat: stat.dataFormat || indicator.data_format,
+                        aggregation: stat.aggregation,
+                        decimalCount: setDecimalCount(suffix, stat.decimalCount)
+                      }}
+                      note={stat.note}
+                    />
                   </ErrorBoundary>
                 </IndicatorStat>
               );
@@ -76,14 +72,15 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   heading={processTemplateString(chart.title || '', templateOptions)}
                   meta={chart.meta || { description: indicator.description, source: indicator.source }}
                 >
-                  <DynamicDataLoader
-                    indicators={chart.indicators}
-                    geocodes={!chart.fetchAll ? [location.geocode] : undefined}
-                    startYear={chart.startYear || chart.endYear || indicator.start_year || indicator.end_year}
-                    endYear={chart.endYear || chart.startYear || indicator.end_year || indicator.start_year}
-                  >
-                    <IndicatorChartDataHandler {...chart} />
-                  </DynamicDataLoader>
+                  <IndicatorChartDataHandler
+                    dataOptions={{
+                      indicators: chart.indicators,
+                      geocodes: !chart.fetchAll ? [location.geocode] : undefined,
+                      startYear: chart.startYear || chart.endYear || indicator.start_year || indicator.end_year,
+                      endYear: chart.endYear || chart.startYear || indicator.end_year || indicator.start_year
+                    }}
+                    {...chart}
+                  />
                 </IndicatorStat>
               );
             }
@@ -105,25 +102,22 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
         heading={processTemplateString(indicator.name, templateOptions)}
         meta={{ description: indicator.description, source: indicator.source }}
       >
-        <DynamicDataLoader
-          indicators={[indicator.ddw_id]}
-          geocodes={[location.geocode]}
-          startYear={indicator.start_year || indicator.end_year}
-        >
-          <IndicatorStatDataHandler
-            valueOptions={{
-              location,
-              useLocalValue: props.useLocalValue,
-              dataFormat: indicator.data_format,
-              prefix:
-                indicator.data_format === 'currency' && props.useLocalValue
-                  ? props.currencyCode
-                  : indicator.value_prefix,
-              suffix: indicator.value_suffix,
-              decimalCount: setDecimalCount(indicator.value_suffix, undefined)
-            }}
-          />
-        </DynamicDataLoader>
+        <IndicatorStatDataHandler
+          dataOptions={{
+            indicators: [indicator.ddw_id],
+            geocodes: [location.geocode],
+            startYear: indicator.start_year || indicator.end_year
+          }}
+          valueOptions={{
+            location,
+            useLocalValue: props.useLocalValue,
+            dataFormat: indicator.data_format,
+            prefix:
+              indicator.data_format === 'currency' && props.useLocalValue ? props.currencyCode : indicator.value_prefix,
+            suffix: indicator.value_suffix,
+            decimalCount: setDecimalCount(indicator.value_suffix, undefined)
+          }}
+        />
       </IndicatorStat>
     </div>
   );

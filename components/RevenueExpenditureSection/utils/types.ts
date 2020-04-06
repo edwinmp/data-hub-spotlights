@@ -9,6 +9,7 @@ export interface RevenueExpenditureHook {
   options: DataLoaderProps;
   setOptions: Dispatch<SetStateAction<DataLoaderProps>>;
   error?: ApolloError;
+  refetch?: () => void;
 }
 
 export type YearData = { [key: string]: BudgetTypeData };
