@@ -47,11 +47,14 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         type: 'category',
         gridIndex: 1,
         data: toBasicAxisData(props.labels),
-        offset: 20,
+        offset: 5,
         axisTick: { show: false }
       }
     ],
-    grid: [{ left: '50%' }, { right: '50%' }],
+    grid: [
+      { left: '60%', right: 20 },
+      { right: '40%', left: '12%' }
+    ],
     color: ['#0089cc', '#eb642b'], // TODO: perhaps configure these in CMS
     series: [
       {
