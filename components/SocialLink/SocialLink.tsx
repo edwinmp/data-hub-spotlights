@@ -2,7 +2,7 @@ import React from 'react';
 
 const SocialLink = (props: any) => {
   return (
-    <a href={props.url}>
+    <a href={props.url} target="_blank" rel="noopener noreferrer">
       <img src={'/assets/svg/source/' + props.socialSource + '.svg'} alt={props.socialSource} />
       <style jsx>{`
         img {
