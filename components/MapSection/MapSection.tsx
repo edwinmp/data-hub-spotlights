@@ -48,8 +48,9 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
 
 const getComparePath = (router: NextRouter): string => {
   const pathname = router.asPath.split('?')[0].split('#')[0];
+  const queryString = router.asPath.split('?')[1];
 
-  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare`;
+  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare${queryString ? '?' + queryString : ''}`;
 };
 
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
@@ -62,11 +63,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
     if (onChangeLocation) {
       onChangeLocation(activeLocation);
     }
-    if (router.query.ln && router.query.lc) {
-      localStorage.setItem('initialSelectedLocation', JSON.stringify(getDefaultLocationFromQuery(router.query)));
-    } else {
-      localStorage.removeItem('initialSelectedLocation');
-    }
   }, []);
 
   const onOptionsChange = (optns: SpotlightOptions): void => {
@@ -77,7 +73,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
     setQuery(router, options, location);
     setActiveLocation(location);
     if (onChangeLocation) {
-      localStorage.setItem('initialSelectedLocation', JSON.stringify(location));
       onChangeLocation(location);
     }
   };

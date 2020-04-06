@@ -8,8 +8,10 @@ import {
   fetchSpotlightPage,
   filterThemesBySection,
   SpotlightPage,
-  getSlugFromURL
+  getSlugFromURL,
+  SpotlightLocation
 } from '../../../utils';
+import { useRouter } from 'next/router';
 
 interface CompareProps {
   setData?: (data: PageScaffoldData) => void;
@@ -18,16 +20,32 @@ interface CompareProps {
 }
 
 const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
+  const router = useRouter();
   useEffect(() => {
     if (setData) {
       setData({ ...scaffold, title: page.title, slug: getSlugFromURL(page.relative_url) });
     }
   }, [setData, scaffold]);
+
+  const getQueryLocation = (): SpotlightLocation | undefined => {
+    if (router.query.ln && router.query.lc) {
+      return {
+        name: router.query.ln.toString(),
+        geocode: router.query.lc.toString()
+      };
+    }
+  };
+
   const mapThemes = filterThemesBySection(page.themes, 'map');
 
   if (page.themes && page.country_code) {
     return (
-      <LocationComparisonSection countryCode={page.country_code} countryName={page.country_name} themes={mapThemes} />
+      <LocationComparisonSection
+        countryCode={page.country_code}
+        countryName={page.country_name}
+        themes={mapThemes}
+        queryLocation={getQueryLocation()}
+      />
     );
   }
 

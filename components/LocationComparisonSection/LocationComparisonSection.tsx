@@ -11,6 +11,7 @@ interface ComponentProps {
   countryCode: string;
   countryName: string;
   themes: SpotlightTheme[];
+  queryLocation?: SpotlightLocation;
 }
 
 export interface LocationTagProps {
@@ -20,13 +21,17 @@ export interface LocationTagProps {
 
 export type LocationTagType = LocationTagProps[];
 
-const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
+const LocationComparisonSection: FunctionComponent<ComponentProps> = ({
+  countryCode,
+  countryName,
+  themes,
+  queryLocation
+}) => {
   const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>([]);
   const [chartCount, setChartCount] = useState<number>(1);
   useEffect(() => {
-    const initialSelectedLocation = localStorage.getItem('initialSelectedLocation');
-    if (initialSelectedLocation && initialSelectedLocation.length > 0) {
-      setSelectedLocations([JSON.parse(initialSelectedLocation.toString())]);
+    if (queryLocation) {
+      setSelectedLocations([queryLocation]);
     }
   }, []);
 
@@ -60,7 +65,12 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
     <>
       <PageSection>
         <PageSectionHeading>Location Comparison</PageSectionHeading>
-        <LocationComparisonBanner countryName={countryName} countryCode={countryCode} onCompare={onCompare} />
+        <LocationComparisonBanner
+          countryName={countryName}
+          countryCode={countryCode}
+          onCompare={onCompare}
+          queryLocation={queryLocation ? [queryLocation] : []}
+        />
       </PageSection>
       {renderSections()}
       {chartCount ? (

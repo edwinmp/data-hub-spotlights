@@ -12,15 +12,15 @@ interface ComparisonWrapperProps {
   countryName: string;
   countryCode: string;
   onCompare?: (locations: SpotlightLocation[]) => void;
+  queryLocation?: SpotlightLocation[];
 }
 
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
   const [addLocation, setAddLocation] = useState(false);
   const [locations, setLocations] = useState<SpotlightLocation[]>([]);
   useEffect(() => {
-    const initialSelectedLocation = localStorage.getItem('initialSelectedLocation');
-    if (initialSelectedLocation && initialSelectedLocation.length > 0) {
-      setLocations([JSON.parse(initialSelectedLocation.toString())]);
+    if (props.queryLocation) {
+      setLocations(props.queryLocation);
     }
   }, []);
 
