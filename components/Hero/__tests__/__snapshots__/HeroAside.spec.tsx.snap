@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HeroAside renders correctly 1`] = `
+<div
+  className="hero__aside"
+/>
+`;
+
+exports[`HeroAside renders with specified children 1`] = `
+<div
+  className="hero__aside"
+>
+  <div>
+    My Child
+  </div>
+</div>
+`;
+
+exports[`HeroAside renders with specified className 1`] = `
+<div
+  className="hero__aside spotlight-hero-aside"
+/>
+`;
