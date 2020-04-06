@@ -41,7 +41,9 @@ export const getDataSuffix = ({ indicator, year }: SpotlightOptions): string | u
 export const setQuery = (router: NextRouter, options: SpotlightOptions, location?: SpotlightLocation): void => {
   const { route, push } = router;
   const { pathname } = window.location;
-  let as = `${pathname}?${THEME_QUERY}=${options.theme?.slug}&${INDICATOR_QUERY}=${options.indicator?.ddw_id}&${YEAR_QUERY}=${options.year}`;
+  let as = `${pathname}?${THEME_QUERY}=${options.theme ? options.theme.slug : ''}&${INDICATOR_QUERY}=${
+    options.indicator ? options.indicator.ddw_id : ''
+  }&${YEAR_QUERY}=${options.year ? options.year : ''}`;
   if (location) {
     as = `${as}&${LOCATION_CODE_QUERY}=${location.geocode}&${LOCATION_NAME_QUERY}=${location.name.toLowerCase()}`;
     push(route, as, { shallow: true });

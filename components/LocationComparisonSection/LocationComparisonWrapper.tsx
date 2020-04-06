@@ -6,6 +6,8 @@ import { SpaceSectionBottom } from '../SpaceSectionBottom';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { VisualisationSectionMain } from '../VisualisationSection';
+import { setQuery } from '../MapSection/utils';
+import { useRouter } from 'next/router';
 
 interface ComponentProps {
   themes: SpotlightTheme[];
@@ -14,10 +16,18 @@ interface ComponentProps {
 }
 
 const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ themes, locations, countryCode }) => {
+  const router = useRouter();
   const { selected: defaultSelected } = getDefaultsByIndex(themes);
   const [selections, setSelections] = useState<SpotlightOptions>(defaultSelected);
   const [loading, setLoading] = useState(false);
   useEffect(() => setLoading(true), [locations, selections]);
+  useEffect(() => {
+    const theLocation = localStorage.getItem('location');
+    console.log('the location is ' + theLocation);
+    if (theLocation) {
+      setQuery(router, selections, JSON.parse(theLocation.toString()));
+    }
+  }, []);
 
   console.log('Its on 4 ' + JSON.stringify(loading));
 

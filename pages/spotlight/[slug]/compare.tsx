@@ -1,5 +1,4 @@
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { PageScaffoldData } from '../../../components/DefaultLayout';
 import { LocationComparisonSection } from '../../../components/LocationComparisonSection';
@@ -25,24 +24,10 @@ const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
     }
   }, [setData, scaffold]);
   const mapThemes = filterThemesBySection(page.themes, 'map');
-  const router = useRouter();
-  const getActiveLocation = () => {
-    if (router.query.location && router.query.location) {
-      return {
-        name: router.query.location.toString(),
-        geocode: router.query.geocode.toString()
-      };
-    }
-  };
 
   if (page.themes && page.country_code) {
     return (
-      <LocationComparisonSection
-        countryCode={page.country_code}
-        countryName={page.country_name}
-        themes={mapThemes}
-        activeLocation={getActiveLocation()}
-      />
+      <LocationComparisonSection countryCode={page.country_code} countryName={page.country_name} themes={mapThemes} />
     );
   }
 

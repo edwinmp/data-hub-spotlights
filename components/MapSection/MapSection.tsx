@@ -62,6 +62,11 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
     if (onChangeLocation) {
       onChangeLocation(activeLocation);
     }
+    if (router.query.ln && router.query.lc) {
+      localStorage.setItem('location', JSON.stringify(getDefaultLocationFromQuery(router.query)));
+    } else {
+      localStorage.removeItem('location');
+    }
   }, []);
 
   const onOptionsChange = (optns: SpotlightOptions): void => {
@@ -72,6 +77,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
     setQuery(router, options, location);
     setActiveLocation(location);
     if (onChangeLocation) {
+      localStorage.setItem('location', JSON.stringify(location));
       onChangeLocation(location);
     }
   };
@@ -79,7 +85,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
   const range = options.indicator && splitByComma(options.indicator.range);
   const colours = getIndicatorColours(options.indicator, range);
   const indicatorID = options.indicator && parseIndicator(options.indicator);
-  const locationQuery = activeLocation ? `?location=${activeLocation.name}&geocode=${activeLocation.geocode}` : '';
+  const compareLocationBaseUrl = router ? router.asPath.split('?')[0] : '';
 
   return (
     <PageSection>
@@ -113,9 +119,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               <SpotlightButtons>
                 {router ? (
                   <AnchorButton
-                    href={`${router.asPath.split('?')[0]}${
-                      router.asPath.endsWith('/') ? '' : '/'
-                    }compare${locationQuery}`}
+                    href={`${compareLocationBaseUrl}${compareLocationBaseUrl.endsWith('/') ? '' : '/'}compare`}
                   >
                     Compare this location to others
                   </AnchorButton>
