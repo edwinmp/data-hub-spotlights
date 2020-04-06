@@ -124,7 +124,9 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
           <SpotlightInteractive height="100%">
             {router ? (
               <div>
-                <AnchorButton href={getComparePath(router)}>Compare this location to others</AnchorButton>
+                <AnchorButton className="button button--secondary--fill" href={getComparePath(router)}>
+                  Compare this location to others
+                </AnchorButton>
                 <style jsx>{`
                   position: absolute;
                   top: 1.75em;
