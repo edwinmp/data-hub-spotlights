@@ -2,6 +2,7 @@ export interface PageScaffoldData {
   title?: string;
   navigation: Navigation;
   footer: Footer;
+  slug?: string;
 }
 
 export interface Navigation {

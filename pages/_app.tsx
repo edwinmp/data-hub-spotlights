@@ -3,7 +3,7 @@ import App from 'next/app';
 import { DefaultLayout } from '../components/DefaultLayout';
 
 class MyApp extends App {
-  render() {
+  render(): JSX.Element {
     const { Component, pageProps } = this.props;
 
     return (
