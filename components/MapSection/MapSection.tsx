@@ -85,7 +85,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
   const range = options.indicator && splitByComma(options.indicator.range);
   const colours = getIndicatorColours(options.indicator, range);
   const indicatorID = options.indicator && parseIndicator(options.indicator);
-  const compareLocationBaseUrl = router ? router.asPath.split('?')[0] : '';
 
   return (
     <PageSection>
@@ -118,11 +117,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               </Legend>
               <SpotlightButtons>
                 {router ? (
-                  <AnchorButton
-                    href={`${compareLocationBaseUrl}${compareLocationBaseUrl.endsWith('/') ? '' : '/'}compare`}
-                  >
-                    Compare this location to others
-                  </AnchorButton>
+                  <AnchorButton href={getComparePath(router)}>Compare this location to others</AnchorButton>
                 ) : null}
                 <SpotlightShare
                   countryName={props.countryName}
