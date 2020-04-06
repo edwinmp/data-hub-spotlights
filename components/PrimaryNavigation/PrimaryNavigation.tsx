@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, ReactNode } from 'react';
 import { NavigationItem } from '../DefaultLayout';
 import { NavigationItem as NavigationListItem } from './NavigationItem';
 
@@ -7,11 +7,10 @@ export interface PrimaryNavigationProps {
 }
 
 const PrimaryNavigation: FunctionComponent<PrimaryNavigationProps> = ({ items }) => {
-  const renderNavigationItems = () => {
-    return items.map(item => (
+  const renderNavigationItems = (): ReactNode =>
+    items.map(item => (
       <NavigationListItem key={item.title} title={item.title} active={item.active} url={item.full_url} />
     ));
-  };
 
   return (
     <>

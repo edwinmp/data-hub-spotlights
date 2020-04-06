@@ -13,7 +13,8 @@ import {
   fetchSpotlightPage,
   filterThemesBySection,
   SpotlightLocation,
-  SpotlightPage
+  SpotlightPage,
+  getSlugFromURL
 } from '../../../utils';
 
 interface SpotlightProps {
@@ -26,7 +27,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
   const [location, setLocation] = useState<SpotlightLocation | undefined>();
   useEffect(() => {
     if (setData) {
-      setData({ ...scaffold, title: page.title });
+      setData({ ...scaffold, title: page.title, slug: getSlugFromURL(page.relative_url) });
     }
   }, [setData, scaffold]);
   const onChangeLocation = (location?: SpotlightLocation): void => setLocation(location);
