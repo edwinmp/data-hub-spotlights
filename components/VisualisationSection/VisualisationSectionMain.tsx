@@ -1,10 +1,16 @@
 import React, { FunctionComponent } from 'react';
+import classNames from 'classnames';
 
-const VisualisationSectionMain: FunctionComponent<{ width?: string }> = ({ children, width }) => (
-  <div className="spotlight__main">
+interface ComponentProps {
+  className?: string;
+  width?: string;
+}
+
+const VisualisationSectionMain: FunctionComponent<ComponentProps> = ({ children, width, className }) => (
+  <div className={classNames('spotlight__main', className)}>
     {children}
     <style jsx>{`
-      .spotlight__main :global(.leaflet-container) {
+      .spotlight__main {
         background: inherit;
       }
       ${width ? `width: ${width};` : ''}

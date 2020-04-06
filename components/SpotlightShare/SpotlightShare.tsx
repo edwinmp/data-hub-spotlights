@@ -1,13 +1,12 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { SpotlightLocation, toCamelCase } from '../../utils';
-import { AnchorButton } from '../AnchorButton';
-import { SocialLink } from '../SocialLink';
-import { getShortUrl } from './utils';
 import { Button } from '../Button';
 import { FormField } from '../FormField';
 import { FormFieldRadio, FormFieldRadioGroup } from '../FormFieldRadio';
 import { Loading } from '../Loading';
+import { SocialLink } from '../SocialLink';
+import { getShortUrl } from './utils';
 
 interface SpotlightShareProps {
   buttonCaption?: string;
@@ -43,7 +42,7 @@ const SpotlightShare: FunctionComponent<SpotlightShareProps> = ({ buttonCaption,
 
   return (
     <>
-      <AnchorButton onClick={toggleModalOpen}>{buttonCaption}</AnchorButton>
+      <Button onClick={toggleModalOpen}>{buttonCaption}</Button>
       <Modal
         isOpen={modalOpen}
         onRequestClose={toggleModalOpen}

@@ -1,5 +1,6 @@
 import { EChartOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
+import { toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
 
@@ -47,11 +48,17 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         type: 'category',
         gridIndex: 1,
         data: toBasicAxisData(props.labels),
-        offset: 20,
-        axisTick: { show: false }
+        offset: 5,
+        axisTick: { show: false },
+        axisLabel: {
+          formatter: (value: string): string => toCamelCase(value)
+        }
       }
     ],
-    grid: [{ left: '50%' }, { right: '50%' }],
+    grid: [
+      { left: '55%', right: 20 },
+      { right: '45%', left: '12%' }
+    ],
     color: ['#0089cc', '#eb642b'], // TODO: perhaps configure these in CMS
     series: [
       {

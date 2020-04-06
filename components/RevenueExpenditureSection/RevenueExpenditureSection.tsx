@@ -156,27 +156,32 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
       <VisualisationSection>
         <SpotlightSidebar>
-          <SpotlightInteractive>
+          <SpotlightInteractive background="#ffffff">
             {error ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (
               <Loading active={dataLoading}>
-                <RevenueExpenditureLineChart
-                  data={data}
-                  budgetType={selectedBudgetType}
-                  valueOptions={{
-                    dataFormat: 'currency',
-                    useLocalValue,
-                    prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
-                    suffix: indicator.value_suffix
-                  }}
-                />
+                <div>
+                  <RevenueExpenditureLineChart
+                    data={data}
+                    budgetType={selectedBudgetType}
+                    valueOptions={{
+                      dataFormat: 'currency',
+                      useLocalValue,
+                      prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                      suffix: indicator.value_suffix
+                    }}
+                  />
+                  <style jsx>{`
+                    padding: 0 10px;
+                  `}</style>
+                </div>
               </Loading>
             )}
           </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
-          <SpotlightInteractive>
+          <SpotlightInteractive background="#ffffff">
             {error ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (

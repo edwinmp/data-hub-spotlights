@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme, toCamelCase } from '../../utils';
 import { ComparisonChartDataHandler } from '../ComparisonChartDataHandler';
-import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
 import { IndicatorComparisonDataLoader } from '../IndicatorComparisonDataLoader';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { IndicatorSelectionBanner } from './IndicatorSelectionBanner';
@@ -48,9 +47,7 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
             countryName={countryName}
             location={location}
             indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
-          >
-            <IndicatorComparisonColumnChart height="500px" />
-          </ComparisonChartDataHandler>
+          />
         </IndicatorComparisonDataLoader>
       ) : (
         <div>Please Select to Compare</div>
