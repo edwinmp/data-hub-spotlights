@@ -20,7 +20,22 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = ({ val
 
   const options: EChartOption = {
     tooltip: {
-      formatter: '{a} - {c}'
+      formatter: (params: EChartOption.Tooltip.Format): string => {
+        const { seriesName, name, seriesIndex } = params;
+        const { value } = params as { value: number };
+        console.log(params);
+        if (seriesIndex === 1) {
+          return `<div>${name} <ul><li>${seriesName}: ${addPrefixAndSuffix(
+            formatNumber(value, 1),
+            valueOptions[1]
+          )}</li></ul></div>`;
+        }
+
+        return `<div>${name} <ul><li>${seriesName}: ${addPrefixAndSuffix(
+          formatNumber(value, 1),
+          valueOptions[0]
+        )}</li></ul></div>`;
+      }
     },
     legend: { show: false },
     xAxis: {
