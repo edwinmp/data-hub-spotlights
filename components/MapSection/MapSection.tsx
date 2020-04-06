@@ -63,9 +63,9 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
       onChangeLocation(activeLocation);
     }
     if (router.query.ln && router.query.lc) {
-      localStorage.setItem('location', JSON.stringify(getDefaultLocationFromQuery(router.query)));
+      localStorage.setItem('initialSelectedLocation', JSON.stringify(getDefaultLocationFromQuery(router.query)));
     } else {
-      localStorage.removeItem('location');
+      localStorage.removeItem('initialSelectedLocation');
     }
   }, []);
 
@@ -77,7 +77,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
     setQuery(router, options, location);
     setActiveLocation(location);
     if (onChangeLocation) {
-      localStorage.setItem('location', JSON.stringify(location));
+      localStorage.setItem('initialSelectedLocation', JSON.stringify(location));
       onChangeLocation(location);
     }
   };

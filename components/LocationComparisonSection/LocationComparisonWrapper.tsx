@@ -22,14 +22,11 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ themes, 
   const [loading, setLoading] = useState(false);
   useEffect(() => setLoading(true), [locations, selections]);
   useEffect(() => {
-    const theLocation = localStorage.getItem('location');
-    console.log('the location is ' + theLocation);
-    if (theLocation) {
-      setQuery(router, selections, JSON.parse(theLocation.toString()));
+    const initialSelectedLocation = localStorage.getItem('initialSelectedLocation');
+    if (initialSelectedLocation && initialSelectedLocation.length > 0) {
+      setQuery(router, selections, JSON.parse(initialSelectedLocation.toString()));
     }
   }, []);
-
-  console.log('Its on 4 ' + JSON.stringify(loading));
 
   const onFilterChange = () => (options: SpotlightOptions): void => {
     if (options.indicator) {

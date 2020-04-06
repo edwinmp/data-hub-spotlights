@@ -33,9 +33,6 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
     groupedByYear[location] = groupedByBudgetType;
   });
 
-  // console.log('data is 5 ' + JSON.stringify(data.data));
-  // console.log('data length is 6 ' + data.data.length);
-
   if (locations && locations.length <= 0 && data.data.length > 10) {
     groupedByYear = {};
   }

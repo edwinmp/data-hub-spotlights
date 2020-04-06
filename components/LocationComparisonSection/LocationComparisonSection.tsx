@@ -24,10 +24,9 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
   const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>([]);
   const [chartCount, setChartCount] = useState<number>(1);
   useEffect(() => {
-    const theLocation = localStorage.getItem('location');
-    if (theLocation) {
-      const queryLocation: SpotlightLocation[] = [JSON.parse(theLocation.toString())];
-      setSelectedLocations(queryLocation);
+    const initialSelectedLocation = localStorage.getItem('initialSelectedLocation');
+    if (initialSelectedLocation && initialSelectedLocation.length > 0) {
+      setSelectedLocations([JSON.parse(initialSelectedLocation.toString())]);
     }
   }, []);
 

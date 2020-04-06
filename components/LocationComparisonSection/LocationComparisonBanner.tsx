@@ -18,10 +18,9 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
   const [addLocation, setAddLocation] = useState(false);
   const [locations, setLocations] = useState<SpotlightLocation[]>([]);
   useEffect(() => {
-    const theLocation = localStorage.getItem('location');
-    if (theLocation) {
-      const queryLocation: SpotlightLocation[] = [JSON.parse(theLocation.toString())];
-      setLocations(queryLocation);
+    const initialSelectedLocation = localStorage.getItem('initialSelectedLocation');
+    if (initialSelectedLocation && initialSelectedLocation.length > 0) {
+      setLocations([JSON.parse(initialSelectedLocation.toString())]);
     }
   }, []);
 
@@ -79,10 +78,12 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
           ) : null}
         </SpotlightBanner>
       ) : (
-        <Alert variant="notice">
-          <Icon name="arrow-up-slate" />
-          <p>To get started add a location</p>
-        </Alert>
+        <SpotlightBanner>
+          <Alert variant="notice" width="30%">
+            <Icon name="arrow-up-slate" />
+            <p>To get started, add a location</p>
+          </Alert>
+        </SpotlightBanner>
       )}
     </>
   );
