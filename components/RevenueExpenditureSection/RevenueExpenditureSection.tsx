@@ -156,7 +156,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
       <VisualisationSection>
         <SpotlightSidebar>
-          <SpotlightInteractive>
+          <SpotlightInteractive background="#ffffff">
             {error ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (
@@ -176,7 +176,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
           </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
-          <SpotlightInteractive>
+          <SpotlightInteractive background="#ffffff">
             {error ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (
