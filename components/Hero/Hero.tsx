@@ -7,7 +7,7 @@ interface HeroProps {
 
 const Hero: FunctionComponent<HeroProps> = ({ excerpt, title }) => {
   return (
-    <section className="hero hero--minor">
+    <section className="hero hero--spotlight hero--minor">
       <span className="hero__flourish" />
       <span className="hero__flourish" />
       <span className="hero__flourish" />
