@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavigationItem renders the NavigationItem correctly 1`] = `
+<li
+  className="navigation-secondary__item"
+>
+  <a
+    href="/spotlight/spotlight-uganda"
+  >
+    Spotlight on Uganda
+  </a>
+</li>
+`;

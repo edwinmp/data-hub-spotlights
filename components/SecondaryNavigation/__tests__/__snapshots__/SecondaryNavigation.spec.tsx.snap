@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SecondaryNavigation renders correctly 1`] = `
+<nav
+  className="navigation-secondary"
+>
+  <ul
+    className="navigation-secondary__items"
+    data-testid="navigation-secondary-ul"
+  />
+</nav>
+`;
+
+exports[`SecondaryNavigation renders with specified children (preferably NavigationItem) 1`] = `
+<nav
+  className="navigation-secondary"
+>
+  <ul
+    className="navigation-secondary__items"
+    data-testid="navigation-secondary-ul"
+  >
+    <li
+      className="navigation-secondary__item navigation-secondary__item--active"
+    >
+      <a
+        href="/my-nav"
+      >
+        My Nav
+      </a>
+    </li>
+  </ul>
+</nav>
+`;
+
+exports[`SecondaryNavigation renders with specified navigation items 1`] = `
+<nav
+  className="navigation-secondary"
+>
+  <ul
+    className="navigation-secondary__items"
+    data-testid="navigation-secondary-ul"
+  >
+    <li
+      className="navigation-secondary__item"
+    >
+      <a
+        href="https://localhost:3000/nav-1"
+      >
+        Nav 1
+      </a>
+    </li>
+    <li
+      className="navigation-secondary__item navigation-secondary__item--active"
+    >
+      <a
+        href="https://localhost:3000/nav-2"
+      >
+        Nav 2
+      </a>
+    </li>
+  </ul>
+</nav>
+`;
