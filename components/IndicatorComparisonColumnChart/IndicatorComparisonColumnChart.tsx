@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
 import { EChartOption } from 'echarts';
-import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
+import { formatNumber, addPrefixAndSuffix, ValueOptions, formatSeries } from '../../utils';
 
 interface ComponentProps {
   series?: {
@@ -25,16 +25,10 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = ({ val
         const { value } = params as { value: number };
         console.log(params);
         if (seriesIndex === 1) {
-          return `<div>${name} <ul><li>${seriesName}: ${addPrefixAndSuffix(
-            formatNumber(value, 1),
-            valueOptions[1]
-          )}</li></ul></div>`;
+          return formatSeries(1, name, seriesName, value, valueOptions);
+        } else {
+          return formatSeries(0, name, seriesName, value, valueOptions);
         }
-
-        return `<div>${name} <ul><li>${seriesName}: ${addPrefixAndSuffix(
-          formatNumber(value, 1),
-          valueOptions[0]
-        )}</li></ul></div>`;
       }
     },
     legend: { show: false },

@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
-import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
+import { formatNumber, addPrefixAndSuffix, ValueOptions, formatSeries } from '../../utils';
 
 interface LocationComparisonChartProps {
   labels?: string[];
@@ -33,16 +33,10 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         const { value } = params[0] as { value: number };
 
         if (seriesIndex === 1) {
-          return `<div>${name} <ul><li>${seriesName}: ${addPrefixAndSuffix(
-            formatNumber(value, 1),
-            valueOptions[1]
-          )}</li></ul></div>`;
+          return formatSeries(1, name, seriesName, value, valueOptions);
         }
 
-        return `<div>${name} <ul><li>${seriesName}: ${addPrefixAndSuffix(
-          formatNumber(value, 1),
-          valueOptions[0]
-        )}</li></ul></div>`;
+        return formatSeries(0, name, seriesName, value, valueOptions);
       }
     },
     xAxis: [
