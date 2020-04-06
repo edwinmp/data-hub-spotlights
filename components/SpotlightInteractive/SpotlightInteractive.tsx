@@ -17,7 +17,6 @@ const SpotlightInteractive: FunctionComponent<SpotlightInteractiveProps> = props
         position: relative;
         min-height: ${props.minHeight};
         height: ${props.height};
-        border: 1px solid #e84439;
         background: ${props.background};
         ${props.maxHeight
           ? `
