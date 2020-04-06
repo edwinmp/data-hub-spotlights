@@ -12,7 +12,7 @@ interface LocationComparisonChartProps {
     data: [number[], number[]];
   };
   height?: string;
-  valueOptions: [ValueOptions, ValueOptions];
+  valueOptions: ValueOptions[];
 }
 
 const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = ({ valueOptions, ...props }) => {
