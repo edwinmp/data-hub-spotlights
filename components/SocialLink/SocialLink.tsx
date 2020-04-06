@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 
-const SocialLink = (props: any) => {
+interface SocialLinkProps {
+  url?: string;
+  socialSource: string;
+}
+
+const SocialLink: FunctionComponent<SocialLinkProps> = ({ url, socialSource }) => {
   return (
-    <a href={props.url}>
-      <img src={'/assets/svg/source/' + props.socialSource + '.svg'} alt={props.socialSource} />
+    <a href={url} target="_blank" rel="noopener noreferrer">
+      <img src={'/assets/svg/source/' + socialSource + '.svg'} alt={socialSource} />
       <style jsx>{`
         img {
           float: left;
