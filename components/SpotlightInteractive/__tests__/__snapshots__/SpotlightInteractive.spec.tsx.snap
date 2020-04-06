@@ -11,7 +11,6 @@ exports[`SpotlightInteractive renders correctly 1`] = `
         position: relative;
         min-height: 500px;
         height: auto;
-        border: 1px solid #e84439;
         background: inherit;
         
       
@@ -30,7 +29,6 @@ exports[`SpotlightInteractive renders the configured class name 1`] = `
         position: relative;
         min-height: 500px;
         height: auto;
-        border: 1px solid #e84439;
         background: inherit;
         
       
@@ -49,7 +47,6 @@ exports[`SpotlightInteractive renders the configured height 1`] = `
         position: relative;
         min-height: 500px;
         height: 300px;
-        border: 1px solid #e84439;
         background: inherit;
         
       
@@ -68,7 +65,6 @@ exports[`SpotlightInteractive renders the configured maxHeight 1`] = `
         position: relative;
         min-height: 500px;
         height: auto;
-        border: 1px solid #e84439;
         background: inherit;
         
             overflow: scroll;
@@ -90,7 +86,6 @@ exports[`SpotlightInteractive renders the configured minHeight 1`] = `
         position: relative;
         min-height: 300px;
         height: auto;
-        border: 1px solid #e84439;
         background: inherit;
         
       
