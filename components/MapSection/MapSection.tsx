@@ -110,9 +110,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 <LegendItem>no data / not applicable</LegendItem>
               </Legend>
               <SpotlightButtons>
-                {router ? (
-                  <AnchorButton href={getComparePath(router)}>Compare this location to others</AnchorButton>
-                ) : null}
                 <SpotlightShare
                   countryName={props.countryName}
                   location={activeLocation}
@@ -125,6 +122,17 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
 
         <VisualisationSectionMain>
           <SpotlightInteractive height="100%">
+            {router ? (
+              <div>
+                <AnchorButton href={getComparePath(router)}>Compare this location to others</AnchorButton>
+                <style jsx>{`
+                  position: absolute;
+                  top: 1.75em;
+                  z-index: 20;
+                  left: 1.4em;
+                `}</style>
+              </div>
+            ) : null}
             <ErrorBoundary>
               <DynamicMapDataLoader
                 indicators={indicatorID ? [indicatorID] : undefined}
