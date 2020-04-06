@@ -45,7 +45,7 @@ const renderPaddedAlert = (message: string): ReactNode => (
     </Alert>
     <style jsx>{`
       div {
-        padding: 8px;
+        padding: 12px;
       }
     `}</style>
   </div>
@@ -78,8 +78,8 @@ const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, l
     <VisualisationSection className="spotlight--leader">
       <SpotlightSidebar>
         <SpotlightHeading>{toCamelCase(location ? location.name : props.countryName)}</SpotlightHeading>
-        {location ? (
-          <SpotlightInteractive>
+        <SpotlightInteractive background="#ffffff">
+          {location ? (
             <Loading active={!!props.dataLoading}>
               <IndicatorComparisonColumnChart
                 height="500px"
@@ -89,18 +89,18 @@ const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, l
                 }}
               />
             </Loading>
-          </SpotlightInteractive>
-        ) : (
-          renderPaddedAlert('Unfortunately, we do not have data for this location.')
-        )}
+          ) : (
+            renderPaddedAlert('Unfortunately, we do not have data for this location.')
+          )}
+        </SpotlightInteractive>
       </SpotlightSidebar>
 
       <VisualisationSectionMain>
         <SpotlightHeading>
           Locations in {location ? toCamelCase(location.name) : toCamelCase(props.countryName)}
         </SpotlightHeading>
-        {locations.length > 1 ? (
-          <SpotlightInteractive maxHeight="500px" background="#ffffff">
+        <SpotlightInteractive maxHeight="500px" background="#ffffff">
+          {locations.length > 1 ? (
             <Loading active={!!props.dataLoading}>
               <LocationComparisonBarChart
                 labels={locations}
@@ -111,10 +111,10 @@ const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, l
                 height={getHeightFromCount(locations.length)}
               />
             </Loading>
-          </SpotlightInteractive>
-        ) : (
-          renderPaddedAlert('Unfortunately, we do not have data for this location.')
-        )}
+          ) : (
+            renderPaddedAlert('Unfortunately, we do not have data for this location.')
+          )}
+        </SpotlightInteractive>
       </VisualisationSectionMain>
     </VisualisationSection>
   );
