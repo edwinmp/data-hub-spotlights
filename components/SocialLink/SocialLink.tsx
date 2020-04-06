@@ -4,6 +4,7 @@ interface SocialLinkProps {
   url?: string;
   socialSource: string;
 }
+
 const SocialLink: FunctionComponent<SocialLinkProps> = ({ url, socialSource }) => {
   return (
     <a href={url} target="_blank" rel="noopener noreferrer">

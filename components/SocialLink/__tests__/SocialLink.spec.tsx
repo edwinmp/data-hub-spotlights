@@ -12,6 +12,7 @@ describe('SocialLink', () => {
 
     expect(renderer).toMatchSnapshot();
   });
+
   test('renders children correctly', () => {
     const renderer = TestRenderer.create(
       <SocialLink socialSource="facebook">
