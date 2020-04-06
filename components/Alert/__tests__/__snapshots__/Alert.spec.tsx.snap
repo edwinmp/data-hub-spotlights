@@ -3,13 +3,28 @@
 exports[`Alert renders correctly 1`] = `
 <div
   className="alert alert--notice"
-/>
+>
+  <style
+    jsx={true}
+  >
+    
+      width: 50%;
+    
+  </style>
+</div>
 `;
 
 exports[`Alert renders with children 1`] = `
 <div
   className="alert alert--notice"
 >
+  <style
+    jsx={true}
+  >
+    
+      width: 50%;
+    
+  </style>
   <p>
     Warning
   </p>
@@ -19,5 +34,13 @@ exports[`Alert renders with children 1`] = `
 exports[`Alert renders with the specified className 1`] = `
 <div
   className="alert alert--success alert-maximum"
-/>
+>
+  <style
+    jsx={true}
+  >
+    
+      width: 50%;
+    
+  </style>
+</div>
 `;
