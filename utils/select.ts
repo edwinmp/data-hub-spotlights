@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { ParsedUrlQuery } from 'querystring';
 import { SpotlightIndicator, SpotlightTheme } from '.';
 import { SelectOption, SelectOptions } from '../components/Select';
@@ -119,6 +120,15 @@ export const getDefaultsFromQuery = (themes: SpotlightTheme[], query: ParsedUrlQ
 
   return getDefaultsByIndex(themes);
 };
+
+export const getDefaults = (
+  themes: SpotlightTheme[],
+  query: ParsedUrlQuery,
+  defaultIndexes?: [number, number]
+): FilterDefaults =>
+  defaultIndexes || !query[THEME_QUERY]
+    ? getDefaultsByIndex(themes, defaultIndexes)
+    : getDefaultsFromQuery(themes, query);
 
 export const getOptionByIndexOrValue = (
   options: SelectOptions,

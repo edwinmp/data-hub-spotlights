@@ -2,13 +2,11 @@ import { useRouter } from 'next/router';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
   createYearOptionsFromIndicator,
-  getDefaultsByIndex,
-  getDefaultsFromQuery,
+  getDefaults,
   getOptionByIndexOrValue,
   getThemeDefaultsByIndex,
   parseIndicatorToOption,
-  SpotlightOptions,
-  THEME_QUERY
+  SpotlightOptions
 } from '../../utils';
 import { FormField } from '../FormField';
 import { Select, SelectOption } from '../Select';
@@ -17,9 +15,11 @@ import { defaultSelectOptions, FilterSelectOptions, SpotlightFilterProps } from 
 
 const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultIndexes, ...props }) => {
   const router = useRouter();
-  const { options: defaultOptions, selected: defaultSelected } = router.query[THEME_QUERY]
-    ? getDefaultsFromQuery(props.themes, router.query)
-    : getDefaultsByIndex(props.themes, defaultIndexes);
+  const { options: defaultOptions, selected: defaultSelected } = getDefaults(
+    props.themes,
+    router.query,
+    defaultIndexes
+  );
   const [options, setOptions] = useState<FilterSelectOptions>(defaultOptions);
   const { themes, indicators, years } = options;
   const [selected, setSelected] = useState<SpotlightOptions>(defaultSelected);
