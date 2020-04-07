@@ -24,6 +24,7 @@ const PrimaryNavigation: FunctionComponent<PrimaryNavigationProps> = ({ items })
         role="button"
         className={classNames('navigation-primary-toggle', { 'navigation-primary-toggle--active': showMenu })}
         id="navigation-primary-toggle"
+        data-testid="navigation-primary-toggle"
         onClick={onToggleMenu}
       >
         <span>Menu</span>
@@ -32,6 +33,7 @@ const PrimaryNavigation: FunctionComponent<PrimaryNavigationProps> = ({ items })
         className={classNames('navigation-primary', { 'navigation-primary--active': showMenu })}
         role="navigation"
         id="navigation-primary"
+        data-testid="navigation-primary"
       >
         <ul className="navigation-primary__items" data-testid="navigation-primary-ul">
           {renderNavigationItems()}
