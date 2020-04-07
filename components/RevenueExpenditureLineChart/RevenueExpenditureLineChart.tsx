@@ -43,11 +43,19 @@ const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = 
 const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueOptions, ...props }) => {
   const data = formatData(props.data, props.budgetType, valueOptions.useLocalValue);
 
-  const options: EChartOption = {
+  const options: EChartOption<EChartOption.SeriesLine> = {
     legend: { show: false },
     tooltip: {
       trigger: 'axis',
-      axisPointer: { type: 'shadow' },
+      axisPointer: {
+        type: 'shadow',
+        label: {
+          show: true,
+          backgroundColor: '#E84439',
+          formatter: ({ axisDimension, value }: { axisDimension: 'x' | 'y'; value: number }): string =>
+            axisDimension === 'x' ? `${value}` : `${formatNumber(value)}`
+        }
+      },
       formatter: (params: EChartOption.Tooltip.Format[]): string => {
         const { value } = params[0] as { value: [number, number] };
 
@@ -64,7 +72,7 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueO
       interval: data && data.length <= 12 ? 1 : 4
     },
     yAxis: {
-      splitLine: { show: true },
+      splitLine: { show: false },
       axisLabel: {
         formatter: (value: number): string => {
           return formatNumber(value, 0);
@@ -75,7 +83,10 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueO
       {
         type: 'line',
         data,
-        showSymbol: false
+        showSymbol: false,
+        connectNulls: true,
+        smooth: true,
+        symbol: 'circle'
       }
     ]
   };
