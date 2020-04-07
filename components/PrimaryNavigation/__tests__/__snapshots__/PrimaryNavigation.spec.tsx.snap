@@ -4,7 +4,9 @@ exports[`PrimaryNavigation renders correctly 1`] = `
 Array [
   <button
     className="navigation-primary-toggle"
+    data-testid="navigation-primary-toggle"
     id="navigation-primary-toggle"
+    onClick={[Function]}
     role="button"
   >
     <span>
@@ -13,6 +15,7 @@ Array [
   </button>,
   <nav
     className="navigation-primary"
+    data-testid="navigation-primary"
     id="navigation-primary"
     role="navigation"
   >
