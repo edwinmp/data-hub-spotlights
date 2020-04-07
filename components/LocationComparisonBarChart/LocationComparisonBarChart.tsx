@@ -45,7 +45,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         position: 'top',
         axisLabel: {
           formatter: (value: number): string => {
-            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0]);
+            return value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0]);
           }
         }
       },
@@ -56,7 +56,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         inverse: true,
         axisLabel: {
           formatter: (value: number): string => {
-            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1]);
+            return value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1]);
           }
         }
       }
