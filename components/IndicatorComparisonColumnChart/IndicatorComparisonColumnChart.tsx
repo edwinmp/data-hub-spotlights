@@ -25,8 +25,8 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = ({ val
         const { seriesName, name, seriesIndex, value } = params;
 
         return seriesIndex === 1
-          ? formatSeries(1, name, seriesName, value as number, valueOptions)
-          : formatSeries(0, name, seriesName, value as number, valueOptions);
+          ? formatSeries(name, seriesName, value as number, valueOptions[1])
+          : formatSeries(name, seriesName, value as number, valueOptions[0]);
       }
     },
     legend: { show: false },

@@ -33,8 +33,8 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         const { seriesName, name, seriesIndex, value } = params[0];
 
         return seriesIndex === 1
-          ? formatSeries(1, name, seriesName, value as number, valueOptions)
-          : formatSeries(0, name, seriesName, value as number, valueOptions);
+          ? formatSeries(name, seriesName, value as number, valueOptions[1])
+          : formatSeries(name, seriesName, value as number, valueOptions[0]);
       }
     },
     xAxis: [
