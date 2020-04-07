@@ -171,6 +171,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                       prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
                       suffix: indicator.value_suffix
                     }}
+                    selectedYear={year}
                   />
                   <style jsx>{`
                     padding: 0 10px;

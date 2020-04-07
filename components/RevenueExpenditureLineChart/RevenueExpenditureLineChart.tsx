@@ -9,6 +9,7 @@ interface ComponentProps {
   budgetType?: BudgetType;
   height?: string;
   valueOptions: ValueOptions;
+  selectedYear?: number;
 }
 
 /**
@@ -40,7 +41,7 @@ const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = 
   return formattedData;
 };
 
-const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueOptions, ...props }) => {
+const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueOptions, selectedYear, ...props }) => {
   const data = formatData(props.data, props.budgetType, valueOptions.useLocalValue);
 
   const options: EChartOption<EChartOption.SeriesLine> = {
@@ -86,7 +87,19 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueO
         showSymbol: false,
         connectNulls: true,
         smooth: true,
-        symbol: 'circle'
+        symbol: 'circle',
+        markArea:
+          typeof selectedYear !== 'undefined'
+            ? {
+                label: {
+                  show: true,
+                  backgroundColor: '#E84439',
+                  padding: 8,
+                  color: '#fff'
+                },
+                data: [[{ name: `${selectedYear}`, xAxis: selectedYear - 0.5 }, { xAxis: selectedYear + 0.5 }]] as any // eslint-disable-line @typescript-eslint/no-explicit-any
+              }
+            : undefined
       }
     ]
   };
