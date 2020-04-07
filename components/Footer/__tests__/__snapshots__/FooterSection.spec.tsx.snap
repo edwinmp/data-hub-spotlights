@@ -119,7 +119,7 @@ exports[`FooterSocialLink renders correctly 1`] = `
   >
     <img
       alt="facebook"
-      src="http://localhost:3000/assets/images/image.svg"
+      src="/assets/http://localhost:3000/assets/images/image.svg"
     />
   </a>
 </li>
