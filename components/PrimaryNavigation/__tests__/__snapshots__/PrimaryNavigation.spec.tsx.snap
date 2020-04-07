@@ -5,6 +5,7 @@ Array [
   <button
     className="navigation-primary-toggle"
     id="navigation-primary-toggle"
+    onClick={[Function]}
     role="button"
   >
     <span>
