@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { ParsedUrlQuery } from 'querystring';
 import { SpotlightIndicator, SpotlightTheme } from '.';
 import { SelectOption, SelectOptions } from '../components/Select';
