@@ -3,7 +3,8 @@ import React, { FunctionComponent } from 'react';
 import { toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
-import { formatNumber, addPrefixAndSuffix, ValueOptions, formatSeries } from '../../utils';
+import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
+import { formatSeries } from '../ComparisonChartDataHandler/utils';
 
 interface LocationComparisonChartProps {
   labels?: string[];
@@ -29,14 +30,11 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
       },
 
       formatter: (params: EChartOption.Tooltip.Format[]): string => {
-        const { seriesName, name, seriesIndex } = params[0];
-        const { value } = params[0] as { value: number };
+        const { seriesName, name, seriesIndex, value } = params[0];
 
-        if (seriesIndex === 1) {
-          return formatSeries(1, name, seriesName, value, valueOptions);
-        }
-
-        return formatSeries(0, name, seriesName, value, valueOptions);
+        return seriesIndex === 1
+          ? formatSeries(1, name, seriesName, value as number, valueOptions)
+          : formatSeries(0, name, seriesName, value as number, valueOptions);
       }
     },
     xAxis: [
@@ -44,9 +42,8 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         type: 'value',
         position: 'top',
         axisLabel: {
-          formatter: (value: number): string => {
-            return value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0]);
-          }
+          formatter: (value: number): string =>
+            value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0])
         }
       },
       {
@@ -55,9 +52,8 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         position: 'top',
         inverse: true,
         axisLabel: {
-          formatter: (value: number): string => {
-            return value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1]);
-          }
+          formatter: (value: number): string =>
+            value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1])
         }
       }
     ],

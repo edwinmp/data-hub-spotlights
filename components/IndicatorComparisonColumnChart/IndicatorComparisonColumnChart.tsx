@@ -2,7 +2,8 @@ import React, { FunctionComponent } from 'react';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
 import { EChartOption } from 'echarts';
-import { formatNumber, addPrefixAndSuffix, ValueOptions, formatSeries } from '../../utils';
+import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
+import { formatSeries } from '../ComparisonChartDataHandler/utils';
 
 interface ComponentProps {
   series?: {
@@ -21,14 +22,11 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = ({ val
   const options: EChartOption = {
     tooltip: {
       formatter: (params: EChartOption.Tooltip.Format): string => {
-        const { seriesName, name, seriesIndex } = params;
-        const { value } = params as { value: number };
-        console.log(params);
-        if (seriesIndex === 1) {
-          return formatSeries(1, name, seriesName, value, valueOptions);
-        } else {
-          return formatSeries(0, name, seriesName, value, valueOptions);
-        }
+        const { seriesName, name, seriesIndex, value } = params;
+
+        return seriesIndex === 1
+          ? formatSeries(1, name, seriesName, value as number, valueOptions)
+          : formatSeries(0, name, seriesName, value as number, valueOptions);
       }
     },
     legend: { show: false },
@@ -44,9 +42,7 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = ({ val
         type: 'value',
         position: 'left',
         axisLabel: {
-          formatter: (value: number): string => {
-            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0]);
-          }
+          formatter: (value: number): string => addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0])
         }
       },
       {
@@ -56,9 +52,7 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = ({ val
         nameLocation: 'center',
         nameTextStyle: { padding: 30 },
         axisLabel: {
-          formatter: (value: number): string => {
-            return addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1]);
-          }
+          formatter: (value: number): string => addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1])
         }
       }
     ],
