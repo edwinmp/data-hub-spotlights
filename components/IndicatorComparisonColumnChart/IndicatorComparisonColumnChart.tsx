@@ -2,6 +2,8 @@ import React, { FunctionComponent } from 'react';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
 import { EChartOption } from 'echarts';
+import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
+import { formatSeries } from '../ComparisonChartDataHandler/utils';
 
 interface ComponentProps {
   series?: {
@@ -9,16 +11,23 @@ interface ComponentProps {
     data: [number[], number[]];
   };
   height?: string;
+  valueOptions: ValueOptions[];
 }
 
-const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = props => {
+const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = ({ valueOptions, ...props }) => {
   if (!props.series) {
     return <div>No Data</div>;
   }
 
   const options: EChartOption = {
     tooltip: {
-      formatter: '{a} - {c}'
+      formatter: (params: EChartOption.Tooltip.Format): string => {
+        const { seriesName, name, seriesIndex, value } = params;
+
+        return seriesIndex === 1
+          ? formatSeries(name, seriesName, value as number, valueOptions[1])
+          : formatSeries(name, seriesName, value as number, valueOptions[0]);
+      }
     },
     legend: { show: false },
     xAxis: {
@@ -31,14 +40,20 @@ const IndicatorComparisonColumnChart: FunctionComponent<ComponentProps> = props 
         nameLocation: 'center',
         nameTextStyle: { padding: 30 },
         type: 'value',
-        position: 'left'
+        position: 'left',
+        axisLabel: {
+          formatter: (value: number): string => addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0])
+        }
       },
       {
         name: props.series.names[1],
         type: 'value',
         position: 'right',
         nameLocation: 'center',
-        nameTextStyle: { padding: 30 }
+        nameTextStyle: { padding: 30 },
+        axisLabel: {
+          formatter: (value: number): string => addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1])
+        }
       }
     ],
     color: ['#0089cc', '#eb642b'], // TODO: perhaps configure these in CMS

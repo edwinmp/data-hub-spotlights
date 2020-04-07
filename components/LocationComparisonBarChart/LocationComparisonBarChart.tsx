@@ -3,6 +3,8 @@ import React, { FunctionComponent } from 'react';
 import { toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
+import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
+import { formatSeries } from '../ComparisonChartDataHandler/utils';
 
 interface LocationComparisonChartProps {
   labels?: string[];
@@ -11,9 +13,10 @@ interface LocationComparisonChartProps {
     data: [number[], number[]];
   };
   height?: string;
+  valueOptions: ValueOptions[];
 }
 
-const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = props => {
+const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = ({ valueOptions, ...props }) => {
   if (!props.series || !props.labels) {
     return <div>No Data</div>;
   }
@@ -24,18 +27,34 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
       trigger: 'axis',
       axisPointer: {
         type: 'shadow'
+      },
+
+      formatter: (params: EChartOption.Tooltip.Format[]): string => {
+        const { seriesName, name, seriesIndex, value } = params[0];
+
+        return seriesIndex === 1
+          ? formatSeries(name, seriesName, value as number, valueOptions[1])
+          : formatSeries(name, seriesName, value as number, valueOptions[0]);
       }
     },
     xAxis: [
       {
         type: 'value',
-        position: 'top'
+        position: 'top',
+        axisLabel: {
+          formatter: (value: number): string =>
+            value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0])
+        }
       },
       {
         type: 'value',
         gridIndex: 1,
         position: 'top',
-        inverse: true
+        inverse: true,
+        axisLabel: {
+          formatter: (value: number): string =>
+            value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1])
+        }
       }
     ],
     yAxis: [
