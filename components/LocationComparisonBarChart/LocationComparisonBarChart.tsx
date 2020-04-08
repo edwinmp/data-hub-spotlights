@@ -97,9 +97,20 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
     ] as EChartOption.SeriesBar[]
   };
 
+  // Options for larger screen devices
+  const lgOptions: EChartsMediaOption = {
+    query: { minWidth: 700 },
+    option: {
+      grid: [
+        { left: '55%', right: 20 },
+        { right: '45%', left: '12%' }
+      ],
+      yAxis: [{}, { axisLabel: { fontSize: 12 } }]
+    }
+  };
   // Options for large screen devices
   const mdOptions: EChartsMediaOption = {
-    query: { maxWidth: 999 },
+    query: { maxWidth: 700 },
     option: {
       grid: [
         { left: '60%', right: 20 },
@@ -139,7 +150,7 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
     }
   };
 
-  const media: EChartsMediaOption[] = [mdOptions, smOptions, xsOptions];
+  const media: EChartsMediaOption[] = [lgOptions, mdOptions, smOptions, xsOptions];
 
   return <EChartsBaseChart options={options} height={props.height} media={media} />;
 };

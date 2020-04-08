@@ -1,7 +1,7 @@
 import merge from 'deepmerge';
+import { EChartOption, ECharts, EChartsMediaOption, init } from 'echarts';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import ReactResizeDetector from 'react-resize-detector';
-import { init, EChartOption, ECharts, EChartsMediaOption } from 'echarts';
-import React, { useEffect, useRef, FunctionComponent, useState } from 'react';
 import { axisDefaults, defaults } from './utils/options';
 
 interface EChartBaseChartProps {
