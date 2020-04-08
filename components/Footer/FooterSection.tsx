@@ -15,7 +15,7 @@ export const FooterSectionLink: FunctionComponent<SectionLinkProps> = ({ childre
 
 export const FooterSocialLink: FunctionComponent<SocialLink> = ({ social_platform, link_url, image_url }) => (
   <FooterSectionLink url={link_url}>
-    <img src={`/assets/` + image_url} alt={social_platform} />
+    <img src={image_url} alt={social_platform} />
   </FooterSectionLink>
 );
 
@@ -36,7 +36,7 @@ const FooterSection: FunctionComponent<FooterSectionProps> = props => {
           <FooterSocialLink
             key={`${social_platform} ${index}`}
             link_url={link_url}
-            image_url={image_url}
+            image_url={image_url.replace('svg/', '/assets/svg/')}
             social_platform={social_platform}
           />
         ))}

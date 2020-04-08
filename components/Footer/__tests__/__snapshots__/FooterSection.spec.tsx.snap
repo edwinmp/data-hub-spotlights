@@ -43,7 +43,7 @@ exports[`FooterSection renders correctly 1`] = `
       >
         <img
           alt="facebook"
-          src="/assets/http://localhost:3000/assets/images/image.svg"
+          src="http://localhost:3000/assets/images/image.svg"
         />
       </a>
     </li>
@@ -94,7 +94,7 @@ exports[`FooterSection renders either a page_url or a link_url 1`] = `
       >
         <img
           alt="facebook"
-          src="/assets/http://localhost:3000/assets/images/image.svg"
+          src="http://localhost:3000/assets/images/image.svg"
         />
       </a>
     </li>
@@ -119,7 +119,7 @@ exports[`FooterSocialLink renders correctly 1`] = `
   >
     <img
       alt="facebook"
-      src="/assets/http://localhost:3000/assets/images/image.svg"
+      src="http://localhost:3000/assets/images/image.svg"
     />
   </a>
 </li>

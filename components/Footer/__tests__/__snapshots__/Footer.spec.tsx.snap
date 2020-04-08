@@ -68,7 +68,7 @@ exports[`Footer renders correctly 1`] = `
             >
               <img
                 alt="facebook"
-                src="/assets/http://localhost:3000/assets/images/image.svg"
+                src="http://localhost:3000/assets/images/image.svg"
               />
             </a>
           </li>
