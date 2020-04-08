@@ -1,4 +1,4 @@
-import { EChartOption } from 'echarts';
+import { EChartOption, EChartsMediaOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
 import { toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
@@ -97,7 +97,51 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
     ] as EChartOption.SeriesBar[]
   };
 
-  return <EChartsBaseChart options={options} height={props.height} />;
+  // Options for large screen devices
+  const mdOptions: EChartsMediaOption = {
+    query: { maxWidth: 999 },
+    option: {
+      grid: [
+        { left: '60%', right: 20 },
+        { right: '40%', left: '18%' }
+      ],
+      yAxis: [{}, { axisLabel: { fontSize: 12 } }]
+    }
+  };
+  // Options for medium sized devices
+  const smOptions: EChartsMediaOption = {
+    query: { maxWidth: 500 },
+    option: {
+      grid: [
+        { left: '60%', right: 20 },
+        { right: '40%', left: '25%' }
+      ],
+      yAxis: [{}, { axisLabel: { fontSize: 12 } }]
+    }
+  };
+  // Options for small screen devices
+  const xsOptions: EChartsMediaOption = {
+    query: { maxWidth: 400 },
+    option: {
+      grid: [
+        { left: '60%', right: 20 },
+        { right: '40%', left: '25%' }
+      ],
+      yAxis: [
+        {},
+        {
+          axisLabel: {
+            padding: -10,
+            fontSize: 10
+          }
+        }
+      ]
+    }
+  };
+
+  const media: EChartsMediaOption[] = [mdOptions, smOptions, xsOptions];
+
+  return <EChartsBaseChart options={options} height={props.height} media={media} />;
 };
 
 export { LocationComparisonBarChart };

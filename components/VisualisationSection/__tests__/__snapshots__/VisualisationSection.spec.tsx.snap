@@ -17,6 +17,7 @@ exports[`VisualisationSection renders only SpotlightSidebar & VisualisationSecti
       jsx={true}
     >
       
+        overflow: visible;
         
         
       

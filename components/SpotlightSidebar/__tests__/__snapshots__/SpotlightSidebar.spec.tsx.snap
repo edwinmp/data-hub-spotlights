@@ -11,6 +11,7 @@ exports[`SpotlightSidebar renders children 1`] = `
     jsx={true}
   >
     
+        overflow: visible;
         
         
       
@@ -26,6 +27,7 @@ exports[`SpotlightSidebar renders correctly 1`] = `
     jsx={true}
   >
     
+        overflow: visible;
         
         
       
@@ -41,6 +43,7 @@ exports[`SpotlightSidebar renders with the specified class name 1`] = `
     jsx={true}
   >
     
+        overflow: visible;
         
         
       
@@ -56,6 +59,7 @@ exports[`SpotlightSidebar renders with the specified width 1`] = `
     jsx={true}
   >
     
+        overflow: visible;
         
         width: 300px;
       
