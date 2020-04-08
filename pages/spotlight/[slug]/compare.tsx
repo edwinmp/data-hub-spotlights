@@ -20,7 +20,6 @@ interface CompareProps {
 }
 
 const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
-  const router = useRouter();
   useEffect(() => {
     if (setData) {
       setData({ ...scaffold, title: page.title, slug: getSlugFromURL(page.relative_url) });
@@ -28,6 +27,7 @@ const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
   }, [setData, scaffold]);
 
   const getQueryLocation = (): SpotlightLocation[] | undefined => {
+    const router = useRouter();
     if (router.query.ln && router.query.lc) {
       const locations: SpotlightLocation[] = [];
       const geocodes = router.query.lc.toString().split(',');

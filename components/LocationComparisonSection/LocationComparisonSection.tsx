@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactNode, useState } from 'react';
-import { SpotlightLocation, SpotlightTheme } from '../../utils';
+import { SpotlightLocation, SpotlightTheme, getDefaultsByIndex, SpotlightOptions } from '../../utils';
 import { ButtonBanner } from '../ButtonBanner';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { Spotlight } from '../Spotlight';
@@ -28,7 +28,13 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({
   queryLocation
 }) => {
   const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(queryLocation ? queryLocation : []);
+  const { selected: defaultSelected } = getDefaultsByIndex(themes);
+  const [selections, setSelections] = useState<SpotlightOptions>(defaultSelected);
   const [chartCount, setChartCount] = useState<number>(1);
+
+  const filterChanged = (options: SpotlightOptions): void => {
+    setSelections(options);
+  };
 
   const onAddComparison = (): void => {
     setChartCount(chartCount + 1);
@@ -40,7 +46,13 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({
       sections.push(
         <PageSection key={index}>
           <Spotlight className="spotlight--full">
-            <LocationComparisonWrapper themes={themes} locations={selectedLocations} countryCode={countryCode} />
+            <LocationComparisonWrapper
+              themes={themes}
+              locations={selectedLocations}
+              countryCode={countryCode}
+              filterChanged={filterChanged}
+              options={selections}
+            />
           </Spotlight>
         </PageSection>
       );
@@ -65,7 +77,7 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({
           countryCode={countryCode}
           onCompare={onCompare}
           locations={queryLocation ? queryLocation : []}
-          themes={themes}
+          options={selections}
         />
       </PageSection>
       {renderSections()}

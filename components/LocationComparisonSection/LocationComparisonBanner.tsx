@@ -1,12 +1,12 @@
 import React, { CSSProperties, FunctionComponent, useState } from 'react';
-import { SpotlightLocation, SpotlightTheme, getDefaultsByIndex } from '../../utils';
+import { SpotlightLocation, SpotlightOptions } from '../../utils';
 import { Button } from '../Button';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { TagList, TagListItem } from '../Tags';
 import { Alert } from '../Alert';
 import { Icon } from '../Icon';
-import { setQuery } from '../MapSection/utils';
+import { setLocationsQuery } from '../MapSection/utils';
 import { useRouter } from 'next/router';
 
 interface ComparisonWrapperProps {
@@ -14,12 +14,11 @@ interface ComparisonWrapperProps {
   countryCode: string;
   onCompare?: (locations: SpotlightLocation[]) => void;
   locations?: SpotlightLocation[];
-  themes: SpotlightTheme[];
+  options: SpotlightOptions;
 }
 
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
   const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations ? props.locations : []);
-  const { selected: defaultSelected } = getDefaultsByIndex(props.themes);
   const router = useRouter();
   const onSelectLocation = (location?: SpotlightLocation): void => {
     if (
@@ -28,13 +27,13 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
     ) {
       const updatedLocations = locations.concat(location);
       setLocations(updatedLocations);
-      setQuery(router, defaultSelected, location, updatedLocations);
+      setLocationsQuery(router, props.options, updatedLocations);
     }
   };
   const onCloseTag = (tagName: string): void => {
     const updatedLocations = locations.filter(location => location.name !== tagName);
     setLocations(updatedLocations);
-    setQuery(router, defaultSelected, undefined, updatedLocations);
+    setLocationsQuery(router, props.options, updatedLocations);
   };
   const onClickCompare = (): void => {
     if (props.onCompare) {

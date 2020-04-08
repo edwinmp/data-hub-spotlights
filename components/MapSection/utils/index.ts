@@ -38,15 +38,26 @@ export const getDataPrefix = (options: SpotlightOptions): string | undefined =>
 export const getDataSuffix = ({ indicator, year }: SpotlightOptions): string | undefined =>
   indicator ? (year ? `${indicator.value_suffix} in ${year}` : indicator.value_suffix || '') : undefined;
 
-export const setQuery = (
+export const setQuery = (router: NextRouter, options: SpotlightOptions, location?: SpotlightLocation): void => {
+  const { route, push } = router;
+  const { pathname } = window.location;
+  let as = `${pathname}?${THEME_QUERY}=${options.theme?.slug}&${INDICATOR_QUERY}=${options.indicator?.ddw_id}&${YEAR_QUERY}=${options.year}`;
+  if (location) {
+    as = `${as}&${LOCATION_CODE_QUERY}=${location.geocode}&${LOCATION_NAME_QUERY}=${location.name.toLowerCase()}`;
+    push(route, as, { shallow: true });
+  } else {
+    push(route, as, { shallow: true });
+  }
+};
+
+export const setLocationsQuery = (
   router: NextRouter,
   options: SpotlightOptions,
-  location?: SpotlightLocation,
   locations?: SpotlightLocation[]
 ): void => {
   const { route, push } = router;
   const { pathname } = window.location;
-  let as = `${pathname}?${THEME_QUERY}=${options.theme?.slug}&${INDICATOR_QUERY}=${options.indicator?.ddw_id}&${YEAR_QUERY}=${options.year}`;
+  const as = `${pathname}?${THEME_QUERY}=${options.theme?.slug}&${INDICATOR_QUERY}=${options.indicator?.ddw_id}&${YEAR_QUERY}=${options.year}`;
   if (locations && locations.length > 0) {
     const lc = locations
       .map(location => {
@@ -59,11 +70,6 @@ export const setQuery = (
       })
       .join();
     push(route, `${as}&${LOCATION_CODE_QUERY}=${lc}&${LOCATION_NAME_QUERY}=${ln}`, { shallow: true });
-  } else if (location) {
-    as = `${as}&${LOCATION_CODE_QUERY}=${location.geocode}&${LOCATION_NAME_QUERY}=${location.name.toLowerCase()}`;
-    push(route, as, { shallow: true });
-  } else {
-    push(route, as, { shallow: true });
   }
 };
 

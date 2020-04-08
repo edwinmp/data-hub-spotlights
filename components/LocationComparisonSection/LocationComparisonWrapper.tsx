@@ -1,27 +1,40 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { getDefaultsByIndex, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import { SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
 import { LocationComparisonChartDataHandler } from '../LocationComparisonChartDataHandler';
 import { LocationComparisonDataLoader } from '../LocationComparisonDataLoader';
 import { SpaceSectionBottom } from '../SpaceSectionBottom';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { VisualisationSectionMain } from '../VisualisationSection';
+import { useRouter } from 'next/router';
+import { setLocationsQuery } from '../MapSection/utils';
 
 interface ComponentProps {
   themes: SpotlightTheme[];
   locations: SpotlightLocation[];
   countryCode: string;
+  options: SpotlightOptions;
+  filterChanged: (options: SpotlightOptions) => void;
 }
 
-const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ themes, locations, countryCode }) => {
-  const { selected: defaultSelected } = getDefaultsByIndex(themes);
-  const [selections, setSelections] = useState<SpotlightOptions>(defaultSelected);
+const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({
+  themes,
+  locations,
+  countryCode,
+  options,
+  filterChanged
+}) => {
+  const [selections, setSelections] = useState<SpotlightOptions>(options);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   useEffect(() => setLoading(true), [locations, selections]);
+  const onIndicatorChange = (options: SpotlightOptions): void => filterChanged(options);
 
   const onFilterChange = () => (options: SpotlightOptions): void => {
     if (options.indicator) {
       setSelections(options);
+      setLocationsQuery(router, options, locations);
+      onIndicatorChange(options);
     }
   };
   const onLoad = (): void => setLoading(false);
