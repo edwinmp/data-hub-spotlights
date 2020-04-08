@@ -12,6 +12,7 @@ const SpotlightSidebar: FunctionComponent<ComponentProps> = ({ children, classNa
     <div className={classNames('spotlight__aside', className)}>
       {children}
       <style jsx>{`
+        overflow: visible;
         ${height ? `min-height: ${height};` : ''}
         ${width ? `width: ${width};` : ''}
       `}</style>
