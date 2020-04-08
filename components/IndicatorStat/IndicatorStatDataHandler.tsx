@@ -13,7 +13,8 @@ interface DataHandlerProps {
 
 const IndicatorStatDataHandler: FunctionComponent<DataHandlerProps> = ({ dataOptions, ...props }) => {
   const [retryCount, setRetryCount] = useState(0);
-  const { data, dataLoading, refetch, error } = useDDWData(dataOptions);
+  const { data, dataLoading, setOptions, refetch, error } = useDDWData(dataOptions);
+  useEffect(() => setOptions(dataOptions), [dataOptions]);
   useEffect(() => {
     if (error) {
       const { message } = error;
