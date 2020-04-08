@@ -206,7 +206,8 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           center: options.center,
           minZoom: options.minZoom || 6,
           zoom: options.zoom || 6.1,
-          maxZoom: options.maxZoom || 7
+          maxZoom: options.maxZoom || 7,
+          scrollZoom: false
         }}
         style={{ width: '100%', background: '#ffffff' }}
         onLoad={onLoad}

@@ -53,7 +53,7 @@ const renderPaddedAlert = (message: string): ReactNode => (
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
   const [retryCount, setRetryCount] = useState(0);
   const [useLocalValue, setUseLocalValue] = useState(false);
-  const [year, setYear] = useState<number | undefined>(indicator.start_year && indicator.start_year);
+  const [year, setYear] = useState<number | undefined>(indicator.end_year && indicator.end_year);
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
   const [selectedBudgetType, setSelectedBudgetType] = useState<BudgetType | undefined>(undefined);
   const { data, dataLoading, options, setOptions, refetch, error } = useRevenueExpenditureData(
@@ -70,7 +70,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       geocodes: location ? [location.geocode] : [props.countryCode],
       indicators: [indicator.ddw_id]
     });
-    setYear(indicator.start_year);
+    setYear(indicator.end_year);
   }, [location]);
   useEffect(() => {
     if (!dataLoading && year && data.hasOwnProperty(year)) {
@@ -171,6 +171,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                       prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
                       suffix: indicator.value_suffix
                     }}
+                    selectedYear={year}
                   />
                   <style jsx>{`
                     padding: 0 10px;
