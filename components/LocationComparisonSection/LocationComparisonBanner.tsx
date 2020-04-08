@@ -1,37 +1,41 @@
-import React, { CSSProperties, FunctionComponent, useEffect, useState } from 'react';
-import { SpotlightLocation } from '../../utils';
+import React, { CSSProperties, FunctionComponent, useState } from 'react';
+import { SpotlightLocation, SpotlightTheme, getDefaultsByIndex } from '../../utils';
 import { Button } from '../Button';
-import { ButtonBanner } from '../ButtonBanner';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { TagList, TagListItem } from '../Tags';
 import { Alert } from '../Alert';
 import { Icon } from '../Icon';
+import { setQuery } from '../MapSection/utils';
+import { useRouter } from 'next/router';
 
 interface ComparisonWrapperProps {
   countryName: string;
   countryCode: string;
   onCompare?: (locations: SpotlightLocation[]) => void;
-  queryLocation?: SpotlightLocation[];
+  locations?: SpotlightLocation[];
+  themes: SpotlightTheme[];
 }
 
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
-  const [addLocation, setAddLocation] = useState(false);
-  const [locations, setLocations] = useState<SpotlightLocation[]>([]);
-  useEffect(() => {
-    if (props.queryLocation) {
-      setLocations(props.queryLocation);
-    }
-  }, []);
-
-  const toggleAddLocation = (): void => setAddLocation(!addLocation);
+  const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations ? props.locations : []);
+  const { selected: defaultSelected } = getDefaultsByIndex(props.themes);
+  const router = useRouter();
   const onSelectLocation = (location?: SpotlightLocation): void => {
-    if (location && locations.findIndex(_location => _location.name === location.name) === -1) {
-      setLocations(locations.concat(location));
-      setAddLocation(false); // TODO: determine whether to move this outside of condition
+    if (
+      location &&
+      locations.findIndex(_location => _location.name.toLocaleLowerCase() === location.name.toLocaleLowerCase()) === -1
+    ) {
+      const updatedLocations = locations.concat(location);
+      setLocations(updatedLocations);
+      setQuery(router, defaultSelected, location, updatedLocations);
     }
   };
-  const onCloseTag = (tagName: string): void => setLocations(locations.filter(location => location.name !== tagName));
+  const onCloseTag = (tagName: string): void => {
+    const updatedLocations = locations.filter(location => location.name !== tagName);
+    setLocations(updatedLocations);
+    setQuery(router, defaultSelected, undefined, updatedLocations);
+  };
   const onClickCompare = (): void => {
     if (props.onCompare) {
       props.onCompare(locations);
@@ -40,30 +44,19 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
 
   return (
     <>
-      {addLocation ? (
-        <LocationSelectionBanner
-          countryName={props.countryName}
-          countryCode={props.countryCode}
-          onSelectLocation={onSelectLocation}
-          selectStyles={{
-            container: (provided): CSSProperties => ({
-              ...provided,
-              maxWidth: '300px',
-              fontSize: '1.6rem',
-              width: '100%'
-            })
-          }}
-        >
-          <Button className="countries__searched-cancel" onClick={toggleAddLocation}>
-            <span>Cancel</span>
-          </Button>
-        </LocationSelectionBanner>
-      ) : (
-        <ButtonBanner onClick={toggleAddLocation} className="m-text-link add-location-link">
-          <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
-          <span>Add Location</span>
-        </ButtonBanner>
-      )}
+      <LocationSelectionBanner
+        countryName={props.countryName}
+        countryCode={props.countryCode}
+        onSelectLocation={onSelectLocation}
+        selectStyles={{
+          container: (provided): CSSProperties => ({
+            ...provided,
+            maxWidth: '300px',
+            fontSize: '1.6rem',
+            width: '100%'
+          })
+        }}
+      ></LocationSelectionBanner>
       {locations.length ? (
         <SpotlightBanner>
           <TagList>

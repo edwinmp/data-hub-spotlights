@@ -27,12 +27,19 @@ const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
     }
   }, [setData, scaffold]);
 
-  const getQueryLocation = (): SpotlightLocation | undefined => {
+  const getQueryLocation = (): SpotlightLocation[] | undefined => {
     if (router.query.ln && router.query.lc) {
-      return {
-        name: router.query.ln.toString(),
-        geocode: router.query.lc.toString()
-      };
+      const locations: SpotlightLocation[] = [];
+      const geocodes = router.query.lc.toString().split(',');
+      const names = router.query.ln.toString().split(',');
+      for (let index = 0; index < geocodes.length; index++) {
+        locations.push({
+          geocode: geocodes[index],
+          name: names[index]
+        });
+      }
+
+      return locations;
     }
   };
 
