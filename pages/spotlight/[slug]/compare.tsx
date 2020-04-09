@@ -1,5 +1,4 @@
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { PageScaffoldData } from '../../../components/DefaultLayout';
 import { LocationComparisonSection } from '../../../components/LocationComparisonSection';
@@ -9,7 +8,6 @@ import {
   fetchSpotlightPage,
   filterThemesBySection,
   getSlugFromURL,
-  SpotlightLocation,
   SpotlightPage
 } from '../../../utils';
 
@@ -26,33 +24,11 @@ const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
     }
   }, [setData, scaffold]);
 
-  const getQueryLocation = (): SpotlightLocation[] | undefined => {
-    const router = useRouter();
-    if (router.query.ln && router.query.lc) {
-      const locations: SpotlightLocation[] = [];
-      const geocodes = router.query.lc.toString().split(',');
-      const names = router.query.ln.toString().split(',');
-      for (let index = 0; index < geocodes.length; index++) {
-        locations.push({
-          geocode: geocodes[index],
-          name: names[index]
-        });
-      }
-
-      return locations;
-    }
-  };
-
   const mapThemes = filterThemesBySection(page.themes, 'map');
 
   if (page.themes && page.country_code) {
     return (
-      <LocationComparisonSection
-        countryCode={page.country_code}
-        countryName={page.country_name}
-        themes={mapThemes}
-        queryLocation={getQueryLocation()}
-      />
+      <LocationComparisonSection countryCode={page.country_code} countryName={page.country_name} themes={mapThemes} />
     );
   }
 

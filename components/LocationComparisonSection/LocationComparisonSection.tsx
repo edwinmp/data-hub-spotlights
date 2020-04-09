@@ -6,12 +6,12 @@ import { Spotlight } from '../Spotlight';
 import { LocationComparisonBanner } from './LocationComparisonBanner';
 import { LocationComparisonWrapper } from './LocationComparisonWrapper';
 import { SpotlightShare } from '../SpotlightShare';
+import { useRouter } from 'next/router';
 
 interface ComponentProps {
   countryCode: string;
   countryName: string;
   themes: SpotlightTheme[];
-  queryLocation?: SpotlightLocation[];
 }
 
 export interface LocationTagProps {
@@ -21,16 +21,29 @@ export interface LocationTagProps {
 
 export type LocationTagType = LocationTagProps[];
 
-const LocationComparisonSection: FunctionComponent<ComponentProps> = ({
-  countryCode,
-  countryName,
-  themes,
-  queryLocation
-}) => {
-  const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(queryLocation ? queryLocation : []);
+const getQueryLocation = (): SpotlightLocation[] | undefined => {
+  const router = useRouter();
+  if (router.query.ln && router.query.lc) {
+    const locations: SpotlightLocation[] = [];
+    const geocodes = router.query.lc.toString().split(',');
+    const names = router.query.ln.toString().split(',');
+    for (let index = 0; index < geocodes.length; index++) {
+      locations.push({
+        geocode: geocodes[index],
+        name: names[index]
+      });
+    }
+
+    return locations;
+  }
+};
+
+const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
   const { selected: defaultSelected } = getDefaultsByIndex(themes);
   const [selections, setSelections] = useState<SpotlightOptions>(defaultSelected);
   const [chartCount, setChartCount] = useState<number>(1);
+  const queryLocation = getQueryLocation();
+  const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(queryLocation ? queryLocation : []);
 
   const filterChanged = (options: SpotlightOptions): void => {
     setSelections(options);
@@ -76,7 +89,7 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({
           countryName={countryName}
           countryCode={countryCode}
           onCompare={onCompare}
-          locations={queryLocation ? queryLocation : []}
+          locations={selectedLocations}
           options={selections}
         />
       </PageSection>
