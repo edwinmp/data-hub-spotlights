@@ -165,7 +165,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       ]);
       _map.setPaintProperty(options.layerName, 'fill-color', '#d1d1d1');
       if (props.locationHandling === 'flyto') {
-        flyToLocation(_map, props.location.name, options);
+        setTimeout(() => flyToLocation(_map, props.location?.name as string, options), 500);
       }
     }
   };
