@@ -194,7 +194,21 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       );
     }
 
-    return <BaseMapLayer id={COLOURED_LAYER} show={false} />;
+    return (
+      <BaseMapLayer
+        id={COLOURED_LAYER}
+        source="composite"
+        source-layer={options.sourceLayer}
+        maxzoom={options.maxZoom && options.maxZoom + 1}
+        type="fill"
+        paint={{
+          'fill-color': '#D1CBCF',
+          'fill-opacity': 0.75,
+          'fill-outline-color': '#ffffff'
+        }}
+        onAdd={onAddLayer}
+      />
+    );
   };
 
   return (
