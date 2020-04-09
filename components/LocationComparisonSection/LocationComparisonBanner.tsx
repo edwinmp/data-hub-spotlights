@@ -1,13 +1,11 @@
+import { useRouter } from 'next/router';
 import React, { CSSProperties, FunctionComponent, useState } from 'react';
 import { SpotlightLocation, SpotlightOptions } from '../../utils';
 import { Button } from '../Button';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
+import { setLocationsQuery } from '../MapSection/utils';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { TagList, TagListItem } from '../Tags';
-import { Alert } from '../Alert';
-import { Icon } from '../Icon';
-import { setLocationsQuery } from '../MapSection/utils';
-import { useRouter } from 'next/router';
 
 interface ComparisonWrapperProps {
   countryName: string;
@@ -23,7 +21,7 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
   const onSelectLocation = (location?: SpotlightLocation): void => {
     if (
       location &&
-      locations.findIndex(_location => _location.name.toLocaleLowerCase() === location.name.toLocaleLowerCase()) === -1
+      locations.findIndex(_location => _location.name.toLowerCase() === location.name.toLowerCase()) === -1
     ) {
       const updatedLocations = locations.concat(location);
       setLocations(updatedLocations);
@@ -31,7 +29,7 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
     }
   };
   const onCloseTag = (tagName: string): void => {
-    const updatedLocations = locations.filter(location => location.name !== tagName);
+    const updatedLocations = locations.filter(location => location.name.toLowerCase() !== tagName.toLowerCase());
     setLocations(updatedLocations);
     setLocationsQuery(router, props.options, updatedLocations);
   };
@@ -55,6 +53,7 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
             width: '100%'
           })
         }}
+        heading={'Add Location'}
       ></LocationSelectionBanner>
       {locations.length ? (
         <SpotlightBanner>
@@ -70,17 +69,7 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
           ) : null}
         </SpotlightBanner>
       ) : (
-        <SpotlightBanner>
-          <div>
-            <style jsx>{`
-              width: 45%;
-            `}</style>
-            <Alert variant="notice">
-              <Icon name="arrow-up-slate" />
-              <p>To get started, add a location</p>
-            </Alert>
-          </div>
-        </SpotlightBanner>
+        ''
       )}
     </>
   );

@@ -13,7 +13,7 @@ interface ComponentProps {
 const getYears = (data: LocationData[]): number[] =>
   data.reduce((prev: number[], curr) => (prev.indexOf(curr.year) === -1 ? prev.concat(curr.year) : prev), []).sort();
 
-const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, indicator, locations }) => {
+const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, indicator }) => {
   if (!data) {
     return (
       <div>
@@ -27,15 +27,11 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
   }
 
   const groupedByLocation: { [location: string]: LocationData[] } = groupBy(data.data, data => data.name);
-  let groupedByYear: { [location: string]: { [year: string]: LocationData[] } } = {};
+  const groupedByYear: { [location: string]: { [year: string]: LocationData[] } } = {};
   Object.keys(groupedByLocation).forEach(location => {
     const groupedByBudgetType = groupBy(groupedByLocation[location], processedData => processedData.year);
     groupedByYear[location] = groupedByBudgetType;
   });
-
-  if (locations && locations.length <= 0 && data.data.length > 10) {
-    groupedByYear = {};
-  }
 
   return (
     <LocationComparisonLineChart

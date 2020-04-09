@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactNode, useState } from 'react';
-import { SpotlightLocation, SpotlightTheme, getDefaultsByIndex, SpotlightOptions } from '../../utils';
+import { getDefaultsByIndex, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
 import { ButtonBanner } from '../ButtonBanner';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { Spotlight } from '../Spotlight';

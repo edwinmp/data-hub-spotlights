@@ -70,6 +70,8 @@ export const setLocationsQuery = (
       })
       .join();
     push(route, `${as}&${LOCATION_CODE_QUERY}=${lc}&${LOCATION_NAME_QUERY}=${ln}`, { shallow: true });
+  } else {
+    push(route, as, { shallow: true });
   }
 };
 

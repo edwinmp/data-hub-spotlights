@@ -31,11 +31,21 @@ const LocationComparisonDataLoader: FunctionComponent<ComponentProps> = ({ optio
     if (props.onLoad) {
       props.onLoad();
     }
-    setData(data[0]);
+    if (props.locations && props.locations.length > 0) {
+      setData(data[0]);
+    }
   };
 
   if (!options) {
-    return <div>No Data</div>;
+    return (
+      <div>
+        <style jsx>{`
+          padding: 20px;
+          font-size: 16px;
+        `}</style>
+        No Data
+      </div>
+    );
   }
 
   if (loading) {
@@ -57,7 +67,15 @@ const LocationComparisonDataLoader: FunctionComponent<ComponentProps> = ({ optio
     return <>{Children.map(props.children, child => (isValidElement(child) ? cloneElement(child, { data }) : null))}</>;
   }
 
-  return <div>No Data</div>;
+  return (
+    <div>
+      <style jsx>{`
+        padding: 20px;
+        font-size: 16px;
+      `}</style>
+      No Data
+    </div>
+  );
 };
 
 export { LocationComparisonDataLoader };

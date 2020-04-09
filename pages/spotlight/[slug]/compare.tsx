@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { PageScaffoldData } from '../../../components/DefaultLayout';
 import { LocationComparisonSection } from '../../../components/LocationComparisonSection';
@@ -7,11 +8,10 @@ import {
   fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
-  SpotlightPage,
   getSlugFromURL,
-  SpotlightLocation
+  SpotlightLocation,
+  SpotlightPage
 } from '../../../utils';
-import { useRouter } from 'next/router';
 
 interface CompareProps {
   setData?: (data: PageScaffoldData) => void;
