@@ -1,4 +1,4 @@
-import { EChartOption } from 'echarts';
+import { EChartOption, EChartsMediaOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
 import { BudgetType, formatNumber, ValueOptions, addPrefixAndSuffix } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
@@ -103,8 +103,24 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueO
       }
     ]
   };
+  // Options for medium & large sized devices
+  const mdOptions: EChartsMediaOption = {
+    query: { minWidth: 450 },
+    option: {
+      grid: { left: '10%' }
+    }
+  };
+  // Options for small screen devices
+  const xsOptions: EChartsMediaOption = {
+    query: { maxWidth: 350 },
+    option: {
+      grid: { left: '15%' }
+    }
+  };
 
-  return <EChartsBaseChart options={options} height={props.height} />;
+  const media: EChartsMediaOption[] = [mdOptions, xsOptions];
+
+  return <EChartsBaseChart options={options} height={props.height} media={media} />;
 };
 
 RevenueExpenditureLineChart.defaultProps = { height: '500px' };
