@@ -5,6 +5,7 @@ import { PageSection, PageSectionHeading } from '../PageSection';
 import { Spotlight } from '../Spotlight';
 import { LocationComparisonBanner } from './LocationComparisonBanner';
 import { LocationComparisonWrapper } from './LocationComparisonWrapper';
+import { SpotlightShare } from '../SpotlightShare';
 
 interface ComponentProps {
   countryCode: string;
@@ -62,6 +63,11 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
             <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
             <span>Add another comparison</span>
           </ButtonBanner>
+        </PageSection>
+      ) : null}
+      {chartCount ? (
+        <PageSection>
+          <SpotlightShare countryName={countryName} />
         </PageSection>
       ) : null}
     </>
