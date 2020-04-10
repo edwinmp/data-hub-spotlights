@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { CSSProperties, FunctionComponent, useState } from 'react';
+import React, { CSSProperties, FunctionComponent, useState, useEffect } from 'react';
 import { SpotlightLocation, SpotlightOptions } from '../../utils';
 import { Button } from '../Button';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
@@ -18,6 +18,12 @@ interface ComparisonWrapperProps {
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
   const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations ? props.locations : []);
   const router = useRouter();
+  useEffect(() => {
+    if (locations.length < 2 && props.onCompare) {
+      props.onCompare(locations);
+    }
+  }, [locations]);
+
   const onSelectLocation = (location?: SpotlightLocation): void => {
     if (
       location &&

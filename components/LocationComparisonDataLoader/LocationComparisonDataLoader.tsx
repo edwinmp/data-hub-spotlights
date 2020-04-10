@@ -33,6 +33,8 @@ const LocationComparisonDataLoader: FunctionComponent<ComponentProps> = ({ optio
     }
     if (props.locations && props.locations.length > 0) {
       setData(data[0]);
+    } else {
+      setData(undefined);
     }
   };
 
