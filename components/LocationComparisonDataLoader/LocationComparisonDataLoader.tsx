@@ -63,19 +63,7 @@ const LocationComparisonDataLoader: FunctionComponent<ComponentProps> = ({ optio
     );
   }
 
-  if (data) {
-    return <>{Children.map(props.children, child => (isValidElement(child) ? cloneElement(child, { data }) : null))}</>;
-  }
-
-  return (
-    <div>
-      <style jsx>{`
-        padding: 20px;
-        font-size: 16px;
-      `}</style>
-      No Data
-    </div>
-  );
+  return <>{Children.map(props.children, child => (isValidElement(child) ? cloneElement(child, { data }) : null))}</>;
 };
 
 export { LocationComparisonDataLoader };

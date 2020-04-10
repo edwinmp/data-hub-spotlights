@@ -14,16 +14,14 @@ const getYears = (data: LocationData[]): number[] =>
   data.reduce((prev: number[], curr) => (prev.indexOf(curr.year) === -1 ? prev.concat(curr.year) : prev), []).sort();
 
 const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, indicator }) => {
+  const valueOptions = {
+    dataFormat: indicator.data_format,
+    prefix: indicator.value_prefix,
+    suffix: indicator.value_suffix
+  };
+
   if (!data) {
-    return (
-      <div>
-        No Data
-        <style jsx>{`
-          padding: 20px;
-          font-size: 1.6em;
-        `}</style>
-      </div>
-    );
+    return <LocationComparisonLineChart years={[]} data={{}} height={'500px'} valueOptions={valueOptions} />;
   }
 
   const groupedByLocation: { [location: string]: LocationData[] } = groupBy(data.data, data => data.name);
@@ -38,11 +36,7 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
       years={getYears(data.data)}
       data={groupedByYear}
       height={'500px'}
-      valueOptions={{
-        dataFormat: indicator.data_format,
-        prefix: indicator.value_prefix,
-        suffix: indicator.value_suffix
-      }}
+      valueOptions={valueOptions}
     />
   );
 };
