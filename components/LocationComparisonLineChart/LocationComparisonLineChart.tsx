@@ -54,7 +54,7 @@ const LocationComparisonLineChart: FunctionComponent<ComponentProps> = props => 
     }))
   };
 
-  return <EChartsBaseChart options={options} height={props.height} />;
+  return <EChartsBaseChart options={options} height={props.height} notMerge={true} />;
 };
 
 LocationComparisonLineChart.defaultProps = { height: '500px' };

@@ -10,19 +10,23 @@ interface EChartBaseChartProps {
   classNames?: string;
   options: EChartOption;
   media?: EChartsMediaOption[];
+  notMerge?: boolean; // states whether not to merge with previous option on update
 }
 
-const setOptions = (chart: ECharts, options: EChartOption, media?: EChartsMediaOption[]): void => {
+const setOptions = (chart: ECharts, options: EChartOption, media?: EChartsMediaOption[], notMerge = false): void => {
   if (options.xAxis && Array.isArray(options.xAxis)) {
     options.xAxis = options.xAxis.map(axis => merge(axisDefaults, axis));
   }
   if (options.yAxis && Array.isArray(options.yAxis)) {
     options.yAxis = options.yAxis.map(axis => merge(axisDefaults, axis));
   }
-  chart.setOption({
-    baseOption: merge(defaults, options, { arrayMerge: (_destinationArray, sourceArray) => sourceArray }),
-    media
-  });
+  chart.setOption(
+    {
+      baseOption: merge(defaults, options, { arrayMerge: (_destinationArray, sourceArray) => sourceArray }),
+      media
+    },
+    notMerge
+  );
 };
 
 const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {
@@ -37,7 +41,7 @@ const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {
   }, []);
   useEffect(() => {
     if (baseChart) {
-      setOptions(baseChart, props.options, props.media);
+      setOptions(baseChart, props.options, props.media, props.notMerge);
     }
   }, [props.options]);
   useEffect(() => {
@@ -61,7 +65,8 @@ const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {
 
 EChartsBaseChart.defaultProps = {
   width: '100%',
-  height: '400px'
+  height: '400px',
+  notMerge: false
 };
 
 export { EChartsBaseChart as default, EChartsBaseChart };

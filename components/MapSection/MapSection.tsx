@@ -48,8 +48,9 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
 
 const getComparePath = (router: NextRouter): string => {
   const pathname = router.asPath.split('?')[0].split('#')[0];
+  const queryString = router.asPath.split('?')[1];
 
-  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare`;
+  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare${queryString ? '?' + queryString : ''}`;
 };
 
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
@@ -110,6 +111,9 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 <LegendItem>no data / not applicable</LegendItem>
               </Legend>
               <SpotlightButtons>
+                {router ? (
+                  <AnchorButton href={getComparePath(router)}>Compare this location to others</AnchorButton>
+                ) : null}
                 <SpotlightShare
                   countryName={props.countryName}
                   location={activeLocation}

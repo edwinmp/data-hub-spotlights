@@ -7,8 +7,8 @@ import {
   fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
-  SpotlightPage,
-  getSlugFromURL
+  getSlugFromURL,
+  SpotlightPage
 } from '../../../utils';
 
 interface CompareProps {
@@ -23,6 +23,7 @@ const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
       setData({ ...scaffold, title: page.title, slug: getSlugFromURL(page.relative_url) });
     }
   }, [setData, scaffold]);
+
   const mapThemes = filterThemesBySection(page.themes, 'map');
 
   if (page.themes && page.country_code) {
