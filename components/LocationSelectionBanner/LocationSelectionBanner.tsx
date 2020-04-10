@@ -41,7 +41,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
 
   return (
     <SpotlightBanner className={props.className}>
-      <h3 className="spotlight-banner__heading">{props.heading}</h3>
+      {props.heading ? <h3 className="spotlight-banner__heading">{props.heading}</h3> : null}
       <SpotlightBannerAside>
         <BoundaryMenu
           countryName={props.countryName}

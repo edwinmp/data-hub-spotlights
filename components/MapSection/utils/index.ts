@@ -59,16 +59,8 @@ export const setLocationsQuery = (
   const { pathname } = window.location;
   const as = `${pathname}?${THEME_QUERY}=${options.theme?.slug}&${INDICATOR_QUERY}=${options.indicator?.ddw_id}&${YEAR_QUERY}=${options.year}`;
   if (locations && locations.length > 0) {
-    const lc = locations
-      .map(location => {
-        return location.geocode;
-      })
-      .join();
-    const ln = locations
-      .map(location => {
-        return location.name;
-      })
-      .join();
+    const lc = locations.map(location => location.geocode).join();
+    const ln = locations.map(location => location.name).join();
     push(route, `${as}&${LOCATION_CODE_QUERY}=${lc}&${LOCATION_NAME_QUERY}=${ln}`, { shallow: true });
   } else {
     push(route, as, { shallow: true });

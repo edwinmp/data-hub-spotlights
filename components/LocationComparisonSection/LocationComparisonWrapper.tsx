@@ -14,27 +14,20 @@ interface ComponentProps {
   locations: SpotlightLocation[];
   countryCode: string;
   options: SpotlightOptions;
-  filterChanged: (options: SpotlightOptions) => void;
+  onFilterChanged: (options: SpotlightOptions) => void;
 }
 
-const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({
-  themes,
-  locations,
-  countryCode,
-  options,
-  filterChanged
-}) => {
+const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ locations, options, ...props }) => {
   const [selections, setSelections] = useState<SpotlightOptions>(options);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   useEffect(() => setLoading(true), [locations, selections]);
-  const onIndicatorChange = (options: SpotlightOptions): void => filterChanged(options);
 
-  const onFilterChange = () => (options: SpotlightOptions): void => {
+  const onFilterChange = (options: SpotlightOptions): void => {
     if (options.indicator) {
       setSelections(options);
       setLocationsQuery(router, options, locations);
-      onIndicatorChange(options);
+      props.onFilterChanged(options);
     }
   };
   const onLoad = (): void => setLoading(false);
@@ -43,8 +36,8 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({
     <>
       <SpaceSectionBottom>
         <SpotlightFilters
-          themes={themes}
-          onOptionsChange={onFilterChange()}
+          themes={props.themes}
+          onOptionsChange={onFilterChange}
           topicLabel="Select a topic to explore"
           indicatorLabel="Choose an indicator"
           topicClassName="form-field--inline-three"
@@ -57,7 +50,7 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({
           <SpotlightInteractive background="#ffffff">
             <LocationComparisonDataLoader options={selections} onLoad={onLoad} loading={loading} locations={locations}>
               <LocationComparisonChartDataHandler
-                countryCode={countryCode}
+                countryCode={props.countryCode}
                 locations={locations}
                 indicator={selections.indicator}
               />

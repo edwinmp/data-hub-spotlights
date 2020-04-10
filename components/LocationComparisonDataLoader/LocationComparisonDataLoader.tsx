@@ -37,15 +37,7 @@ const LocationComparisonDataLoader: FunctionComponent<ComponentProps> = ({ optio
   };
 
   if (!options) {
-    return (
-      <div>
-        <style jsx>{`
-          padding: 20px;
-          font-size: 16px;
-        `}</style>
-        No Data
-      </div>
-    );
+    return <>{props.children}</>;
   }
 
   if (loading) {

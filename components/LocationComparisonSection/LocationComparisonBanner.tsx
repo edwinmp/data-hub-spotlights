@@ -53,7 +53,7 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
             width: '100%'
           })
         }}
-        heading={'Add Location'}
+        heading="Add Location"
       ></LocationSelectionBanner>
       {locations.length ? (
         <SpotlightBanner>
@@ -68,9 +68,7 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
             </Button>
           ) : null}
         </SpotlightBanner>
-      ) : (
-        ''
-      )}
+      ) : null}
     </>
   );
 };
