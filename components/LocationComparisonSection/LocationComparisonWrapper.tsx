@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
 import { LocationComparisonChartDataHandler } from '../LocationComparisonChartDataHandler';
-import { LocationComparisonDataLoader } from '../LocationComparisonDataLoader';
 import { setLocationsQuery } from '../MapSection/utils';
 import { SpaceSectionBottom } from '../SpaceSectionBottom';
 import { SpotlightFilters } from '../SpotlightFilters';
@@ -19,9 +18,7 @@ interface ComponentProps {
 
 const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ locations, options, ...props }) => {
   const [selections, setSelections] = useState<SpotlightOptions>(options);
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  useEffect(() => setLoading(true), [locations, selections]);
 
   const onFilterChange = (options: SpotlightOptions): void => {
     if (options.indicator) {
@@ -30,7 +27,6 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ location
       props.onFilterChanged(options);
     }
   };
-  const onLoad = (): void => setLoading(false);
 
   return (
     <>
@@ -48,13 +44,11 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ location
       {selections.indicator ? (
         <VisualisationSectionMain>
           <SpotlightInteractive background="#ffffff">
-            <LocationComparisonDataLoader options={selections} onLoad={onLoad} loading={loading} locations={locations}>
-              <LocationComparisonChartDataHandler
-                countryCode={props.countryCode}
-                locations={locations}
-                indicator={selections.indicator}
-              />
-            </LocationComparisonDataLoader>
+            <LocationComparisonChartDataHandler
+              countryCode={props.countryCode}
+              locations={locations}
+              indicator={selections.indicator}
+            />
           </SpotlightInteractive>
         </VisualisationSectionMain>
       ) : null}
