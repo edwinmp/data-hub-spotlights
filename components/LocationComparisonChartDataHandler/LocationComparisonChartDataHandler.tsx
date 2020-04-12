@@ -11,6 +11,7 @@ interface ComponentProps {
   indicator: SpotlightIndicator;
   locations: SpotlightLocation[];
   countryCode: string;
+  foundMissingData: (show: boolean, location: SpotlightLocation[]) => void;
 }
 
 const getYears = (data: LocationData[]): number[] =>
@@ -35,7 +36,27 @@ const processData = (data: LocationData[]): FormattedData => {
   return groupedByYear;
 };
 
-const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ indicator, locations }) => {
+const getMissingData = (
+  data: LocationIndicatorData[],
+  locations: SpotlightLocation[]
+): SpotlightLocation[] | undefined => {
+  return locations.filter(obj => {
+    const match =
+      data.length > 0
+        ? data[0].data.find((s: { geocode: any }) => {
+            return s.geocode === obj.geocode;
+          })
+        : [];
+
+    return match ? false : true;
+  });
+};
+
+const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
+  indicator,
+  locations,
+  foundMissingData
+}) => {
   const valueOptions = {
     dataFormat: indicator.data_format,
     prefix: indicator.value_prefix,
@@ -50,6 +71,14 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
   useEffect(() => {
     setOptions(getDataLoaderOptions(indicator, locations));
   }, [locations, indicator]);
+  useEffect(() => {
+    const isDataMissing = getMissingData(data ? data : [], locations);
+    if (isDataMissing && isDataMissing.length > 0) {
+      foundMissingData(true, isDataMissing);
+    } else {
+      foundMissingData(false, []);
+    }
+  }, [data, locations]);
 
   if (!data) {
     return <LocationComparisonLineChart years={[]} data={{}} height={'500px'} valueOptions={valueOptions} />;
