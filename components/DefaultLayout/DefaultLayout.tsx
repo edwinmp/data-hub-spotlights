@@ -1,4 +1,4 @@
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 import { NextComponentType } from 'next';
 import { useRouter } from 'next/router';
 import React, { cloneElement, isValidElement, ReactNode, useState } from 'react';

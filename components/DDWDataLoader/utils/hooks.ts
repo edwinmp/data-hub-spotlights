@@ -1,5 +1,4 @@
-import { useQuery } from '@apollo/react-hooks';
-import { ApolloError } from 'apollo-client';
+import { ApolloError, useQuery } from '@apollo/client';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { DataLoaderProps } from '..';
 import { GET_INDICATOR_DATA, LocationIndicatorData, DataFilter } from '../../../utils';
@@ -10,7 +9,7 @@ interface DDWData {
   options: DataLoaderProps;
   filter?: DataFilter[][];
   setOptions: Dispatch<SetStateAction<DataLoaderProps>>;
-  refetch?: () => void;
+  refetch?: (options?: DataLoaderProps) => void;
   error?: ApolloError;
 }
 
@@ -24,14 +23,15 @@ export const useDDWData = (_options: DataLoaderProps): DDWData => {
         variables: {
           indicators,
           geocodes,
-          startYear,
-          endYear,
+          startYear: typeof startYear === 'number' ? startYear : undefined,
+          endYear: typeof endYear === 'number' ? endYear : undefined,
           filter,
           limit
         },
         notifyOnNetworkStatusChange: true
       }
     );
+
     if (error) {
       console.log('useDDWData:', error.message);
 

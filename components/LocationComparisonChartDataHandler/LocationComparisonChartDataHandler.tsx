@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { LocationIndicatorData, SpotlightLocation, LocationData, SpotlightIndicator } from '../../utils';
-import { LocationComparisonLineChart } from '../LocationComparisonLineChart';
+import { LocationComparisonLineChart, FormattedData } from '../LocationComparisonLineChart';
 import { groupBy } from 'underscore';
 import { useDDWData, DataLoaderProps } from '../DDWDataLoader';
 import { parseIndicator } from '../MapSection/utils';
@@ -24,6 +24,17 @@ const getDataLoaderOptions = (indicator: SpotlightIndicator, locations: Spotligh
   limit: 10000
 });
 
+const processData = (data: LocationData[]): FormattedData => {
+  const groupedByLocation: { [location: string]: LocationData[] } = groupBy(data, _data => _data.name);
+  const groupedByYear: { [location: string]: { [year: string]: LocationData[] } } = {};
+  Object.keys(groupedByLocation).forEach(location => {
+    const groupedByBudgetType = groupBy(groupedByLocation[location], processedData => processedData.year);
+    groupedByYear[location] = groupedByBudgetType;
+  });
+
+  return groupedByYear;
+};
+
 const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ indicator, locations }) => {
   const valueOptions = {
     dataFormat: indicator.data_format,
@@ -44,18 +55,11 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
     return <LocationComparisonLineChart years={[]} data={{}} height={'500px'} valueOptions={valueOptions} />;
   }
 
-  const groupedByLocation: { [location: string]: LocationData[] } = groupBy(data[0].data, data => data.name);
-  const groupedByYear: { [location: string]: { [year: string]: LocationData[] } } = {};
-  Object.keys(groupedByLocation).forEach(location => {
-    const groupedByBudgetType = groupBy(groupedByLocation[location], processedData => processedData.year);
-    groupedByYear[location] = groupedByBudgetType;
-  });
-
   return (
     <Loading active={dataLoading}>
       <LocationComparisonLineChart
         years={getYears(data[0].data)}
-        data={groupedByYear}
+        data={processData(data[0].data)}
         height={'500px'}
         valueOptions={valueOptions}
       />
