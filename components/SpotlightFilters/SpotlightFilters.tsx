@@ -64,6 +64,17 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultInde
       setSelected({ ...selected, year: undefined });
     }
   };
+  const filteredYears = () => {
+    const excludedYear = activeIndicator?.excluded_years;
+    if (excludedYear && years) {
+      const filteredYears = years.filter(year => year.label !== '2004' && year.label !== '2008');
+      console.log(filteredYears);
+
+      return filteredYears;
+    } else {
+      return years;
+    }
+  };
 
   return (
     <form className="form">
@@ -90,7 +101,7 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultInde
         activeIndicator={activeIndicator && parseIndicatorToOption(activeIndicator)}
         onSelectIndicator={onSelectIndicator}
         onSelectYear={onSelectYear}
-        years={years}
+        years={filteredYears()}
         activeYear={activeYear}
         indicatorLabel={props.indicatorLabel}
         yearLabel={props.yearLabel}
