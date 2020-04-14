@@ -1,6 +1,4 @@
-// import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-// import { createHttpLink } from 'apollo-link-http';
 import fetch from 'node-fetch';
 
 const cache = new InMemoryCache();
