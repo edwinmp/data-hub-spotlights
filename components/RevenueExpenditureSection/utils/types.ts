@@ -1,4 +1,4 @@
-import { ApolloError } from 'apollo-client';
+import { ApolloError } from '@apollo/client';
 import { Dispatch, SetStateAction } from 'react';
 import { BudgetType } from '../../../utils';
 import { DataLoaderProps } from '../../DDWDataLoader';
