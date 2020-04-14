@@ -32,6 +32,7 @@ export interface SpotlightIndicator {
   description?: string;
   start_year?: number;
   end_year?: number;
+  excluded_years?: number[];
   data_format: DataFormat;
   range?: string;
   value_prefix?: string;
