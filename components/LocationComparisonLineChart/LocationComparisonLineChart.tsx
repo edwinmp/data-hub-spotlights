@@ -6,12 +6,12 @@ import { LocationData, formatNumber, addPrefixAndSuffix, ValueOptions } from '..
 
 interface ComponentProps {
   years: (string | number)[];
-  data: FormatedData;
+  data: FormattedData;
   height?: string;
   valueOptions: ValueOptions;
 }
 
-type FormatedData = { [location: string]: { [year: string]: LocationData[] } };
+export type FormattedData = { [location: string]: { [year: string]: LocationData[] } };
 
 const LocationComparisonLineChart: FunctionComponent<ComponentProps> = props => {
   const options: EChartOption<EChartOption.SeriesLine | EChartOption.SeriesBar> = {

@@ -24,14 +24,15 @@ export const useDDWData = (_options: DataLoaderProps): DDWData => {
         variables: {
           indicators,
           geocodes,
-          startYear,
-          endYear,
+          startYear: typeof startYear === 'number' ? startYear : undefined,
+          endYear: typeof endYear === 'number' ? endYear : undefined,
           filter,
           limit
         },
         notifyOnNetworkStatusChange: true
       }
     );
+
     if (error) {
       console.log('useDDWData:', error.message);
 
