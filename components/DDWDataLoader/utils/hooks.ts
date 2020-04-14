@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import { ApolloError } from 'apollo-client';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { DataLoaderProps } from '..';
@@ -10,7 +10,7 @@ interface DDWData {
   options: DataLoaderProps;
   filter?: DataFilter[][];
   setOptions: Dispatch<SetStateAction<DataLoaderProps>>;
-  refetch?: () => void;
+  refetch?: (options?: DataLoaderProps) => void;
   error?: ApolloError;
 }
 
