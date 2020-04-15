@@ -4,7 +4,8 @@ import {
   SpotlightIndicator,
   SpotlightIndicatorContent,
   SpotlightLocation,
-  TemplateOptions
+  TemplateOptions,
+  toCamelCase
 } from '../../utils';
 import { IndicatorChartDataHandler, IndicatorStat, IndicatorStatDataHandler } from '../IndicatorStat';
 import { setDecimalCount } from '../IndicatorStat/utils';
@@ -19,7 +20,7 @@ interface KeyFactIndicatorProps {
 
 const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator, location, ...props }) => {
   const templateOptions: TemplateOptions = {
-    location: location.name
+    location: toCamelCase(location.name)
   };
 
   if (indicator.content_template) {
