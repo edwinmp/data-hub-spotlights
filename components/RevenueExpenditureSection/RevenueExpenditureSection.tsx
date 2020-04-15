@@ -127,11 +127,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
           <FormField className="form-field--inline">
             <FormFieldSelect
               label="Year"
-              options={createYearOptionsFromRange(
-                indicator.start_year,
-                indicator.end_year,
-                indicator.excluded_years as string
-              )}
+              options={createYearOptionsFromRange(indicator.start_year, indicator.end_year, indicator.excluded_years)}
               value={year ? { label: `${year}`, value: `${year}` } : null}
               onChange={onSelectYear}
             />
