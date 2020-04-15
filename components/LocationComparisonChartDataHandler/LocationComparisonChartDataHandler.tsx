@@ -46,7 +46,8 @@ const renderMissingDataAlert = (data: LocationData[], locations: SpotlightLocati
     <div>
       <Alert variant="notice">For this indicator, we do not have data for {noDataLocations.join(', ')}</Alert>
       <style jsx>{`
-        padding-bottom: 8px;
+        padding: 0 2em 8px;
+        background: #ffffff;
       `}</style>
     </div>
   ) : null;
@@ -82,7 +83,7 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
 
   return (
     <>
-      {renderMissingDataAlert(data[0].data, locations)}
+      {!dataLoading && renderMissingDataAlert(data[0].data, locations)}
       <SpotlightInteractive background="#ffffff">
         <Loading active={dataLoading}>
           <LocationComparisonLineChart
