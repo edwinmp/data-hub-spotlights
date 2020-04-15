@@ -3,9 +3,8 @@ import React, { FunctionComponent, useState } from 'react';
 import { SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
 import { LocationComparisonChartDataHandler } from '../LocationComparisonChartDataHandler';
 import { setLocationsQuery } from '../MapSection/utils';
-import { SpaceSectionBottom } from '../SpaceSectionBottom';
+import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightFilters } from '../SpotlightFilters';
-import { SpotlightInteractive } from '../SpotlightInteractive';
 import { VisualisationSectionMain } from '../VisualisationSection';
 
 interface ComponentProps {
@@ -30,7 +29,7 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ location
 
   return (
     <>
-      <SpaceSectionBottom>
+      <SpotlightBanner>
         <SpotlightFilters
           themes={props.themes}
           onOptionsChange={onFilterChange}
@@ -40,16 +39,14 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ location
           indicatorClassName="form-field--inline-three"
           yearClassName="hide"
         />
-      </SpaceSectionBottom>
+      </SpotlightBanner>
       {selections.indicator ? (
         <VisualisationSectionMain>
-          <SpotlightInteractive background="#ffffff">
-            <LocationComparisonChartDataHandler
-              countryCode={props.countryCode}
-              locations={locations}
-              indicator={selections.indicator}
-            />
-          </SpotlightInteractive>
+          <LocationComparisonChartDataHandler
+            countryCode={props.countryCode}
+            locations={locations}
+            indicator={selections.indicator}
+          />
         </VisualisationSectionMain>
       ) : null}
     </>
