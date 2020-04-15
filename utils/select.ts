@@ -29,24 +29,33 @@ const createIndicatorOptionsFromTheme = (theme: SpotlightTheme): SelectOptions =
 };
 
 // TODO: exclude specified years
-export const createYearOptionsFromRange = (startYear = 0, endYear = 0, _exclude?: number[]): SelectOptions => {
+export const createYearOptionsFromRange = (startYear = 0, endYear = 0, excludedYear: number[]): SelectOptions => {
   const options: SelectOption[] = [];
   if (startYear || endYear) {
     const difference = Math.abs(endYear - startYear);
     for (let i = 0; i <= difference; i++) {
       const year = startYear + i;
-      options.push({ value: `${year}`, label: `${year}` });
+      if (excludedYear) {
+        if (!excludedYear.includes(year)) {
+          options.push({ value: `${year}`, label: `${year}` });
+        }
+      }
     }
   }
 
   return options;
 };
 
-export const createYearOptionsFromIndicator = ({ start_year, end_year }: SpotlightIndicator): SelectOptions => {
+export const createYearOptionsFromIndicator = ({
+  start_year,
+  end_year,
+  excluded_years
+}: SpotlightIndicator): SelectOptions => {
   const startYear = start_year || end_year || 0;
   const endYear = end_year || start_year || 0;
+  const excludedYear = excluded_years || [];
 
-  return createYearOptionsFromRange(startYear, endYear);
+  return createYearOptionsFromRange(startYear, endYear, excludedYear);
 };
 
 export const parseIndicatorToOption = (indicator: SpotlightIndicator): SelectOption => ({
