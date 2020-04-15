@@ -1,17 +1,18 @@
-import React, { FunctionComponent, useEffect } from 'react';
-import { LocationIndicatorData, SpotlightLocation, LocationData, SpotlightIndicator } from '../../utils';
+import React, { FunctionComponent, useEffect, ReactNode } from 'react';
+import { LocationIndicatorData, SpotlightLocation, LocationData, SpotlightIndicator, toCamelCase } from '../../utils';
 import { LocationComparisonLineChart, FormattedData } from '../LocationComparisonLineChart';
 import { groupBy } from 'underscore';
 import { useDDWData, DataLoaderProps } from '../DDWDataLoader';
 import { parseIndicator } from '../MapSection/utils';
 import { Loading } from '../Loading';
+import { SpotlightInteractive } from '../SpotlightInteractive';
+import { Alert } from '../Alert';
 
 interface ComponentProps {
   data?: LocationIndicatorData; // TODO: remove
   indicator: SpotlightIndicator;
   locations: SpotlightLocation[];
   countryCode: string;
-  foundMissingData: (show: boolean, location: SpotlightLocation[]) => void;
 }
 
 const getYears = (data: LocationData[]): number[] =>
@@ -36,27 +37,22 @@ const processData = (data: LocationData[]): FormattedData => {
   return groupedByYear;
 };
 
-const getMissingData = (
-  data: LocationIndicatorData[],
-  locations: SpotlightLocation[]
-): SpotlightLocation[] | undefined => {
-  return locations.filter(obj => {
-    const match =
-      data.length > 0
-        ? data[0].data.find((s: { geocode: any }) => {
-            return s.geocode === obj.geocode;
-          })
-        : [];
+const renderMissingDataAlert = (data: LocationData[], locations: SpotlightLocation[]): ReactNode => {
+  const noDataLocations = locations
+    .filter(location => !data.find(_data => _data.geocode === location.geocode))
+    .map(location => toCamelCase(location.name));
 
-    return match ? false : true;
-  });
+  return noDataLocations.length ? (
+    <div>
+      <Alert variant="notice">For this indicator, we do not have data for {noDataLocations.join(', ')}</Alert>
+      <style jsx>{`
+        padding-bottom: 8px;
+      `}</style>
+    </div>
+  ) : null;
 };
 
-const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
-  indicator,
-  locations,
-  foundMissingData
-}) => {
+const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ indicator, locations }) => {
   const valueOptions = {
     dataFormat: indicator.data_format,
     prefix: indicator.value_prefix,
@@ -64,35 +60,40 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
   };
 
   if (!locations || locations.length === 0) {
-    return <LocationComparisonLineChart years={[]} data={{}} height={'500px'} valueOptions={valueOptions} />;
+    return (
+      <SpotlightInteractive background="#ffffff">
+        <LocationComparisonLineChart years={[]} data={{}} height={'500px'} valueOptions={valueOptions} />
+      </SpotlightInteractive>
+    );
   }
 
   const { data, dataLoading, setOptions } = useDDWData(getDataLoaderOptions(indicator, locations));
   useEffect(() => {
     setOptions(getDataLoaderOptions(indicator, locations));
   }, [locations, indicator]);
-  useEffect(() => {
-    const isDataMissing = getMissingData(data ? data : [], locations);
-    if (isDataMissing && isDataMissing.length > 0) {
-      foundMissingData(true, isDataMissing);
-    } else {
-      foundMissingData(false, []);
-    }
-  }, [data, locations]);
 
   if (!data) {
-    return <LocationComparisonLineChart years={[]} data={{}} height={'500px'} valueOptions={valueOptions} />;
+    return (
+      <SpotlightInteractive background="#ffffff">
+        <LocationComparisonLineChart years={[]} data={{}} height={'500px'} valueOptions={valueOptions} />
+      </SpotlightInteractive>
+    );
   }
 
   return (
-    <Loading active={dataLoading}>
-      <LocationComparisonLineChart
-        years={getYears(data[0].data)}
-        data={processData(data[0].data)}
-        height={'500px'}
-        valueOptions={valueOptions}
-      />
-    </Loading>
+    <>
+      {renderMissingDataAlert(data[0].data, locations)}
+      <SpotlightInteractive background="#ffffff">
+        <Loading active={dataLoading}>
+          <LocationComparisonLineChart
+            years={getYears(data[0].data)}
+            data={processData(data[0].data)}
+            height={'500px'}
+            valueOptions={valueOptions}
+          />
+        </Loading>
+      </SpotlightInteractive>
+    </>
   );
 };
 
