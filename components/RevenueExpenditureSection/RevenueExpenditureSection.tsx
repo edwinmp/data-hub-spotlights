@@ -130,7 +130,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
               options={createYearOptionsFromRange(
                 indicator.start_year,
                 indicator.end_year,
-                indicator.excluded_years as number[]
+                indicator.excluded_years as string
               )}
               value={year ? { label: `${year}`, value: `${year}` } : null}
               onChange={onSelectYear}
