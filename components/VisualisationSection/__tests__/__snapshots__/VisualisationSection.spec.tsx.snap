@@ -17,6 +17,7 @@ exports[`VisualisationSection renders only SpotlightSidebar & VisualisationSecti
       jsx={true}
     >
       
+        overflow: visible;
         
         
       
@@ -29,7 +30,7 @@ exports[`VisualisationSection renders only SpotlightSidebar & VisualisationSecti
       jsx={true}
     >
       
-      .spotlight__main :global(.leaflet-container) {
+      .spotlight__main {
         background: inherit;
       }
       

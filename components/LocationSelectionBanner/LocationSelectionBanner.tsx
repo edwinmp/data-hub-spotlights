@@ -1,10 +1,10 @@
-import React, { FunctionComponent, useEffect, useState, CSSProperties } from 'react';
+import React, { CSSProperties, FunctionComponent, useEffect, useState } from 'react';
+import { OptionTypeBase, Styles, ValueType } from 'react-select';
 import { createLocationOptions, getBoundariesByCountryCode, SpotlightBoundary, SpotlightLocation } from '../../utils';
 import { BoundaryMenu } from '../BoundaryMenu';
 import { AsyncSelect, SelectOption, SelectOptions } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain } from '../SpotlightBanner';
 import { MenuListItem } from '../SpotlightMenu';
-import { ValueType, OptionTypeBase, Styles } from 'react-select';
 
 interface LocationSelectionBannerProps {
   countryCode: string;
@@ -13,6 +13,7 @@ interface LocationSelectionBannerProps {
   defaultLocation?: SpotlightLocation;
   onSelectLocation: (location?: SpotlightLocation) => void;
   selectStyles?: Partial<Styles>;
+  heading?: string;
 }
 
 const noOptionsMessage = (obj: { inputValue: string }): string =>
@@ -40,6 +41,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
 
   return (
     <SpotlightBanner className={props.className}>
+      {props.heading ? <h3 className="spotlight-banner__heading">{props.heading}</h3> : null}
       <SpotlightBannerAside>
         <BoundaryMenu
           countryName={props.countryName}

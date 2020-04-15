@@ -27,3 +27,9 @@ export const toCamelCase = (text: string): string => {
 
   return textArray.join('');
 };
+
+export const getSlugFromURL = (url: string): string => {
+  const urlBits = url.split('/').filter(slug => !!slug);
+
+  return urlBits[urlBits.length - 1];
+};

@@ -2,7 +2,7 @@
 
 exports[`Hero renders correctly 1`] = `
 <section
-  className="hero hero--minor"
+  className="hero hero--spotlight hero--minor"
 >
   <span
     className="hero__flourish"
@@ -55,7 +55,7 @@ exports[`Hero renders correctly 1`] = `
 
 exports[`Hero renders without an excerpt when one is not provided 1`] = `
 <section
-  className="hero hero--minor"
+  className="hero hero--spotlight hero--minor"
 >
   <span
     className="hero__flourish"

@@ -1,7 +1,10 @@
-import { EChartOption } from 'echarts';
+import { EChartOption, EChartsMediaOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
+import { toCamelCase } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
 import { toBasicAxisData } from '../EChartsBaseChart/utils';
+import { formatNumber, addPrefixAndSuffix, ValueOptions } from '../../utils';
+import { formatSeries } from '../ComparisonChartDataHandler/utils';
 
 interface LocationComparisonChartProps {
   labels?: string[];
@@ -10,9 +13,10 @@ interface LocationComparisonChartProps {
     data: [number[], number[]];
   };
   height?: string;
+  valueOptions: ValueOptions[];
 }
 
-const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = props => {
+const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps> = ({ valueOptions, ...props }) => {
   if (!props.series || !props.labels) {
     return <div>No Data</div>;
   }
@@ -23,18 +27,34 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
       trigger: 'axis',
       axisPointer: {
         type: 'shadow'
+      },
+
+      formatter: (params: EChartOption.Tooltip.Format[]): string => {
+        const { seriesName, name, seriesIndex, value } = params[0];
+
+        return seriesIndex === 1
+          ? formatSeries(name, seriesName, value as number, valueOptions[1])
+          : formatSeries(name, seriesName, value as number, valueOptions[0]);
       }
     },
     xAxis: [
       {
         type: 'value',
-        position: 'top'
+        position: 'top',
+        axisLabel: {
+          formatter: (value: number): string =>
+            value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[0])
+        }
       },
       {
         type: 'value',
         gridIndex: 1,
         position: 'top',
-        inverse: true
+        inverse: true,
+        axisLabel: {
+          formatter: (value: number): string =>
+            value === 0 ? '0' : addPrefixAndSuffix(formatNumber(value, 0), valueOptions[1])
+        }
       }
     ],
     yAxis: [
@@ -47,11 +67,17 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
         type: 'category',
         gridIndex: 1,
         data: toBasicAxisData(props.labels),
-        offset: 20,
-        axisTick: { show: false }
+        offset: 5,
+        axisTick: { show: false },
+        axisLabel: {
+          formatter: (value: string): string => toCamelCase(value)
+        }
       }
     ],
-    grid: [{ left: '50%' }, { right: '50%' }],
+    grid: [
+      { left: '55%', right: 20 },
+      { right: '45%', left: '12%' }
+    ],
     color: ['#0089cc', '#eb642b'], // TODO: perhaps configure these in CMS
     series: [
       {
@@ -71,7 +97,62 @@ const LocationComparisonBarChart: FunctionComponent<LocationComparisonChartProps
     ] as EChartOption.SeriesBar[]
   };
 
-  return <EChartsBaseChart options={options} height={props.height} />;
+  // Options for larger screen devices
+  const lgOptions: EChartsMediaOption = {
+    query: { minWidth: 700 },
+    option: {
+      grid: [
+        { left: '55%', right: 20 },
+        { right: '45%', left: '12%' }
+      ],
+      yAxis: [{}, { axisLabel: { fontSize: 12 } }]
+    }
+  };
+  // Options for large screen devices
+  const mdOptions: EChartsMediaOption = {
+    query: { maxWidth: 700 },
+    option: {
+      grid: [
+        { left: '60%', right: 20 },
+        { right: '40%', left: '18%' }
+      ],
+      yAxis: [{}, { axisLabel: { fontSize: 12 } }]
+    }
+  };
+  // Options for medium sized devices
+  const smOptions: EChartsMediaOption = {
+    query: { maxWidth: 500 },
+    option: {
+      grid: [
+        { left: '60%', right: 20 },
+        { right: '40%', left: '25%' }
+      ],
+      yAxis: [{}, { axisLabel: { fontSize: 12 } }]
+    }
+  };
+  // Options for small screen devices
+  const xsOptions: EChartsMediaOption = {
+    query: { maxWidth: 400 },
+    option: {
+      grid: [
+        { left: '60%', right: 20 },
+        { right: '40%', left: '25%' }
+      ],
+      yAxis: [
+        {},
+        {
+          axisLabel: {
+            padding: -10,
+            fontSize: 10
+          }
+        }
+      ]
+    }
+  };
+
+  const media: EChartsMediaOption[] = [lgOptions, mdOptions, smOptions, xsOptions];
+
+  return <EChartsBaseChart options={options} height={props.height} media={media} />;
 };
 
 export { LocationComparisonBarChart };

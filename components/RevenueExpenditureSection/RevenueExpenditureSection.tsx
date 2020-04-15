@@ -51,11 +51,12 @@ const renderPaddedAlert = (message: string): ReactNode => (
 );
 
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
+  const [retryCount, setRetryCount] = useState(0);
   const [useLocalValue, setUseLocalValue] = useState(false);
-  const [year, setYear] = useState<number | undefined>(indicator.start_year && indicator.start_year);
+  const [year, setYear] = useState<number | undefined>(indicator.end_year && indicator.end_year);
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
   const [selectedBudgetType, setSelectedBudgetType] = useState<BudgetType | undefined>(undefined);
-  const { data, dataLoading, options, setOptions, error } = useRevenueExpenditureData(
+  const { data, dataLoading, options, setOptions, refetch, error } = useRevenueExpenditureData(
     {
       indicators: [indicator.ddw_id],
       geocodes: location ? [location.geocode] : [props.countryCode],
@@ -69,7 +70,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       geocodes: location ? [location.geocode] : [props.countryCode],
       indicators: [indicator.ddw_id]
     });
-    setYear(indicator.start_year);
+    setYear(indicator.end_year);
   }, [location]);
   useEffect(() => {
     if (!dataLoading && year && data.hasOwnProperty(year)) {
@@ -77,7 +78,21 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setBudgetTypes(_budgetTypes);
       setSelectedBudgetType(_budgetTypes[0]);
     }
+    if (retryCount > 0 && !dataLoading) {
+      setRetryCount(0);
+    }
   }, [dataLoading]);
+  useEffect(() => {
+    if (error) {
+      const { message } = error;
+      if (message.includes('relation') && message.includes('does not exist') && retryCount === 0 && refetch) {
+        refetch();
+        setRetryCount(retryCount + 1);
+      }
+    } else if (retryCount > 0) {
+      setRetryCount(0);
+    }
+  }, [error]);
 
   const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
   const onSelectYear = (option?: SelectOption): void => {
@@ -112,7 +127,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
           <FormField className="form-field--inline">
             <FormFieldSelect
               label="Year"
-              options={createYearOptionsFromRange(indicator.start_year, indicator.end_year)}
+              options={createYearOptionsFromRange(indicator.start_year, indicator.end_year, indicator.excluded_years)}
               value={year ? { label: `${year}`, value: `${year}` } : null}
               onChange={onSelectYear}
             />
@@ -141,27 +156,33 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
       <VisualisationSection>
         <SpotlightSidebar>
-          <SpotlightInteractive>
+          <SpotlightInteractive background="#ffffff">
             {error ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (
               <Loading active={dataLoading}>
-                <RevenueExpenditureLineChart
-                  data={data}
-                  budgetType={selectedBudgetType}
-                  valueOptions={{
-                    dataFormat: 'currency',
-                    useLocalValue,
-                    prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
-                    suffix: indicator.value_suffix
-                  }}
-                />
+                <div>
+                  <RevenueExpenditureLineChart
+                    data={data}
+                    budgetType={selectedBudgetType}
+                    valueOptions={{
+                      dataFormat: 'currency',
+                      useLocalValue,
+                      prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                      suffix: indicator.value_suffix
+                    }}
+                    selectedYear={year}
+                  />
+                  <style jsx>{`
+                    padding: 0 10px;
+                  `}</style>
+                </div>
               </Loading>
             )}
           </SpotlightInteractive>
         </SpotlightSidebar>
         <VisualisationSectionMain>
-          <SpotlightInteractive>
+          <SpotlightInteractive background="#ffffff">
             {error ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (

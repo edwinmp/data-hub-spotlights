@@ -6,12 +6,12 @@ import { LocationData, formatNumber, addPrefixAndSuffix, ValueOptions } from '..
 
 interface ComponentProps {
   years: (string | number)[];
-  data: FormatedData;
+  data: FormattedData;
   height?: string;
   valueOptions: ValueOptions;
 }
 
-type FormatedData = { [location: string]: { [year: string]: LocationData[] } };
+export type FormattedData = { [location: string]: { [year: string]: LocationData[] } };
 
 const LocationComparisonLineChart: FunctionComponent<ComponentProps> = props => {
   const options: EChartOption<EChartOption.SeriesLine | EChartOption.SeriesBar> = {
@@ -36,7 +36,7 @@ const LocationComparisonLineChart: FunctionComponent<ComponentProps> = props => 
     xAxis: {
       data: toBasicAxisData(props.years ? props.years : []),
       interval: props.years.length <= 12 ? 1 : 4,
-      boundaryGap: false
+      boundaryGap: props.years.length <= 2
     },
     yAxis: {
       axisLabel: {
@@ -54,7 +54,7 @@ const LocationComparisonLineChart: FunctionComponent<ComponentProps> = props => 
     }))
   };
 
-  return <EChartsBaseChart options={options} height={props.height} />;
+  return <EChartsBaseChart options={options} height={props.height} notMerge={true} />;
 };
 
 LocationComparisonLineChart.defaultProps = { height: '500px' };

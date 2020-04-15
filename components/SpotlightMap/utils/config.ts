@@ -28,7 +28,7 @@ export const config: { [key: string]: MapConfig } = {
         zoom: 6.1,
         minZoom: 5,
         maxZoom: 8,
-        nameProperty: 'DName2016',
+        nameProperty: 'DName2019',
         codeProperty: 'dc2018',
         formatter: (value: string): string => value.toUpperCase()
       }

@@ -16,6 +16,7 @@ app
   .prepare()
   .then(() => {
     const server = express();
+    server.get('/', (_req, res) => res.redirect('https://devinit.org/data/')); // TODO: change this to the country spotlights page
     server.get('/bitly', (req, res) => {
       const parsedUrl = parse(req.url as string, true);
       const { query } = parsedUrl;

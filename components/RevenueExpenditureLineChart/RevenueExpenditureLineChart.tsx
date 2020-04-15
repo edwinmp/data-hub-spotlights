@@ -1,4 +1,4 @@
-import { EChartOption } from 'echarts';
+import { EChartOption, EChartsMediaOption } from 'echarts';
 import React, { FunctionComponent } from 'react';
 import { BudgetType, formatNumber, ValueOptions, addPrefixAndSuffix } from '../../utils';
 import { EChartsBaseChart } from '../EChartsBaseChart';
@@ -9,6 +9,7 @@ interface ComponentProps {
   budgetType?: BudgetType;
   height?: string;
   valueOptions: ValueOptions;
+  selectedYear?: number;
 }
 
 /**
@@ -40,14 +41,22 @@ const formatData = (data: YearData, budgetType?: BudgetType, useLocalCurrency = 
   return formattedData;
 };
 
-const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueOptions, ...props }) => {
+const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueOptions, selectedYear, ...props }) => {
   const data = formatData(props.data, props.budgetType, valueOptions.useLocalValue);
 
-  const options: EChartOption = {
+  const options: EChartOption<EChartOption.SeriesLine> = {
     legend: { show: false },
     tooltip: {
       trigger: 'axis',
-      axisPointer: { type: 'shadow' },
+      axisPointer: {
+        type: 'shadow',
+        label: {
+          show: true,
+          backgroundColor: '#E84439',
+          formatter: ({ axisDimension, value }: { axisDimension: 'x' | 'y'; value: number }): string =>
+            axisDimension === 'x' ? `${value}` : `${formatNumber(value)}`
+        }
+      },
       formatter: (params: EChartOption.Tooltip.Format[]): string => {
         const { value } = params[0] as { value: [number, number] };
 
@@ -64,7 +73,7 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueO
       interval: data && data.length <= 12 ? 1 : 4
     },
     yAxis: {
-      splitLine: { show: true },
+      splitLine: { show: false },
       axisLabel: {
         formatter: (value: number): string => {
           return formatNumber(value, 0);
@@ -75,12 +84,43 @@ const RevenueExpenditureLineChart: FunctionComponent<ComponentProps> = ({ valueO
       {
         type: 'line',
         data,
-        showSymbol: false
+        showSymbol: false,
+        connectNulls: true,
+        smooth: true,
+        symbol: 'circle',
+        markArea:
+          typeof selectedYear !== 'undefined'
+            ? {
+                label: {
+                  show: true,
+                  backgroundColor: '#E84439',
+                  padding: 8,
+                  color: '#fff'
+                },
+                data: [[{ name: `${selectedYear}`, xAxis: selectedYear - 0.5 }, { xAxis: selectedYear + 0.5 }]] as any // eslint-disable-line @typescript-eslint/no-explicit-any
+              }
+            : undefined
       }
     ]
   };
+  // Options for medium & large sized devices
+  const mdOptions: EChartsMediaOption = {
+    query: { minWidth: 450 },
+    option: {
+      grid: { left: '10%' }
+    }
+  };
+  // Options for small screen devices
+  const xsOptions: EChartsMediaOption = {
+    query: { maxWidth: 350 },
+    option: {
+      grid: { left: '15%' }
+    }
+  };
 
-  return <EChartsBaseChart options={options} height={props.height} />;
+  const media: EChartsMediaOption[] = [mdOptions, xsOptions];
+
+  return <EChartsBaseChart options={options} height={props.height} media={media} />;
 };
 
 RevenueExpenditureLineChart.defaultProps = { height: '500px' };

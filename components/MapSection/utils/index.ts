@@ -36,7 +36,7 @@ export const getIndicatorColours = (indicator?: SpotlightIndicator, range?: stri
 export const getDataPrefix = (options: SpotlightOptions): string | undefined =>
   options.indicator && `${options.indicator.name}: ${options.indicator.value_prefix || ''}`;
 export const getDataSuffix = ({ indicator, year }: SpotlightOptions): string | undefined =>
-  indicator ? (year ? `${indicator.value_suffix} in ${year}` : indicator.value_suffix || '') : undefined;
+  indicator ? (year ? `${indicator.value_suffix || ''} in ${year}` : indicator.value_suffix || '') : undefined;
 
 export const setQuery = (router: NextRouter, options: SpotlightOptions, location?: SpotlightLocation): void => {
   const { route, push } = router;
@@ -45,6 +45,23 @@ export const setQuery = (router: NextRouter, options: SpotlightOptions, location
   if (location) {
     as = `${as}&${LOCATION_CODE_QUERY}=${location.geocode}&${LOCATION_NAME_QUERY}=${location.name.toLowerCase()}`;
     push(route, as, { shallow: true });
+  } else {
+    push(route, as, { shallow: true });
+  }
+};
+
+export const setLocationsQuery = (
+  router: NextRouter,
+  options: SpotlightOptions,
+  locations?: SpotlightLocation[]
+): void => {
+  const { route, push } = router;
+  const { pathname } = window.location;
+  const as = `${pathname}?${THEME_QUERY}=${options.theme?.slug}&${INDICATOR_QUERY}=${options.indicator?.ddw_id}&${YEAR_QUERY}=${options.year}`;
+  if (locations && locations.length > 0) {
+    const lc = locations.map(location => location.geocode).join();
+    const ln = locations.map(location => location.name).join();
+    push(route, `${as}&${LOCATION_CODE_QUERY}=${lc}&${LOCATION_NAME_QUERY}=${ln}`, { shallow: true });
   } else {
     push(route, as, { shallow: true });
   }

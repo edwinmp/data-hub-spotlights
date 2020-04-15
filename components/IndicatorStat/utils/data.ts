@@ -108,7 +108,7 @@ const aggregateProcessedData = (data: ProcessedData[], options: ValueOptions): n
 };
 
 const processMultipleData = (data: LocationData[], options: ValueOptions = { dataFormat: 'plain' }): string => {
-  const sortedData = data.sort((a, b) => a.year - b.year);
+  const sortedData = data.slice().sort((a, b) => a.year - b.year);
   const latest = sortedData.filter(d => d.year === sortedData[data.length - 1].year);
   if (latest && latest.length > 1) {
     const _data = getOneFromMultipleBudgetTypes(data);

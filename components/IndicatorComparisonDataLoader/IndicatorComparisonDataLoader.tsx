@@ -9,8 +9,6 @@ interface ComponentProps {
   loading?: boolean;
 }
 
-// type LocData = LocationIndicatorData;
-
 const IndicatorComparisonDataLoader: FunctionComponent<ComponentProps> = ({ options: selectOptions, ...props }) => {
   const indicators = selectOptions.map(option => parseIndicator(option.indicator as SpotlightIndicator) as string);
   const geocodes = props.locations.map(location => location.geocode);

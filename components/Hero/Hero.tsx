@@ -1,13 +1,14 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, Children, isValidElement } from 'react';
+import { HeroAside } from './HeroAside';
 
 interface HeroProps {
   title: string;
   excerpt?: string;
 }
 
-const Hero: FunctionComponent<HeroProps> = ({ excerpt, title }) => {
+const Hero: FunctionComponent<HeroProps> = ({ children, excerpt, title }) => {
   return (
-    <section className="hero hero--minor">
+    <section className="hero hero--spotlight hero--minor">
       <span className="hero__flourish" />
       <span className="hero__flourish" />
       <span className="hero__flourish" />
@@ -27,6 +28,7 @@ const Hero: FunctionComponent<HeroProps> = ({ excerpt, title }) => {
             </p>
           ) : null}
         </div>
+        {Children.map(children, child => (isValidElement(child) && child.type === HeroAside ? child : null))}
       </div>
     </section>
   );

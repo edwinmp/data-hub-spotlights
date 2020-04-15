@@ -165,7 +165,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       ]);
       _map.setPaintProperty(options.layerName, 'fill-color', '#d1d1d1');
       if (props.locationHandling === 'flyto') {
-        flyToLocation(_map, props.location.name, options);
+        setTimeout(() => flyToLocation(_map, props.location?.name as string, options), 500);
       }
     }
   };
@@ -194,7 +194,21 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       );
     }
 
-    return <BaseMapLayer id={COLOURED_LAYER} show={false} />;
+    return (
+      <BaseMapLayer
+        id={COLOURED_LAYER}
+        source="composite"
+        source-layer={options.sourceLayer}
+        maxzoom={options.maxZoom && options.maxZoom + 1}
+        type="fill"
+        paint={{
+          'fill-color': '#D1CBCF',
+          'fill-opacity': 0.75,
+          'fill-outline-color': '#ffffff'
+        }}
+        onAdd={onAddLayer}
+      />
+    );
   };
 
   return (
@@ -206,9 +220,10 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           center: options.center,
           minZoom: options.minZoom || 6,
           zoom: options.zoom || 6.1,
-          maxZoom: options.maxZoom || 7
+          maxZoom: options.maxZoom || 7,
+          scrollZoom: false
         }}
-        style={{ width: '100%' }}
+        style={{ width: '100%', background: '#ffffff' }}
         onLoad={onLoad}
       >
         {renderLayers()}

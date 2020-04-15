@@ -1,10 +1,11 @@
 /**
  * @jest-environment jsdom
  */
+/* eslint-disable @typescript-eslint/camelcase */
 import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import * as TestRenderer from 'react-test-renderer';
-// import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { PrimaryNavigation } from '../PrimaryNavigation';
 import { NavigationItem } from '../../DefaultLayout';
 
@@ -28,5 +29,25 @@ describe('PrimaryNavigation', () => {
     const renderer = TestRenderer.create(<PrimaryNavigation items={items} />).toJSON();
 
     expect(renderer).toMatchSnapshot();
+  });
+
+  test('adds & removes necessary classes on button toggle', () => {
+    const { getByTestId } = render(<PrimaryNavigation items={items} />);
+
+    const button = getByTestId('navigation-primary-toggle');
+    const nav = getByTestId('navigation-primary');
+
+    expect(button).not.toHaveClass('navigation-primary-toggle--active');
+    expect(nav).not.toHaveClass('navigation-primary--active');
+
+    fireEvent.click(button);
+
+    expect(button).toHaveClass('navigation-primary-toggle--active');
+    expect(nav).toHaveClass('navigation-primary--active');
+
+    fireEvent.click(button);
+
+    expect(button).not.toHaveClass('navigation-primary-toggle--active');
+    expect(nav).not.toHaveClass('navigation-primary--active');
   });
 });

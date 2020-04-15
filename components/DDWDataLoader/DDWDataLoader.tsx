@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import React, { Children, cloneElement, FunctionComponent, isValidElement, ReactNode } from 'react';
 import { DataFilter, GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
 import { Alert } from '../Alert';

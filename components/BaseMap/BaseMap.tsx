@@ -108,7 +108,8 @@ BaseMap.defaultProps = {
     minZoom: 6,
     zoom: 6.1
   },
-  showNavigationControls: true
+  showNavigationControls: true,
+  background: 'inherit'
 };
 
 export { BaseMap };
