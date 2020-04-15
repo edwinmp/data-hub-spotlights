@@ -55,7 +55,7 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
 
   return (
     <>
-      <PageSection>
+      <PageSection narrow>
         <PageSectionHeading>Location Comparison</PageSectionHeading>
         <LocationComparisonBanner
           countryName={countryName}
@@ -66,7 +66,7 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
         />
       </PageSection>
       {_times(chartCount, (index: number) => (
-        <PageSection key={index}>
+        <PageSection narrow key={index}>
           <Spotlight className="spotlight--full">
             <LocationComparisonWrapper
               themes={themes}
@@ -79,7 +79,7 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
         </PageSection>
       ))}
       {chartCount ? (
-        <PageSection>
+        <PageSection narrow>
           <ButtonBanner onClick={onAddComparison} className="m-text-link add-location-link">
             <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
             <span>Add another comparison</span>
@@ -87,7 +87,7 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
         </PageSection>
       ) : null}
       {chartCount ? (
-        <PageSection>
+        <PageSection narrow>
           <SpotlightShare countryName={countryName} />
         </PageSection>
       ) : null}
