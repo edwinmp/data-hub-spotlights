@@ -29,11 +29,7 @@ const createIndicatorOptionsFromTheme = (theme: SpotlightTheme): SelectOptions =
 };
 
 // TODO: exclude specified years
-export const createYearOptionsFromRange = (
-  startYear = 0,
-  endYear = 0,
-  excludedYears: string | undefined
-): SelectOptions => {
+export const createYearOptionsFromRange = (startYear = 0, endYear = 0, excludedYears?: string): SelectOptions => {
   const options: SelectOption[] = [];
   if (startYear || endYear) {
     const difference = Math.abs(endYear - startYear);
