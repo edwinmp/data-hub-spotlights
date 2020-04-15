@@ -36,7 +36,7 @@ export const getIndicatorColours = (indicator?: SpotlightIndicator, range?: stri
 export const getDataPrefix = (options: SpotlightOptions): string | undefined =>
   options.indicator && `${options.indicator.name}: ${options.indicator.value_prefix || ''}`;
 export const getDataSuffix = ({ indicator, year }: SpotlightOptions): string | undefined =>
-  indicator ? (year ? `${indicator.value_suffix} in ${year}` : indicator.value_suffix || '') : undefined;
+  indicator ? (year ? `${indicator.value_suffix || ''} in ${year}` : indicator.value_suffix || '') : undefined;
 
 export const setQuery = (router: NextRouter, options: SpotlightOptions, location?: SpotlightLocation): void => {
   const { route, push } = router;

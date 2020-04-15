@@ -1,5 +1,5 @@
 import { Map, MapboxGeoJSONFeature, MapMouseEvent, Popup } from 'mapbox-gl';
-import { LocationData } from '../../../utils';
+import { LocationData, formatNumber } from '../../../utils';
 
 type LocationStyle = [string | number, string];
 
@@ -45,9 +45,9 @@ export type TooltipEvent = MapMouseEvent & { features?: MapboxGeoJSONFeature[] }
 
 const getTooltipValue = (options: TooltipOptions, location?: LocationData): string =>
   location && location.value
-    ? `${options.dataPrefix}<span style="font-size: 1em; font-weight: 700; color:#EA7600">${location.value.toFixed(
-        1
-      )}</span>${options.dataSuffix}`
+    ? `${options.dataPrefix || ''}<span style="font-size: 1em; font-weight: 700; color:#EA7600">${formatNumber(
+        location.value
+      )}</span>${options.dataSuffix || ''}`
     : 'No Data';
 
 export const getLocationNameFromEvent = (event: TooltipEvent, nameProperty: string): string | null => {
