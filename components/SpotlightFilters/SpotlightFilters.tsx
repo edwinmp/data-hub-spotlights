@@ -67,10 +67,9 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultInde
   const filteredYears = () => {
     const excludedYear = activeIndicator?.excluded_years;
     if (excludedYear && years) {
-      const filteredYears = years.filter(year => year.label !== '2004' && year.label !== '2008');
-      console.log(filteredYears);
+      const filteredArray = years.filter(year => !excludedYear.split(',').includes(year.label));
 
-      return filteredYears;
+      return filteredArray;
     } else {
       return years;
     }

@@ -132,8 +132,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                   position: absolute;
                   top: 1.75em;
                   z-index: 20;
-                  left: 1.4em;Choose a year
-
+                  left: 1.4em;
                 `}</style>
               </div>
             ) : null}
