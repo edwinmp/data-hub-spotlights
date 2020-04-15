@@ -1,12 +1,12 @@
-import React, { FunctionComponent, useEffect, ReactNode } from 'react';
-import { LocationIndicatorData, SpotlightLocation, LocationData, SpotlightIndicator, toCamelCase } from '../../utils';
-import { LocationComparisonLineChart, FormattedData } from '../LocationComparisonLineChart';
+import React, { FunctionComponent, ReactNode, useEffect } from 'react';
 import { groupBy } from 'underscore';
-import { useDDWData, DataLoaderProps } from '../DDWDataLoader';
-import { parseIndicator } from '../MapSection/utils';
-import { Loading } from '../Loading';
-import { SpotlightInteractive } from '../SpotlightInteractive';
+import { LocationData, LocationIndicatorData, SpotlightIndicator, SpotlightLocation, toCamelCase } from '../../utils';
 import { Alert } from '../Alert';
+import { DataLoaderProps, useDDWData } from '../DDWDataLoader';
+import { Loading } from '../Loading';
+import { FormattedData, LocationComparisonLineChart } from '../LocationComparisonLineChart';
+import { parseIndicator } from '../MapSection/utils';
+import { SpotlightInteractive } from '../SpotlightInteractive';
 
 interface ComponentProps {
   data?: LocationIndicatorData; // TODO: remove
