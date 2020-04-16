@@ -1,6 +1,12 @@
 import React, { CSSProperties, FunctionComponent, useEffect, useState } from 'react';
 import { OptionTypeBase, Styles, ValueType } from 'react-select';
-import { createLocationOptions, getBoundariesByCountryCode, SpotlightBoundary, SpotlightLocation } from '../../utils';
+import {
+  createLocationOptions,
+  getBoundariesByCountryCode,
+  SpotlightBoundary,
+  SpotlightLocation,
+  sortBoundariesByName
+} from '../../utils';
 import { BoundaryMenu } from '../BoundaryMenu';
 import { AsyncSelect, SelectOption, SelectOptions } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain } from '../SpotlightBanner';
@@ -23,9 +29,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
   const [boundaries, setBoundaries] = useState<SpotlightBoundary[]>([]);
   const [options, setOptions] = useState<SelectOptions>([]);
   useEffect(() => {
-    getBoundariesByCountryCode(props.countryCode).then(boundaries => {
-      setBoundaries(boundaries);
-    });
+    getBoundariesByCountryCode(props.countryCode).then(boundaries => setBoundaries(sortBoundariesByName(boundaries)));
   }, [props.countryCode]);
   useEffect(() => {
     setOptions(createLocationOptions(boundaries, 'd')); // TODO: allow greater depth when sub-county data comes in
