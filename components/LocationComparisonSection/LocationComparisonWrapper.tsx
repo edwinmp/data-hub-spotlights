@@ -6,6 +6,8 @@ import { setLocationsQuery } from '../MapSection/utils';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { VisualisationSectionMain } from '../VisualisationSection';
+import { Button } from '../Button';
+import { Icon } from '../Icon';
 
 interface ComponentProps {
   themes: SpotlightTheme[];
@@ -39,6 +41,10 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ location
           indicatorClassName="form-field--inline-three"
           yearClassName="hide"
         />
+        <Button className="button button--alt button--icon-l">
+          <Icon name="-20 ico-cross-slate" />
+          Remove chart
+        </Button>
       </SpotlightBanner>
       {selections.indicator ? (
         <VisualisationSectionMain>
