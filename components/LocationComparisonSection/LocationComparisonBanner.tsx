@@ -55,7 +55,8 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
           })
         }}
         heading="Add Location"
-      ></LocationSelectionBanner>
+        canReset={false}
+      />
       {locations.length ? (
         <SpotlightBanner>
           <TagList>

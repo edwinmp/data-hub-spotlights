@@ -18,10 +18,11 @@ const SpotlightMenuNav: FunctionComponent<ComponentProps> = ({ active, caption, 
         {caption}
       </a>
       <a
-        className="countries-menu__profile countries-menu__link js-profile-item"
+        className={classNames('countries-menu__profile countries-menu__link js-profile-item', { hide: !onShowAll })}
         aria-hidden="true"
         title={`View ${caption}`}
         onClick={onShowAll}
+        data-testid="spotlight-nav-view"
       >
         View
       </a>

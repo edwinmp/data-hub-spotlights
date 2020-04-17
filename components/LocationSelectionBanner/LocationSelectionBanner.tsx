@@ -20,6 +20,7 @@ interface LocationSelectionBannerProps {
   onSelectLocation: (location?: SpotlightLocation) => void;
   selectStyles?: Partial<Styles>;
   heading?: string;
+  canReset?: boolean;
 }
 
 const noOptionsMessage = (obj: { inputValue: string }): string =>
@@ -52,6 +53,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
           boundaries={boundaries}
           onSelectLocation={onSelectLocation}
           defaultLocation={props.defaultLocation}
+          canReset={props.canReset}
         />
       </SpotlightBannerAside>
       <SpotlightBannerMain>
@@ -62,7 +64,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
               placeholder="Search for a location"
               isLoading={!(options && options.length)}
               chooseTheme="dark"
-              isClearable
+              isClearable={props.canReset}
               defaultOptions
               styles={{
                 dropdownIndicator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
@@ -83,5 +85,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
     </SpotlightBanner>
   );
 };
+
+LocationSelectionBanner.defaultProps = { canReset: true };
 
 export { LocationSelectionBanner };
