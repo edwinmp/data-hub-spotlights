@@ -11,7 +11,9 @@ interface ComponentProps {
   countryCode: string;
   countryName: string;
   themes: SpotlightTheme[];
+  defaultLocations: SpotlightLocation[];
 }
+type P = ComponentProps;
 
 export interface LocationTagProps {
   name: string;
@@ -36,8 +38,10 @@ const generateUniqueRandomID = (existing: string[]): string => {
   return existing.includes(randomID) ? generateUniqueRandomID(existing) : randomID;
 };
 
-const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
-  const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(getQueryLocation() || []);
+const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryName, themes, ...props }) => {
+  const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(
+    getQueryLocation() || props.defaultLocations
+  );
   const [chartIDs, setChartIDs] = useState<string[]>([generateUniqueRandomID([])]);
 
   const addChartID = (): void => {

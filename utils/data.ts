@@ -14,6 +14,7 @@ export interface SpotlightPage {
   datasources_description: string;
   datasource_links: DataSourcesLink[];
   themes: SpotlightTheme[];
+  compare: SpotlightCompareConfigs;
 }
 
 export interface SpotlightTheme {
@@ -41,6 +42,10 @@ export interface SpotlightIndicator {
   content_template: string | null; // this is a JSON string in the format of SpotlightIndicatorContent
   colour?: string;
   source?: string;
+}
+
+export interface SpotlightCompareConfigs {
+  default_locations: SpotlightLocation[];
 }
 
 export interface ContentMeta {
