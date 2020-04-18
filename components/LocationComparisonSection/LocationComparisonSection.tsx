@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, ReactNode, useEffect } from 'react';
 import { times as _times } from 'underscore';
 import { getDefaultsByIndex, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
 import { ButtonBanner } from '../ButtonBanner';
@@ -35,21 +35,44 @@ const getQueryLocation = (): SpotlightLocation[] | undefined => {
 const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
   const { selected: defaultSelected } = getDefaultsByIndex(themes);
   const [selections, setSelections] = useState<SpotlightOptions>(defaultSelected);
-  const [chartCount, setChartCount] = useState<number>(1);
+  const [charts, setCharts] = useState<ReactNode[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(getQueryLocation() || []);
-
   const onFilterChanged = (options: SpotlightOptions): void => {
     setSelections(options);
   };
 
+  const handleRemoveChart = (index: number): void => {
+    setCharts(charts => [...charts.slice(0, index), ...charts.slice(index + 1)]);
+  };
+
+  const renderChart = (index: number): ReactNode => (
+    <PageSection narrow key={index}>
+      <Spotlight className="spotlight--full">
+        <LocationComparisonWrapper
+          themes={themes}
+          locations={selectedLocations}
+          countryCode={countryCode}
+          onFilterChanged={onFilterChanged}
+          options={selections}
+          onRemoveChart={handleRemoveChart}
+          index={index}
+        />
+      </Spotlight>
+    </PageSection>
+  );
+
+  useEffect(() => {
+    setCharts([renderChart(0)]);
+  }, []);
+
   const onAddComparison = (): void => {
-    setChartCount(chartCount + 1);
+    setCharts([...charts, renderChart(charts.length)]);
   };
 
   const onCompare = (locations: SpotlightLocation[]): void => {
     setSelectedLocations(locations);
-    if (!chartCount) {
-      setChartCount(1);
+    if (!charts || charts.length === 0) {
+      setCharts(charts.concat(renderChart(charts.length)));
     }
   };
 
@@ -65,20 +88,8 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
           options={selections}
         />
       </PageSection>
-      {_times(chartCount, (index: number) => (
-        <PageSection narrow key={index}>
-          <Spotlight className="spotlight--full">
-            <LocationComparisonWrapper
-              themes={themes}
-              locations={selectedLocations}
-              countryCode={countryCode}
-              onFilterChanged={onFilterChanged}
-              options={selections}
-            />
-          </Spotlight>
-        </PageSection>
-      ))}
-      {chartCount ? (
+      {charts}
+      {charts.length ? (
         <PageSection narrow>
           <ButtonBanner onClick={onAddComparison} className="m-text-link add-location-link">
             <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
@@ -86,7 +97,7 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
           </ButtonBanner>
         </PageSection>
       ) : null}
-      {chartCount ? (
+      {charts.length ? (
         <PageSection narrow>
           <SpotlightShare countryName={countryName} />
         </PageSection>

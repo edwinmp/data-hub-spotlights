@@ -15,6 +15,8 @@ interface ComponentProps {
   countryCode: string;
   options: SpotlightOptions;
   onFilterChanged: (options: SpotlightOptions) => void;
+  onRemoveChart: (index: number) => void;
+  index: number;
 }
 
 const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ locations, options, ...props }) => {
@@ -41,7 +43,7 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ location
           indicatorClassName="form-field--inline-three"
           yearClassName="hide"
         />
-        <Button className="button button--alt button--icon-l">
+        <Button className="button button--alt button--icon-l" onClick={(): void => props.onRemoveChart(props.index)}>
           <Icon name="-20 ico-cross-slate" />
           Remove chart
         </Button>
