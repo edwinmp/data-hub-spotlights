@@ -42,9 +42,8 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
   };
 
   const handleRemoveChart = (): void => {
-    const newChart = charts;
-    newChart.splice(charts.length, 1);
-    setCharts(newChart);
+    const data = [...charts];
+    setCharts([...data.slice(0, charts.length), ...data.slice(charts.length + 1)]);
   };
 
   const renderChart = (index: number): ReactNode => (
