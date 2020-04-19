@@ -41,8 +41,10 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
     setSelections(options);
   };
 
-  const handleRemoveChart = (index: number): void => {
-    setCharts(charts => [...charts.slice(0, index), ...charts.slice(index + 1)]);
+  const handleRemoveChart = (): void => {
+    const newChart = charts;
+    newChart.splice(charts.length, 1);
+    setCharts(newChart);
   };
 
   const renderChart = (index: number): ReactNode => (
@@ -55,7 +57,6 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
           onFilterChanged={onFilterChanged}
           options={selections}
           onRemoveChart={handleRemoveChart}
-          index={index}
         />
       </Spotlight>
     </PageSection>
