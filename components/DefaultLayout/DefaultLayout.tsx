@@ -1,6 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
 import { NextComponentType } from 'next';
-import { useRouter } from 'next/router';
 import React, { cloneElement, isValidElement, ReactNode, useState } from 'react';
 import { graphClient } from '../../utils';
 import { ErrorBoundary } from '../ErrorBoundary';
@@ -11,7 +10,6 @@ import { NavigationItem, SecondaryNavigation } from '../SecondaryNavigation';
 import { PageScaffoldData } from './types';
 
 const DefaultLayout: NextComponentType = ({ children }) => {
-  const router = useRouter();
   const [data, setData] = useState<PageScaffoldData | undefined>();
 
   const attachDataProp = (component: ReactNode): ReactNode => {
@@ -31,17 +29,17 @@ const DefaultLayout: NextComponentType = ({ children }) => {
             <Hero title={data && data.title ? data.title : ''}>
               <HeroAside>
                 <SecondaryNavigation>
-                  {data && router ? (
+                  {data && location ? (
                     <>
                       <NavigationItem
                         title={data.title || 'Spotlight'}
                         url={`/spotlight/${data.slug || ''}`}
-                        active={!router.pathname.includes('compare')}
+                        active={!location.pathname.includes('compare')}
                       />
                       <NavigationItem
                         title="Location comparison"
                         url={`/spotlight/${data.slug || ''}/compare`}
-                        active={router.pathname.includes('compare')}
+                        active={location.pathname.includes('compare')}
                       />
                     </>
                   ) : null}
