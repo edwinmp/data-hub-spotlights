@@ -1,13 +1,11 @@
 import { useRouter } from 'next/router';
-import React, { FunctionComponent, useState, ReactNode, useEffect } from 'react';
-import { times as _times } from 'underscore';
-import { getDefaultsByIndex, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import React, { cloneElement, FunctionComponent, isValidElement, ReactNode, useState } from 'react';
+import { SpotlightLocation, SpotlightTheme } from '../../utils';
 import { ButtonBanner } from '../ButtonBanner';
 import { PageSection, PageSectionHeading } from '../PageSection';
-import { Spotlight } from '../Spotlight';
-import { LocationComparisonBanner } from './LocationComparisonBanner';
-import { LocationComparisonWrapper } from './LocationComparisonWrapper';
 import { SpotlightShare } from '../SpotlightShare';
+import { LocationComparisonBanner } from './LocationComparisonBanner';
+import LocationComparisonChartSection from './LocationComparisonChartSection';
 
 interface ComponentProps {
   countryCode: string;
@@ -33,40 +31,19 @@ const getQueryLocation = (): SpotlightLocation[] | undefined => {
 };
 
 const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
-  const { selected: defaultSelected } = getDefaultsByIndex(themes);
-  const [selections, setSelections] = useState<SpotlightOptions>(defaultSelected);
-  const [charts, setCharts] = useState<ReactNode[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(getQueryLocation() || []);
-  const onFilterChanged = (options: SpotlightOptions): void => {
-    setSelections(options);
-  };
-
-  const handleRemoveChart = (): void => {
-    const data = [...charts];
-    setCharts([...data.slice(0, charts.length), ...data.slice(charts.length + 1)]);
-  };
-
   const renderChart = (index: number): ReactNode => (
-    <PageSection narrow key={index}>
-      <Spotlight className="spotlight--full">
-        <LocationComparisonWrapper
-          themes={themes}
-          locations={selectedLocations}
-          countryCode={countryCode}
-          onFilterChanged={onFilterChanged}
-          options={selections}
-          onRemoveChart={handleRemoveChart}
-        />
-      </Spotlight>
-    </PageSection>
+    <LocationComparisonChartSection
+      key={index}
+      themes={themes}
+      locations={selectedLocations}
+      countryCode={countryCode}
+    />
   );
+  const [charts, setCharts] = useState<ReactNode[]>([renderChart(0)]);
 
-  useEffect(() => {
-    setCharts([renderChart(0)]);
-  }, []);
-
-  const onAddComparison = (): void => {
-    setCharts([...charts, renderChart(charts.length)]);
+  const addChart = (): void => {
+    setCharts(charts.concat(renderChart(charts.length)));
   };
 
   const onCompare = (locations: SpotlightLocation[]): void => {
@@ -85,13 +62,12 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
           countryCode={countryCode}
           onCompare={onCompare}
           locations={selectedLocations}
-          options={selections}
         />
       </PageSection>
-      {charts}
+      {charts.map(chart => isValidElement(chart) && cloneElement(chart, { locations: selectedLocations }))}
       {charts.length ? (
         <PageSection narrow>
-          <ButtonBanner onClick={onAddComparison} className="m-text-link add-location-link">
+          <ButtonBanner onClick={addChart} className="m-text-link add-location-link">
             <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
             <span>Add another comparison</span>
           </ButtonBanner>

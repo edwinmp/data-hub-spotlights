@@ -15,7 +15,7 @@ interface ComponentProps {
   countryCode: string;
   options: SpotlightOptions;
   onFilterChanged: (options: SpotlightOptions) => void;
-  onRemoveChart: () => void;
+  onRemoveChart?: () => void;
 }
 
 const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ locations, options, ...props }) => {
