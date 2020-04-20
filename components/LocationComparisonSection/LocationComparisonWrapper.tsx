@@ -1,13 +1,14 @@
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useState } from 'react';
 import { SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import { Button } from '../Button';
+import { FormField } from '../FormField';
+import { Icon } from '../Icon';
 import { LocationComparisonChartDataHandler } from '../LocationComparisonChartDataHandler';
 import { setLocationsQuery } from '../MapSection/utils';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { VisualisationSectionMain } from '../VisualisationSection';
-import { Button } from '../Button';
-import { Icon } from '../Icon';
 
 interface ComponentProps {
   themes: SpotlightTheme[];
@@ -29,9 +30,6 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ location
       props.onFilterChanged(options);
     }
   };
-  const customStyle = {
-    display: 'inline-block'
-  };
 
   return (
     <>
@@ -44,11 +42,14 @@ const LocationComparisonWrapper: FunctionComponent<ComponentProps> = ({ location
           topicClassName="form-field--inline-three"
           indicatorClassName="form-field--inline-three"
           yearClassName="hide"
-        />
-        <Button className="button button--alt button--icon-l" onClick={props.onRemoveChart} style={customStyle}>
-          <Icon name="-20 ico-cross-slate" />
-          Remove chart
-        </Button>
+        >
+          <FormField className="form-field--inline-three">
+            <Button className="button button--alt button--icon-l" onClick={props.onRemoveChart}>
+              <Icon name="-20 ico-cross-slate" />
+              Remove chart
+            </Button>
+          </FormField>
+        </SpotlightFilters>
       </SpotlightBanner>
       {selections.indicator ? (
         <VisualisationSectionMain>
