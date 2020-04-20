@@ -8,7 +8,7 @@ interface SocialLinkProps {
 const SocialLink: FunctionComponent<SocialLinkProps> = ({ url, socialSource }) => {
   return (
     <a href={url} target="_blank" rel="noopener noreferrer">
-      <img src={'/assets/svg/source/' + socialSource + '.svg'} alt={socialSource} />
+      <img src={'/static/svg/source/' + socialSource + '.svg'} alt={socialSource} />
       <style jsx>{`
         img {
           float: left;

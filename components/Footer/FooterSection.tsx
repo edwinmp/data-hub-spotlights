@@ -36,7 +36,7 @@ const FooterSection: FunctionComponent<FooterSectionProps> = props => {
           <FooterSocialLink
             key={`${social_platform} ${index}`}
             link_url={link_url}
-            image_url={image_url.replace('svg/', '/assets/svg/')}
+            image_url={image_url.replace('svg/', '/static/svg/')}
             social_platform={social_platform}
           />
         ))}

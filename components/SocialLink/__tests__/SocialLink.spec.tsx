@@ -16,7 +16,7 @@ describe('SocialLink', () => {
   test('renders children correctly', () => {
     const renderer = TestRenderer.create(
       <SocialLink socialSource="facebook">
-        <img src={'/assets/svg/source/facebook .svg'} alt="facebook" />
+        <img src={'/static/svg/source/facebook .svg'} alt="facebook" />
       </SocialLink>
     ).toJSON();
 
