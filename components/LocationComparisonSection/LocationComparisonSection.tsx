@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { cloneElement, FunctionComponent, isValidElement, ReactNode, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { SpotlightLocation, SpotlightTheme } from '../../utils';
 import { ButtonBanner } from '../ButtonBanner';
 import { PageSection, PageSectionHeading } from '../PageSection';
@@ -30,26 +30,29 @@ const getQueryLocation = (): SpotlightLocation[] | undefined => {
   }
 };
 
+const generateUniqueRandomID = (existing: string[]): string => {
+  const randomID = `${Math.random()}`;
+
+  return existing.includes(randomID) ? generateUniqueRandomID(existing) : randomID;
+};
+
 const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
   const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(getQueryLocation() || []);
-  const renderChart = (index: number): ReactNode => (
-    <LocationComparisonChartSection
-      key={index}
-      themes={themes}
-      locations={selectedLocations}
-      countryCode={countryCode}
-    />
-  );
-  const [charts, setCharts] = useState<ReactNode[]>([renderChart(0)]);
+  const [chartIDs, setChartIDs] = useState<string[]>([generateUniqueRandomID([])]);
 
-  const addChart = (): void => {
-    setCharts(charts.concat(renderChart(charts.length)));
+  const addChartID = (): void => {
+    setChartIDs(chartIDs.concat(generateUniqueRandomID(chartIDs)));
   };
 
   const onCompare = (locations: SpotlightLocation[]): void => {
     setSelectedLocations(locations);
-    if (!charts || charts.length === 0) {
-      setCharts(charts.concat(renderChart(charts.length)));
+    if (!chartIDs || chartIDs.length === 0) {
+      setChartIDs(chartIDs.concat(generateUniqueRandomID([])));
+    }
+  };
+  const onRemove = (key: string) => (): void => {
+    if (chartIDs.length > 1) {
+      setChartIDs(chartIDs.slice().filter(_key => _key !== key));
     }
   };
 
@@ -64,16 +67,24 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
           locations={selectedLocations}
         />
       </PageSection>
-      {charts.map(chart => isValidElement(chart) && cloneElement(chart, { locations: selectedLocations }))}
-      {charts.length ? (
+      {chartIDs.map(key => (
+        <LocationComparisonChartSection
+          key={key}
+          themes={themes}
+          locations={selectedLocations}
+          countryCode={countryCode}
+          onRemove={onRemove(key)}
+        />
+      ))}
+      {chartIDs.length ? (
         <PageSection narrow>
-          <ButtonBanner onClick={addChart} className="m-text-link add-location-link">
+          <ButtonBanner onClick={addChartID} className="m-text-link add-location-link">
             <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
             <span>Add another comparison</span>
           </ButtonBanner>
         </PageSection>
       ) : null}
-      {charts.length ? (
+      {chartIDs.length ? (
         <PageSection narrow>
           <SpotlightShare countryName={countryName} />
         </PageSection>
