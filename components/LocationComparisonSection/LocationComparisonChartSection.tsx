@@ -1,11 +1,10 @@
-import { useRouter } from 'next/router';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { getDefaultsByIndex, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
 import { Button } from '../Button';
 import { FormField } from '../FormField';
 import { Icon } from '../Icon';
 import { LocationComparisonChartDataHandler } from '../LocationComparisonChartDataHandler';
-import { setLocationsQuery } from '../MapSection/utils';
+import { setQuery } from '../MapSection/utils';
 import { PageSection } from '../PageSection';
 import { Spotlight } from '../Spotlight';
 import { SpotlightBanner } from '../SpotlightBanner';
@@ -20,17 +19,16 @@ interface ComponentProps {
 }
 
 const LocationComparisonChartSection: FunctionComponent<ComponentProps> = props => {
-  const router = useRouter();
   const { selected: defaultSelected } = getDefaultsByIndex(props.themes);
   const [selections, setSelections] = useState<SpotlightOptions>(defaultSelected);
   useEffect(() => {
-    setLocationsQuery(router, selections, props.locations);
+    setQuery(selections, props.locations);
   }, [props.locations]);
 
   const onFilterChanged = (options: SpotlightOptions): void => {
     if (options.indicator) {
       setSelections(options);
-      setLocationsQuery(router, options, props.locations);
+      setQuery(options, props.locations);
     }
   };
 
