@@ -33,12 +33,12 @@ const DefaultLayout: NextComponentType = ({ children }) => {
                     <>
                       <NavigationItem
                         title={data.title || 'Spotlight'}
-                        url={`/spotlight/${data.slug || ''}`}
+                        url={location.pathname.replace('compare', '')}
                         active={!location.pathname.includes('compare')}
                       />
                       <NavigationItem
                         title="Location comparison"
-                        url={`/spotlight/${data.slug || ''}/compare`}
+                        url={`${location.pathname.concat('/').replace('//', '/')}compare`}
                         active={location.pathname.includes('compare')}
                       />
                     </>
