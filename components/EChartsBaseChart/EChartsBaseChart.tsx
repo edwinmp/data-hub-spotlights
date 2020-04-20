@@ -51,14 +51,14 @@ const EChartsBaseChart: FunctionComponent<EChartBaseChartProps> = props => {
   }, [props.height]);
 
   const onResize = (width: number): void => {
-    if (baseChart) {
+    if (baseChart && chartNode.current) {
       baseChart.resize({ width: `${width}px` });
     }
   };
 
   return (
     <div ref={chartNode} style={{ width: props.width, height: props.height }} className={props.classNames}>
-      <ReactResizeDetector handleWidth handleHeight onResize={onResize} />
+      {chartNode.current ? <ReactResizeDetector handleWidth handleHeight onResize={onResize} /> : null}
     </div>
   );
 };

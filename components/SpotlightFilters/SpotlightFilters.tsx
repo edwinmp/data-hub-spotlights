@@ -97,6 +97,7 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultInde
         indicatorClassName={props.indicatorClassName}
         yearClassName={props.yearClassName}
       />
+      {props.children}
     </form>
   );
 };

@@ -1,9 +1,7 @@
-import { useRouter } from 'next/router';
-import React, { CSSProperties, FunctionComponent, useState, useEffect } from 'react';
-import { SpotlightLocation, SpotlightOptions } from '../../utils';
+import React, { CSSProperties, FunctionComponent, useEffect, useState } from 'react';
+import { SpotlightLocation } from '../../utils';
 import { Button } from '../Button';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
-import { setLocationsQuery } from '../MapSection/utils';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { TagList, TagListItem } from '../Tags';
 
@@ -12,12 +10,10 @@ interface ComparisonWrapperProps {
   countryCode: string;
   onCompare?: (locations: SpotlightLocation[]) => void;
   locations?: SpotlightLocation[];
-  options: SpotlightOptions;
 }
 
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
   const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations ? props.locations : []);
-  const router = useRouter();
   useEffect(() => {
     if (locations.length < 2 && props.onCompare) {
       props.onCompare(locations);
@@ -31,13 +27,11 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
     ) {
       const updatedLocations = locations.concat(location);
       setLocations(updatedLocations);
-      setLocationsQuery(router, props.options, updatedLocations);
     }
   };
   const onCloseTag = (tagName: string): void => {
     const updatedLocations = locations.filter(location => location.name.toLowerCase() !== tagName.toLowerCase());
     setLocations(updatedLocations);
-    setLocationsQuery(router, props.options, updatedLocations);
   };
   const onClickCompare = (): void => {
     if (props.onCompare) {
