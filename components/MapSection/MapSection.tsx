@@ -1,7 +1,8 @@
-import { useRouter, NextRouter } from 'next/dist/client/router';
+import { NextRouter, useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
-import React, { FunctionComponent, ReactNode, useState, useEffect } from 'react';
+import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { SpotlightLocation, SpotlightOptions } from '../../utils';
+import { useBoundaries } from '../../utils/hooks';
 import { AnchorButton } from '../AnchorButton';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
@@ -16,12 +17,12 @@ import { VisualisationSection, VisualisationSectionMain } from '../Visualisation
 import {
   getDataPrefix,
   getDataSuffix,
+  getDefaultLocationFromQuery,
   getIndicatorColours,
   MapSectionProps,
   parseIndicator,
-  splitByComma,
   setQuery,
-  getDefaultLocationFromQuery
+  splitByComma
 } from './utils';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
@@ -55,6 +56,7 @@ const getComparePath = (router: NextRouter): string => {
 
 const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
   const router = useRouter();
+  const boundaries = useBoundaries(countryCode);
   const [options, setOptions] = useState<SpotlightOptions>({});
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(
     router ? getDefaultLocationFromQuery(router.query) : undefined
@@ -85,8 +87,8 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
     <PageSection>
       <LocationSelectionBanner
         className="spotlight-banner--header"
+        boundaries={boundaries}
         onSelectLocation={onSelectLocation}
-        countryCode={countryCode}
         countryName={props.countryName}
         defaultLocation={activeLocation}
       />
