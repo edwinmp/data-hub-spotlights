@@ -1,6 +1,12 @@
 import React, { CSSProperties, FunctionComponent, useEffect, useState } from 'react';
 import { OptionTypeBase, Styles, ValueType } from 'react-select';
-import { createLocationOptions, getBoundariesByCountryCode, SpotlightBoundary, SpotlightLocation } from '../../utils';
+import {
+  createLocationOptions,
+  getBoundariesByCountryCode,
+  SpotlightBoundary,
+  SpotlightLocation,
+  sortBoundariesByName
+} from '../../utils';
 import { BoundaryMenu } from '../BoundaryMenu';
 import { AsyncSelect, SelectOption, SelectOptions } from '../Select';
 import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain } from '../SpotlightBanner';
@@ -14,6 +20,7 @@ interface LocationSelectionBannerProps {
   onSelectLocation: (location?: SpotlightLocation) => void;
   selectStyles?: Partial<Styles>;
   heading?: string;
+  canReset?: boolean;
 }
 
 const noOptionsMessage = (obj: { inputValue: string }): string =>
@@ -23,9 +30,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
   const [boundaries, setBoundaries] = useState<SpotlightBoundary[]>([]);
   const [options, setOptions] = useState<SelectOptions>([]);
   useEffect(() => {
-    getBoundariesByCountryCode(props.countryCode).then(boundaries => {
-      setBoundaries(boundaries);
-    });
+    getBoundariesByCountryCode(props.countryCode).then(boundaries => setBoundaries(sortBoundariesByName(boundaries)));
   }, [props.countryCode]);
   useEffect(() => {
     setOptions(createLocationOptions(boundaries, 'd')); // TODO: allow greater depth when sub-county data comes in
@@ -48,6 +53,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
           boundaries={boundaries}
           onSelectLocation={onSelectLocation}
           defaultLocation={props.defaultLocation}
+          canReset={props.canReset}
         />
       </SpotlightBannerAside>
       <SpotlightBannerMain>
@@ -58,7 +64,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
               placeholder="Search for a location"
               isLoading={!(options && options.length)}
               chooseTheme="dark"
-              isClearable
+              isClearable={props.canReset}
               defaultOptions
               styles={{
                 dropdownIndicator: (provided): CSSProperties => ({ ...provided, display: 'none' }),
@@ -79,5 +85,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
     </SpotlightBanner>
   );
 };
+
+LocationSelectionBanner.defaultProps = { canReset: true };
 
 export { LocationSelectionBanner };

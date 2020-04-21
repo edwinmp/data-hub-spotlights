@@ -14,6 +14,7 @@ interface BoundaryMenuProps {
   countryName: string;
   defaultLocation?: SpotlightLocation;
   onSelectLocation?: (location?: MenuListItem) => void;
+  canReset?: boolean;
 }
 
 const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ countryName, onSelectLocation, ...props }) => {
@@ -55,7 +56,12 @@ const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ countryName, onSel
   return (
     <SpotlightMenu>
       <SpotlightMenuToggle caption={activeItem.toLowerCase()} show={!showMenu} onClick={onShowMenu} />
-      <SpotlightMenuNav caption={countryName} active={showMenu} onClick={onShowMenu} onShowAll={onShowAll}>
+      <SpotlightMenuNav
+        caption={countryName}
+        active={showMenu}
+        onClick={onShowMenu}
+        onShowAll={props.canReset ? onShowAll : undefined}
+      >
         <SpotlightMenuList classNames="countries-menu-list__content">
           {renderMenuItems(props.boundaries, 1, (item: string) => setActiveItem(item))}
         </SpotlightMenuList>
@@ -63,5 +69,7 @@ const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ countryName, onSel
     </SpotlightMenu>
   );
 };
+
+BoundaryMenu.defaultProps = { canReset: true };
 
 export { BoundaryMenu };

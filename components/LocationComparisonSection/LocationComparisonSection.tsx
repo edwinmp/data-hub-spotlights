@@ -11,14 +11,9 @@ interface ComponentProps {
   countryCode: string;
   countryName: string;
   themes: SpotlightTheme[];
+  defaultLocations: SpotlightLocation[];
 }
-
-export interface LocationTagProps {
-  name: string;
-  geocode: string;
-}
-
-export type LocationTagType = LocationTagProps[];
+type P = ComponentProps;
 
 const getQueryLocation = (): SpotlightLocation[] | undefined => {
   const router = useRouter();
@@ -36,8 +31,8 @@ const generateUniqueRandomID = (existing: string[]): string => {
   return existing.includes(randomID) ? generateUniqueRandomID(existing) : randomID;
 };
 
-const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
-  const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(getQueryLocation() || []);
+const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryName, themes, ...props }) => {
+  const [locations, setLocations] = useState<SpotlightLocation[]>(getQueryLocation() || props.defaultLocations);
   const [chartIDs, setChartIDs] = useState<string[]>([generateUniqueRandomID([])]);
 
   const addChartID = (): void => {
@@ -45,7 +40,7 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
   };
 
   const onCompare = (locations: SpotlightLocation[]): void => {
-    setSelectedLocations(locations);
+    setLocations(locations);
     if (!chartIDs || chartIDs.length === 0) {
       setChartIDs(chartIDs.concat(generateUniqueRandomID([])));
     }
@@ -64,23 +59,23 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
           countryName={countryName}
           countryCode={countryCode}
           onCompare={onCompare}
-          locations={selectedLocations}
+          locations={locations}
         />
       </PageSection>
       {chartIDs.map(key => (
         <LocationComparisonChartSection
           key={key}
           themes={themes}
-          locations={selectedLocations}
+          locations={locations}
           countryCode={countryCode}
-          onRemove={onRemove(key)}
+          onRemove={chartIDs.length > 1 ? onRemove(key) : undefined}
         />
       ))}
       {chartIDs.length ? (
         <PageSection narrow>
           <ButtonBanner onClick={addChartID} className="m-text-link add-location-link">
             <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
-            <span>Add another comparison</span>
+            <span>Add another comparison chart</span>
           </ButtonBanner>
         </PageSection>
       ) : null}

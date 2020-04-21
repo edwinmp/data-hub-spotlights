@@ -1,4 +1,5 @@
-import React, { CSSProperties, FunctionComponent, useEffect, useState } from 'react';
+import classNames from 'classnames';
+import { CSSProperties, default as React, FunctionComponent, useEffect, useState } from 'react';
 import { SpotlightLocation } from '../../utils';
 import { Button } from '../Button';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
@@ -54,7 +55,8 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
           })
         }}
         heading="Add Location"
-      ></LocationSelectionBanner>
+        canReset={false}
+      />
       {locations.length ? (
         <SpotlightBanner>
           <TagList>
@@ -62,11 +64,12 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
               <TagListItem key={location.geocode} label={location.name} onRemove={onCloseTag} />
             ))}
           </TagList>
-          {locations.length >= 2 ? (
-            <Button className="button button--compare" onClick={onClickCompare}>
-              Compare
-            </Button>
-          ) : null}
+          <Button
+            className={classNames('button button--compare', { 'button--disabled': locations.length < 2 })}
+            onClick={onClickCompare}
+          >
+            Compare
+          </Button>
         </SpotlightBanner>
       ) : null}
     </>

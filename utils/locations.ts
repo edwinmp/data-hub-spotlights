@@ -2,9 +2,12 @@ import { SelectOption, SelectOptions } from '../components/Select';
 import { getLocationIDFromGeoCode } from '../components/SpotlightMap/utils';
 import { SpotlightLocation } from './data';
 import { toCamelCase } from './strings';
+import { sortBy as _sortBy } from 'underscore';
 
 export interface SpotlightBoundary extends SpotlightLocation {
   code: string;
+  geocode: string;
+  name: string;
   children: SpotlightBoundary[];
 }
 
@@ -42,3 +45,12 @@ export const createLocationOptions = (
 
   return options;
 };
+
+export const sortBoundariesByName = (boundaries: SpotlightBoundary[]): SpotlightBoundary[] =>
+  _sortBy(boundaries, 'name').map(boundary => {
+    if (boundary.children) {
+      boundary.children = sortBoundariesByName(boundary.children);
+    }
+
+    return boundary;
+  });

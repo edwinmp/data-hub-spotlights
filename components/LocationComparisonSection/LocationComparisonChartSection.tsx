@@ -45,12 +45,14 @@ const LocationComparisonChartSection: FunctionComponent<ComponentProps> = props 
             indicatorClassName="form-field--inline-three"
             yearClassName="hide"
           >
-            <FormField className="form-field--inline-three">
-              <Button className="button button--alt button--icon-l" onClick={props.onRemove}>
-                <Icon name="-20 ico-cross-slate" />
-                Remove chart
-              </Button>
-            </FormField>
+            {props.onRemove ? (
+              <FormField className="form-field--inline-three">
+                <Button className="button button--alt button--icon-l" onClick={props.onRemove}>
+                  <Icon name="-20 ico-cross-slate" />
+                  Remove chart
+                </Button>
+              </FormField>
+            ) : null}
           </SpotlightFilters>
         </SpotlightBanner>
         {selections.indicator ? (
