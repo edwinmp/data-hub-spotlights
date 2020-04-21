@@ -75,7 +75,7 @@ const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryN
         <PageSection narrow>
           <ButtonBanner onClick={addChartID} className="m-text-link add-location-link">
             <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
-            <span>Add another comparison</span>
+            <span>Add another comparison chart</span>
           </ButtonBanner>
         </PageSection>
       ) : null}
