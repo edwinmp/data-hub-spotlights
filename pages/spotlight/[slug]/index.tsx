@@ -19,6 +19,7 @@ import {
   SpotlightLocation,
   SpotlightPage
 } from '../../../utils';
+import { addEvent } from '../../../utils/gtm';
 
 interface SpotlightProps {
   setData?: (data: PageScaffoldData) => void;
@@ -31,6 +32,11 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
   const [countryInfo] = useState({ countryCode, countryName, currencyCode });
   const [location, setLocation] = useState<SpotlightLocation | undefined>();
   useEffect(() => {
+    window.dataLayer = window.dataLayer || [];
+    addEvent('registrationComplete', {
+      registrationCountry: 'United States',
+      plan: 'Premiums yo'
+    });
     if (setData) {
       setData({ ...scaffold, title: page.title, slug: getSlugFromURL(page.relative_url) });
     }
