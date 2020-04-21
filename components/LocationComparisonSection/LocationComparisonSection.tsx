@@ -15,13 +15,6 @@ interface ComponentProps {
 }
 type P = ComponentProps;
 
-export interface LocationTagProps {
-  name: string;
-  geocode: string;
-}
-
-export type LocationTagType = LocationTagProps[];
-
 const getQueryLocation = (): SpotlightLocation[] | undefined => {
   const router = useRouter();
   if (router.query.ln && router.query.lc) {
@@ -39,9 +32,7 @@ const generateUniqueRandomID = (existing: string[]): string => {
 };
 
 const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryName, themes, ...props }) => {
-  const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(
-    getQueryLocation() || props.defaultLocations
-  );
+  const [locations, setLocations] = useState<SpotlightLocation[]>(getQueryLocation() || props.defaultLocations);
   const [chartIDs, setChartIDs] = useState<string[]>([generateUniqueRandomID([])]);
 
   const addChartID = (): void => {
@@ -49,7 +40,7 @@ const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryN
   };
 
   const onCompare = (locations: SpotlightLocation[]): void => {
-    setSelectedLocations(locations);
+    setLocations(locations);
     if (!chartIDs || chartIDs.length === 0) {
       setChartIDs(chartIDs.concat(generateUniqueRandomID([])));
     }
@@ -68,16 +59,16 @@ const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryN
           countryName={countryName}
           countryCode={countryCode}
           onCompare={onCompare}
-          locations={selectedLocations}
+          locations={locations}
         />
       </PageSection>
       {chartIDs.map(key => (
         <LocationComparisonChartSection
           key={key}
           themes={themes}
-          locations={selectedLocations}
+          locations={locations}
           countryCode={countryCode}
-          onRemove={onRemove(key)}
+          onRemove={chartIDs.length > 1 ? onRemove(key) : undefined}
         />
       ))}
       {chartIDs.length ? (
