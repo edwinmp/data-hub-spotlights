@@ -38,7 +38,10 @@ const DefaultLayout: NextComponentType = ({ children }) => {
                       />
                       <NavigationItem
                         title="Location comparison"
-                        url={`${location.pathname.concat('/').replace('//', '/')}compare`}
+                        url={`${location.pathname
+                          .replace('/compare', '')
+                          .concat('/')
+                          .replace('//', '/')}compare`}
                         active={location.pathname.includes('compare')}
                       />
                     </>
