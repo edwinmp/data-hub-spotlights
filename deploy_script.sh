@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-## gets run on host server
 # Instantly exists our script whenever an error occurs
 set -e
 
