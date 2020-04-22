@@ -5,7 +5,8 @@ import {
   LocationContext,
   processTemplateString,
   SpotlightIndicator,
-  toCamelCase
+  toCamelCase,
+  CountryContext
 } from '../../utils';
 import { Alert } from '../Alert';
 import { CurrencySelector } from '../CurrencySelector';
@@ -23,17 +24,8 @@ import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { getIndicatorContentOptions, parseBudgetType, useRevenueExpenditureData } from './utils';
 
-interface SelectType {
-  label: string;
-  value: string;
-}
-
 interface RevenueSectionProps {
-  countryCode: string;
-  countryName: string;
-  currencyCode: string;
   indicator: SpotlightIndicator;
-  budgetTypeOptions?: SelectType[];
 }
 
 const renderPaddedAlert = (message: string): ReactNode => (
@@ -50,7 +42,8 @@ const renderPaddedAlert = (message: string): ReactNode => (
   </div>
 );
 
-const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, ...props }) => {
+const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator }) => {
+  const { countryCode, countryName, currencyCode } = useContext(CountryContext);
   const location = useContext(LocationContext);
   const [retryCount, setRetryCount] = useState(0);
   const [useLocalValue, setUseLocalValue] = useState(false);
@@ -60,7 +53,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const { data, dataLoading, options, setOptions, refetch, error } = useRevenueExpenditureData(
     {
       indicators: [indicator.ddw_id],
-      geocodes: location ? [location.geocode] : [props.countryCode],
+      geocodes: location ? [location.geocode] : [countryCode],
       limit: 10000
     },
     indicator
@@ -68,7 +61,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   useEffect(() => {
     setOptions({
       ...options,
-      geocodes: location ? [location.geocode] : [props.countryCode],
+      geocodes: location ? [location.geocode] : [countryCode],
       indicators: [indicator.ddw_id]
     });
     setYear(indicator.end_year);
@@ -120,7 +113,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   return (
     <PageSection>
       <PageSectionHeading>
-        {processTemplateString(indicator.name, { location: location ? toCamelCase(location.name) : props.countryName })}
+        {processTemplateString(indicator.name, { location: location ? toCamelCase(location.name) : countryName })}
       </PageSectionHeading>
 
       <SpotlightBanner className="spotlight-banner--alt">
@@ -149,7 +142,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         <SpotlightBannerMain>
           <SpotlightBannerForm>
             <FormField className="form-field--inline">
-              <CurrencySelector currencyCode={props.currencyCode} width="100%" onChange={onChangeCurrency} />
+              <CurrencySelector currencyCode={currencyCode} width="100%" onChange={onChangeCurrency} />
             </FormField>
           </SpotlightBannerForm>
         </SpotlightBannerMain>
@@ -169,7 +162,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                     valueOptions={{
                       dataFormat: 'currency',
                       useLocalValue,
-                      prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                      prefix: useLocalValue ? currencyCode : indicator.value_prefix,
                       suffix: indicator.value_suffix
                     }}
                     selectedYear={year}
@@ -199,7 +192,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                   valueOptions={{
                     dataFormat: 'currency',
                     useLocalValue,
-                    prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                    prefix: useLocalValue ? currencyCode : indicator.value_prefix,
                     suffix: indicator.value_suffix
                   }}
                 />

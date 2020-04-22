@@ -51,12 +51,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
               )
               .map((indicator, index) => (
                 <ErrorBoundary key={index}>
-                  <RevenueExpenditureSection
-                    indicator={indicator}
-                    countryCode={countryCode}
-                    countryName={countryName}
-                    currencyCode={currencyCode || ''}
-                  />
+                  <RevenueExpenditureSection indicator={indicator} />
                 </ErrorBoundary>
               ))
           )}
