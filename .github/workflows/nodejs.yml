@@ -92,10 +92,12 @@ jobs:
       uses: appleboy/ssh-action@master
       env:
         CMS_URL: ${{ secrets.CMS_URL }}
+        BITLY_API_KEY: ${{ secrets.BITLY_API_KEY }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
+        envs: CMS_URL,BITLY_API_KEY
         script: |
           cd ./deploy_spotlights/deploy_script.sh && chmod +x deploy_script.sh && bash deploy_script.sh

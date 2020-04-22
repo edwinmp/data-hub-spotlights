@@ -5,7 +5,8 @@ services:
             context: .
             dockerfile: ./Dockerfile
             args:
-              - CMS_URL=http://178.128.102.213/
+              - CMS_URL=${CMS_URL}
+              - BITLY_API_KEY=${BITLY_API_KEY}
         container_name: nodejs
         restart: always
         ports:
