@@ -10,6 +10,8 @@ services:
         restart: always
         ports:
             - "3000:3000"
+        networks:
+            - app-network
     webserver:
         build:
             context: nginx/
@@ -22,3 +24,8 @@ services:
             - nodejs
         links:
             - nodejs
+        networks:
+            - app-network
+networks:
+    app-network:
+        driver: bridge 
