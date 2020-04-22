@@ -1,8 +1,9 @@
 import center from '@turf/center';
 import { Feature, featureCollection, point, Point, Position, Properties } from '@turf/helpers';
 import { LngLat, Map, MapboxEvent, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
-import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 import { debounce } from 'underscore';
+import { CountryContext } from '../../utils';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
 import {
@@ -82,7 +83,8 @@ const setZoomByContainerWidth = (map: Map, container: HTMLElement, options: Laye
 };
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
-  const { countryCode, level, data, dataLoading, range, colours } = props;
+  const { level, data, dataLoading, range, colours } = props;
+  const { countryCode } = useContext(CountryContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [map, setMap] = useState<Map | undefined>(undefined);
   const { layers } = config[countryCode];

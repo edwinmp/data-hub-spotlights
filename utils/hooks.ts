@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { getBoundariesByCountryCode, sortBoundariesByName, SpotlightBoundary } from './locations';
+import { CountryContext } from './context';
 
-export const useBoundaries = (countryCode: string): SpotlightBoundary[] => {
+export const useBoundaries = (): SpotlightBoundary[] => {
+  const { countryCode } = useContext(CountryContext);
   const [boundaries, setBoundaries] = useState<SpotlightBoundary[]>([]);
 
   useEffect(() => {

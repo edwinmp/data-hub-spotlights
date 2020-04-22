@@ -54,9 +54,9 @@ const getComparePath = (router: NextRouter): string => {
   return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare${queryString ? '?' + queryString : ''}`;
 };
 
-const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
+const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...props }) => {
   const router = useRouter();
-  const boundaries = useBoundaries(countryCode);
+  const boundaries = useBoundaries();
   const [options, setOptions] = useState<SpotlightOptions>({});
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(
     router ? getDefaultLocationFromQuery(router.query) : undefined
@@ -92,7 +92,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
         className="spotlight-banner--header"
         boundaries={boundaries}
         onSelectLocation={onSelectLocation}
-        countryName={props.countryName}
         location={activeLocation}
       />
 
@@ -116,11 +115,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 <LegendItem>no data / not applicable</LegendItem>
               </Legend>
               <SpotlightButtons>
-                <SpotlightShare
-                  countryName={props.countryName}
-                  location={activeLocation}
-                  buttonCaption="Share this visualisation"
-                />
+                <SpotlightShare buttonCaption="Share this visualisation" />
               </SpotlightButtons>
             </SpotlightHide>
           </SidebarContent>
@@ -149,7 +144,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 limit={10000}
               >
                 <DynamicMap
-                  countryCode={countryCode}
                   range={range}
                   colours={colours}
                   dataPrefix={getDataPrefix(options)}
@@ -174,11 +168,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               <LegendItem>no data / not applicable</LegendItem>
             </Legend>
             <SpotlightButtons>
-              <SpotlightShare
-                countryName={props.countryName}
-                location={activeLocation}
-                buttonCaption="Share this visualisation"
-              />
+              <SpotlightShare />
             </SpotlightButtons>
           </SidebarContent>
         </SpotlightSidebar>

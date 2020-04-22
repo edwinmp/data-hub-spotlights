@@ -81,7 +81,7 @@ const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryN
       ) : null}
       {chartIDs.length ? (
         <PageSection narrow>
-          <SpotlightShare countryName={countryName} />
+          <SpotlightShare />
         </PageSection>
       ) : null}
     </>

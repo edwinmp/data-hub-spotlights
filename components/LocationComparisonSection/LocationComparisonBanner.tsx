@@ -15,7 +15,7 @@ interface ComparisonWrapperProps {
 }
 
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
-  const boundaries = useBoundaries(props.countryCode);
+  const boundaries = useBoundaries();
   const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations ? props.locations : []);
   useEffect(() => {
     if (locations.length < 2 && props.onCompare) {
@@ -46,7 +46,6 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
     <>
       <LocationSelectionBanner
         boundaries={boundaries}
-        countryName={props.countryName}
         onSelectLocation={onSelectLocation}
         selectStyles={{
           container: (provided): CSSProperties => ({

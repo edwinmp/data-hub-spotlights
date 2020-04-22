@@ -7,7 +7,6 @@ import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerMain } from '../S
 import { MenuListItem } from '../SpotlightMenu';
 
 interface LocationSelectionBannerProps {
-  countryName: string;
   className?: string;
   boundaries: SpotlightBoundary[];
   location?: SpotlightLocation;
@@ -38,12 +37,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
     <SpotlightBanner className={props.className}>
       {props.heading ? <h3 className="spotlight-banner__heading">{props.heading}</h3> : null}
       <SpotlightBannerAside>
-        <BoundaryMenu
-          countryName={props.countryName}
-          boundaries={props.boundaries}
-          onSelectLocation={onSelectLocation}
-          canReset={props.canReset}
-        />
+        <BoundaryMenu boundaries={props.boundaries} onSelectLocation={onSelectLocation} canReset={props.canReset} />
       </SpotlightBannerAside>
       <SpotlightBannerMain>
         <div>

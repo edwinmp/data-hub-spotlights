@@ -9,13 +9,14 @@ import { MapSection } from '../../../components/MapSection';
 import { PageSection } from '../../../components/PageSection';
 import { RevenueExpenditureSection } from '../../../components/RevenueExpenditureSection';
 import {
+  CountryContext,
   fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
   getSlugFromURL,
+  LocationContext,
   SpotlightLocation,
-  SpotlightPage,
-  LocationContext
+  SpotlightPage
 } from '../../../utils';
 
 interface SpotlightProps {
@@ -25,7 +26,8 @@ interface SpotlightProps {
 }
 
 const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
-  const { country_code: countryCode, country_name: countryName } = page;
+  const { country_code: countryCode, country_name: countryName, currency_code: currencyCode } = page;
+  const [countryInfo] = useState({ countryCode, countryName, currencyCode });
   const [location, setLocation] = useState<SpotlightLocation | undefined>();
   useEffect(() => {
     if (setData) {
@@ -38,34 +40,33 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
   if (page.themes && page.country_code) {
     return (
       <LocationContext.Provider value={location}>
-        <MapSection
-          themes={mapThemes}
-          countryCode={countryCode}
-          countryName={countryName}
-          onChangeLocation={onChangeLocation}
-        />
-        <KeyFactsSection
-          countryCode={countryCode}
-          countryName={countryName}
-          currencyCode={countryCode || ''}
-          themes={filterThemesBySection(page.themes, location ? 'facts' : 'country-facts')}
-        />
-        <IndicatorComparisonSection themes={mapThemes} countryCode={countryCode} countryName={countryName} />
-        {filterThemesBySection(page.themes, 'revenue-expenditure').map(theme =>
-          theme.indicators
-            .filter(indicator => (!location ? indicator.slug.includes('country') : !indicator.slug.includes('country')))
-            .map((indicator, index) => (
-              <ErrorBoundary key={index}>
-                <RevenueExpenditureSection
-                  indicator={indicator}
-                  countryCode={countryCode}
-                  countryName={countryName}
-                  currencyCode={page.currency_code || ''}
-                />
-              </ErrorBoundary>
-            ))
-        )}
-        <DataSourcesSection description={page.datasources_description} dataSourceLinks={page.datasource_links} />
+        <CountryContext.Provider value={countryInfo}>
+          <MapSection themes={mapThemes} onChangeLocation={onChangeLocation} />
+          <KeyFactsSection
+            countryCode={countryCode}
+            countryName={countryName}
+            currencyCode={countryCode || ''}
+            themes={filterThemesBySection(page.themes, location ? 'facts' : 'country-facts')}
+          />
+          <IndicatorComparisonSection themes={mapThemes} countryCode={countryCode} countryName={countryName} />
+          {filterThemesBySection(page.themes, 'revenue-expenditure').map(theme =>
+            theme.indicators
+              .filter(indicator =>
+                !location ? indicator.slug.includes('country') : !indicator.slug.includes('country')
+              )
+              .map((indicator, index) => (
+                <ErrorBoundary key={index}>
+                  <RevenueExpenditureSection
+                    indicator={indicator}
+                    countryCode={countryCode}
+                    countryName={countryName}
+                    currencyCode={currencyCode || ''}
+                  />
+                </ErrorBoundary>
+              ))
+          )}
+          <DataSourcesSection description={page.datasources_description} dataSourceLinks={page.datasource_links} />
+        </CountryContext.Provider>
       </LocationContext.Provider>
     );
   }

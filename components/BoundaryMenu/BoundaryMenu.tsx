@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactNode, useContext, useState, useEffect } from 'react';
-import { LocationContext, SpotlightBoundary } from '../../utils';
+import { LocationContext, SpotlightBoundary, CountryContext } from '../../utils';
 import {
   MenuListItem,
   SpotlightMenu,
@@ -11,13 +11,13 @@ import SpotlightMenuNav from '../SpotlightMenu/SpotlightMenuNav';
 
 interface BoundaryMenuProps {
   boundaries: SpotlightBoundary[];
-  countryName: string;
   onSelectLocation?: (location?: MenuListItem) => void;
   canReset?: boolean;
 }
 
-const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ countryName, onSelectLocation, ...props }) => {
+const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ onSelectLocation, ...props }) => {
   const location = useContext(LocationContext);
+  const { countryName } = useContext(CountryContext);
   const [showMenu, setShowMenu] = useState(false);
   const [activeItem, setActiveItem] = useState(location ? location.name : countryName);
   useEffect(() => setActiveItem(location ? location.name : countryName), [location]);
