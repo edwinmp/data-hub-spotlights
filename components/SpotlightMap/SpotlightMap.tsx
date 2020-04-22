@@ -116,7 +116,11 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       const onClick = (event: TooltipEvent): void => {
         const locationName = getLocationNameFromEvent(event, options.nameProperty);
         if (locationName) {
-          flyToLocation(map, locationName, options);
+          if (props.onClick) {
+            props.onClick(locationName, event);
+          } else {
+            flyToLocation(map, locationName, options);
+          }
         }
       };
       const onResize = debounce((event: MapboxEvent) => {

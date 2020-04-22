@@ -1,7 +1,7 @@
 import { NextRouter, useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
-import { SpotlightLocation, SpotlightOptions } from '../../utils';
+import { SpotlightLocation, SpotlightOptions, findBoundaryByName } from '../../utils';
 import { useBoundaries } from '../../utils/hooks';
 import { AnchorButton } from '../AnchorButton';
 import { ErrorBoundary } from '../ErrorBoundary';
@@ -78,6 +78,9 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
       onChangeLocation(location);
     }
   };
+  const onSelectLocationFromMap = (locationName: string): void => {
+    onSelectLocation(findBoundaryByName(boundaries, locationName.toLowerCase()));
+  };
 
   const range = options.indicator && splitByComma(options.indicator.range);
   const colours = getIndicatorColours(options.indicator, range);
@@ -153,6 +156,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                   dataSuffix={getDataSuffix(options)}
                   location={activeLocation}
                   locationHandling="flyto"
+                  onClick={onSelectLocationFromMap}
                 />
               </DynamicMapDataLoader>
             </ErrorBoundary>
