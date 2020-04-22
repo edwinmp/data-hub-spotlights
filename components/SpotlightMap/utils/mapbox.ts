@@ -1,7 +1,22 @@
-import { Map, MapboxGeoJSONFeature, MapMouseEvent, Popup } from 'mapbox-gl';
-import { LocationData, formatNumber } from '../../../utils';
+import center from '@turf/center';
+import { Feature, featureCollection, point, Point, Position, Properties } from '@turf/helpers';
+import { LngLat, Map, MapboxGeoJSONFeature, MapMouseEvent, Popup } from 'mapbox-gl';
+import { formatNumber, LocationData } from '../../../utils';
+import { LayerConfig } from './config';
 
 type LocationStyle = [string | number, string];
+
+export const COLOURED_LAYER = 'highlight';
+
+export const setZoomByContainerWidth = (map: Map, container: HTMLElement, options: LayerConfig): void => {
+  if (container.clientWidth < 700) {
+    map.setZoom(options.zoom ? options.zoom - 1 : 5);
+  } else if (container.clientWidth < 900) {
+    map.setZoom(options.minZoom ? options.minZoom + 0.8 : 5.8);
+  } else {
+    map.setZoom(options.zoom || 6.1);
+  }
+};
 
 export const getProperLocationName = (
   locationName: string,
@@ -63,7 +78,66 @@ export const getLocationNameFromEvent = (event: TooltipEvent, nameProperty: stri
   return null;
 };
 
-export const renderTooltip = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
+const getCoordinatesCenter = (coordinates: Position[]): Feature<Point, Properties> => {
+  const features = featureCollection(coordinates.map(position => point(position)));
+
+  return center(features);
+};
+
+const getLngLatFromFeature = (feature: Feature<Point, Properties>): LngLat | null => {
+  const position = feature.geometry?.coordinates;
+
+  return position ? new LngLat(position[0], position[1]) : null;
+};
+
+const getPosition = ({ geometry }: MapboxGeoJSONFeature): LngLat | null => {
+  if (geometry) {
+    if (geometry.type === 'Polygon') {
+      const feature = getCoordinatesCenter(geometry.coordinates[0]);
+
+      return getLngLatFromFeature(feature);
+    }
+    if (geometry.type === 'MultiPolygon') {
+      const positions = geometry.coordinates[0][0];
+      const feature = getCoordinatesCenter(positions);
+
+      return getLngLatFromFeature(feature);
+    }
+  }
+
+  return null;
+};
+
+export const getPositionFromLocationName = (map: Map, locationName: string, options: LayerConfig): LngLat | null => {
+  const features = map.querySourceFeatures('composite', {
+    sourceLayer: options.sourceLayer,
+    filter: ['in', options.nameProperty, getProperLocationName(locationName, options.formatter)]
+  });
+
+  return features && features.length ? getPosition(features[0]) : null;
+};
+
+// export const renderLocationTooltip = (map: Map, locationName: string, options: TooltipOptions): void => {
+//   //
+// };
+
+export const flyToLocation = (map: Map, locationName: string, options: LayerConfig, recenter = true): void => {
+  const position = getPositionFromLocationName(map, locationName, options);
+  if (position) {
+    map.flyTo({
+      center: position,
+      zoom: 16
+    });
+  } else if (recenter) {
+    // reset view before next flyTo, otherwise flying to locations not currently visible shall fail
+    map.flyTo({ center: options.center, zoom: options.zoom || 6.1 });
+    setTimeout(() => {
+      flyToLocation(map, locationName, options, false);
+    }, 500);
+  }
+};
+
+export const renderTooltipByEvent = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
   const { popup, nameProperty, data, formatter: format } = options;
   const locationName = getLocationNameFromEvent(event, nameProperty);
   if (locationName) {

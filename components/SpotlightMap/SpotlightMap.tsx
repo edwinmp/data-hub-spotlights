@@ -1,86 +1,20 @@
-import center from '@turf/center';
-import { Feature, featureCollection, point, Point, Position, Properties } from '@turf/helpers';
-import { LngLat, Map, MapboxEvent, MapboxGeoJSONFeature, Popup } from 'mapbox-gl';
+import { Map, MapboxEvent, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 import { debounce } from 'underscore';
 import { CountryContext } from '../../utils';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
+import { config, SpotlightMapProps } from './utils';
 import {
-  config,
+  COLOURED_LAYER,
+  flyToLocation,
   getLocationNameFromEvent,
   getLocationStyles,
   getProperLocationName,
-  LayerConfig,
-  renderTooltip,
-  SpotlightMapProps,
+  renderTooltipByEvent,
+  setZoomByContainerWidth,
   TooltipEvent
-} from './utils';
-
-const COLOURED_LAYER = 'highlight';
-
-const getCoordinatesCenter = (coordinates: Position[]): Feature<Point, Properties> => {
-  const features = featureCollection(coordinates.map(position => point(position)));
-
-  return center(features);
-};
-
-const getLngLatFromFeature = (feature: Feature<Point, Properties>): LngLat | null => {
-  const position = feature.geometry?.coordinates;
-
-  return position ? new LngLat(position[0], position[1]) : null;
-};
-
-const getPosition = ({ geometry }: MapboxGeoJSONFeature): LngLat | null => {
-  if (geometry) {
-    if (geometry.type === 'Polygon') {
-      const feature = getCoordinatesCenter(geometry.coordinates[0]);
-
-      return getLngLatFromFeature(feature);
-    }
-    if (geometry.type === 'MultiPolygon') {
-      const positions = geometry.coordinates[0][0];
-      const feature = getCoordinatesCenter(positions);
-
-      return getLngLatFromFeature(feature);
-    }
-  }
-
-  return null;
-};
-
-const flyToLocation = (map: Map, locationName: string, options: LayerConfig, recenter = true): void => {
-  const features = map.querySourceFeatures('composite', {
-    sourceLayer: options.sourceLayer,
-    filter: ['in', options.nameProperty, getProperLocationName(locationName, options.formatter)]
-  });
-
-  if (features && features.length) {
-    const position = getPosition(features[0]);
-    if (position) {
-      map.flyTo({
-        center: position,
-        zoom: 16
-      });
-    }
-  } else if (recenter) {
-    // reset view before next flyTo, otherwise flying to locations not currently visible shall fail
-    map.flyTo({ center: options.center, zoom: options.zoom || 6.1 });
-    setTimeout(() => {
-      flyToLocation(map, locationName, options, false);
-    }, 500);
-  }
-};
-
-const setZoomByContainerWidth = (map: Map, container: HTMLElement, options: LayerConfig): void => {
-  if (container.clientWidth < 700) {
-    map.setZoom(options.zoom ? options.zoom - 1 : 5);
-  } else if (container.clientWidth < 900) {
-    map.setZoom(options.minZoom ? options.minZoom + 0.8 : 5.8);
-  } else {
-    map.setZoom(options.zoom || 6.1);
-  }
-};
+} from './utils/mapbox';
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const { level, data, dataLoading, range, colours } = props;
@@ -90,6 +24,17 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const { layers } = config[countryCode];
   const options = { ...(level && level <= layers.length ? layers[level] : layers[0]), ...props.layerConfig };
 
+  const showPopup = (popup: Popup, map: Map, event: TooltipEvent): void => {
+    renderTooltipByEvent(map, event, {
+      nameProperty: options.nameProperty,
+      popup,
+      data: data ? data[0].data : [],
+      dataPrefix: props.dataPrefix,
+      dataSuffix: props.dataSuffix,
+      formatter: options.formatter
+    });
+  };
+
   useEffect(() => {
     if (map) {
       const popup = new Popup({
@@ -98,14 +43,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       });
       const onHover = (event: TooltipEvent): void => {
         map.getCanvas().style.cursor = 'pointer';
-        renderTooltip(map, event, {
-          nameProperty: options.nameProperty,
-          popup,
-          data: data ? data[0].data : [],
-          dataPrefix: props.dataPrefix,
-          dataSuffix: props.dataSuffix,
-          formatter: options.formatter
-        });
+        showPopup(popup, map, event);
       };
       const onBlur = (): void => {
         map.getCanvas().style.cursor = '';
@@ -144,8 +82,10 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
     }
   }, [map, loading, data]);
   useEffect(() => {
-    if (map && !props.location) {
-      map.setCenter(options.center).setZoom(options.zoom || 6.1);
+    if (map) {
+      if (!props.location) {
+        map.setCenter(options.center).setZoom(options.zoom || 6.1);
+      }
     }
   }, [props.location]);
   useEffect(() => {
