@@ -42,12 +42,7 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
       <LocationContext.Provider value={location}>
         <CountryContext.Provider value={countryInfo}>
           <MapSection themes={mapThemes} onChangeLocation={onChangeLocation} />
-          <KeyFactsSection
-            countryCode={countryCode}
-            countryName={countryName}
-            currencyCode={countryCode || ''}
-            themes={filterThemesBySection(page.themes, location ? 'facts' : 'country-facts')}
-          />
+          <KeyFactsSection themes={filterThemesBySection(page.themes, location ? 'facts' : 'country-facts')} />
           <IndicatorComparisonSection themes={mapThemes} countryCode={countryCode} countryName={countryName} />
           {filterThemesBySection(page.themes, 'revenue-expenditure').map(theme =>
             theme.indicators
