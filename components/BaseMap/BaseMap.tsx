@@ -87,6 +87,7 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
           font-family: geomanist, sans-serif;
           -webkit-tap-highlight-color: black;
           opacity: 0.8;
+          padding: 20px;
         }
 
         div :global(.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip) {
@@ -96,6 +97,11 @@ const BaseMap: FunctionComponent<BaseMapProps> = props => {
 
         div :global(.mapboxgl-popup-content .mapBox-popup p) {
           margin-bottom: 0;
+        }
+
+        div :global(.mapboxgl-popup-content .mapboxgl-popup-close-button) {
+          color: #ffffff;
+          font-size: 1.8rem;
         }
       `}</style>
     </div>
