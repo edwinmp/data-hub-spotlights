@@ -89,19 +89,23 @@ const aggregateProcessedData = (data: ProcessedData[], options: ValueOptions): n
       return sum / data.length;
     }
     if (options.aggregation === 'POSN ASC' && options.location) {
-      return data
+      const position = data
         .sort((a, b) => a.value - b.value)
         .findIndex(d =>
           d.geocode && options.location?.geocode ? options.location?.geocode.includes(d.geocode) : false
         );
+
+      return position > -1 ? position : data;
     }
     if (options.aggregation === 'POSN DESC' && options.location) {
-      return data
+      const position = data
         .sort((a, b) => a.value - b.value)
         .reverse()
         .findIndex(d =>
           d.geocode && options.location?.geocode ? options.location?.geocode.includes(d.geocode) : false
         );
+
+      return position > -1 ? position : data;
     }
   }
 
