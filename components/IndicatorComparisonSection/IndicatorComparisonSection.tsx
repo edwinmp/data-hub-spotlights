@@ -1,5 +1,12 @@
 import React, { FunctionComponent, useEffect, useState, useContext } from 'react';
-import { SpotlightIndicator, SpotlightOptions, SpotlightTheme, toCamelCase, LocationContext } from '../../utils';
+import {
+  SpotlightIndicator,
+  SpotlightOptions,
+  SpotlightTheme,
+  toCamelCase,
+  LocationContext,
+  CountryContext
+} from '../../utils';
 import { ComparisonChartDataHandler } from '../ComparisonChartDataHandler';
 import { IndicatorComparisonDataLoader } from '../IndicatorComparisonDataLoader';
 import { PageSection, PageSectionHeading } from '../PageSection';
@@ -7,12 +14,11 @@ import { IndicatorSelectionBanner } from './IndicatorSelectionBanner';
 
 export interface IndicatorComparisonSectionProps {
   themes: SpotlightTheme[];
-  countryCode: string;
-  countryName: string;
 }
 
 const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionProps> = props => {
-  const { themes, countryName, countryCode } = props;
+  const { themes } = props;
+  const { countryName } = useContext(CountryContext);
   const location = useContext(LocationContext);
   const [loading, setLoading] = useState(false);
   const [selections, setSelections] = useState<[SpotlightOptions, SpotlightOptions] | undefined>(undefined);
@@ -43,8 +49,6 @@ const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionPr
       {selections ? (
         <IndicatorComparisonDataLoader options={selections} loading={loading} locations={location ? [location] : []}>
           <ComparisonChartDataHandler
-            countryCode={countryCode}
-            countryName={countryName}
             location={location}
             indicators={selections.map(sel => sel.indicator) as [SpotlightIndicator, SpotlightIndicator]}
           />
