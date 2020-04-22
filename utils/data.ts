@@ -151,6 +151,7 @@ export interface LocationDataMeta extends Object {
 export interface ProcessedData {
   value: number;
   name: string;
+  geocode: string;
   meta?: LocationDataMeta;
 }
 

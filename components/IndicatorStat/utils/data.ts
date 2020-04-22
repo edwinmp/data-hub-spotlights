@@ -61,8 +61,9 @@ const getOneFromMultipleBudgetTypes = (data: LocationData[]): LocationData | und
   );
 };
 
-const locationDataToProcessedData = ({ name, value, meta }: LocationData): ProcessedData => ({
+const locationDataToProcessedData = ({ name, value, geocode, meta }: LocationData): ProcessedData => ({
   name,
+  geocode,
   value: value || 0,
   meta: meta ? JSON.parse(meta) : {}
 });
@@ -91,7 +92,7 @@ const aggregateProcessedData = (data: ProcessedData[], options: ValueOptions): n
       return data
         .sort((a, b) => a.value - b.value)
         .findIndex(d =>
-          d.name && options.location?.name ? d.name.toLowerCase() === options.location?.name.toLowerCase() : false
+          d.geocode && options.location?.geocode ? options.location?.geocode.includes(d.geocode) : false
         );
     }
     if (options.aggregation === 'POSN DESC' && options.location) {
@@ -99,7 +100,7 @@ const aggregateProcessedData = (data: ProcessedData[], options: ValueOptions): n
         .sort((a, b) => a.value - b.value)
         .reverse()
         .findIndex(d =>
-          d.name && options.location?.name ? d.name.toLowerCase() === options.location?.name.toLowerCase() : false
+          d.geocode && options.location?.geocode ? options.location?.geocode.includes(d.geocode) : false
         );
     }
   }
@@ -162,7 +163,7 @@ export const getIndicatorsValue = (
       }
       const requiredData = _data.data[0];
 
-      return requiredData ? locationDataToProcessedData(requiredData) : { name: '', value: 0, meta: {} };
+      return requiredData ? locationDataToProcessedData(requiredData) : { name: '', geocode: '', value: 0, meta: {} };
     });
     const aggregate = aggregateProcessedData(values, options);
     if (typeof aggregate === 'number') {
