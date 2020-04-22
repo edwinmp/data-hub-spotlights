@@ -18,14 +18,13 @@ app
     const server = express();
     server.get('/', (_req, res) => res.redirect('https://devinit.org/data/')); // TODO: change this to the country spotlights page
     server.get('/bitly', (req, res) => {
-      const parsedUrl = parse(req.url as string, true);
-      const { query } = parsedUrl;
-      if (query.longUrl && !Array.isArray(query.longUrl)) {
+      const longUrl = req.url.split('longUrl=')[1];
+      if (longUrl) {
         if (process.env.BITLY_API_KEY) {
           const bitly = new BitlyClient(process.env.BITLY_API_KEY);
 
           return bitly
-            .shorten(query.longUrl.replace('localhost', '127.0.0.1'))
+            .shorten(longUrl.replace('localhost', '127.0.0.1'))
             .then(shortUrl => res.json({ code: 200, shortUrl }))
             .catch(error => res.json({ code: 401, error: error.message }));
         } else {
