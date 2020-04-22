@@ -23,6 +23,7 @@ import {
   setQuery,
   splitByComma
 } from './utils';
+import { addEvent } from '../../utils/gtm';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
@@ -69,10 +70,18 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
   const onOptionsChange = (optns: SpotlightOptions): void => {
     setQuery(optns, activeLocation && [activeLocation]);
     setOptions(optns);
+    addEvent('mapsectionOptionsChanged', {
+      topic: optns.theme?.name,
+      indicator: optns.indicator?.name,
+      year: optns.year
+    });
   };
   const onSelectLocation = (location?: SpotlightLocation): void => {
     setQuery(options, location && [location]);
     setActiveLocation(location);
+    addEvent('locationChanged', {
+      locationName: location?.name.toUpperCase()
+    });
     if (onChangeLocation) {
       onChangeLocation(location);
     }
