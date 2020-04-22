@@ -100,4 +100,6 @@ jobs:
         port: ${{ secrets.PORT }}
         envs: CMS_URL,BITLY_API_KEY
         script: |
+          export CMS_URL=$CMS_URL
+          export BITLY_API_KEY=$BITLY_API_KEY
           cd ./deploy_spotlights/deploy_script.sh && chmod +x deploy_script.sh && bash deploy_script.sh
