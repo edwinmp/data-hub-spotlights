@@ -4,17 +4,17 @@ import { debounce } from 'underscore';
 import { CountryContext } from '../../utils';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
-import { config, SpotlightMapProps } from './utils';
 import {
-  COLOURED_LAYER,
-  flyToLocation,
   getLocationNameFromEvent,
   getLocationStyles,
   getProperLocationName,
   renderTooltipByEvent,
-  setZoomByContainerWidth,
-  TooltipEvent
+  TooltipEvent,
+  flyToLocation,
+  COLOURED_LAYER,
+  setZoomByContainerWidth
 } from './utils/mapbox';
+import { SpotlightMapProps, config } from './utils';
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const { level, data, dataLoading, range, colours } = props;
@@ -37,7 +37,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 
   useEffect(() => {
     if (map) {
-      const popup = new Popup({
+      let popup = new Popup({
         offset: 5,
         closeButton: false
       });
@@ -61,6 +61,11 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           } else {
             flyToLocation(map, locationName, options);
           }
+          if (popup.isOpen()) {
+            popup.remove();
+          }
+          popup = new Popup({ offset: 5, closeButton: true });
+          showPopup(popup, map, event);
         }
       };
       const onResize = debounce((event: MapboxEvent) => {
