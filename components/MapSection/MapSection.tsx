@@ -93,7 +93,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
         boundaries={boundaries}
         onSelectLocation={onSelectLocation}
         countryName={props.countryName}
-        defaultLocation={activeLocation}
+        location={activeLocation}
       />
 
       <VisualisationSection>

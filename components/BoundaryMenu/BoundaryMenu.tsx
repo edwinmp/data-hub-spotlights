@@ -12,14 +12,14 @@ import { SpotlightBoundary, SpotlightLocation } from '../../utils';
 interface BoundaryMenuProps {
   boundaries: SpotlightBoundary[];
   countryName: string;
-  defaultLocation?: SpotlightLocation;
+  location?: SpotlightLocation;
   onSelectLocation?: (location?: MenuListItem) => void;
   canReset?: boolean;
 }
 
 const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ countryName, onSelectLocation, ...props }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const [activeItem, setActiveItem] = useState(props.defaultLocation ? props.defaultLocation.name : countryName);
+  const [activeItem, setActiveItem] = useState(props.location ? props.location.name : countryName);
 
   const onShowMenu = (): void => setShowMenu(!showMenu);
   const onShowAll = (): void => {

@@ -10,7 +10,7 @@ interface LocationSelectionBannerProps {
   countryName: string;
   className?: string;
   boundaries: SpotlightBoundary[];
-  defaultLocation?: SpotlightLocation;
+  location?: SpotlightLocation;
   onSelectLocation: (location?: SpotlightLocation) => void;
   selectStyles?: Partial<Styles>;
   heading?: string;
@@ -42,7 +42,7 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
           countryName={props.countryName}
           boundaries={props.boundaries}
           onSelectLocation={onSelectLocation}
-          defaultLocation={props.defaultLocation}
+          location={props.location}
           canReset={props.canReset}
         />
       </SpotlightBannerAside>
