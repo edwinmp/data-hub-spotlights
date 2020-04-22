@@ -1,20 +1,36 @@
 import { Map, MapboxEvent, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 import { debounce } from 'underscore';
-import { CountryContext } from '../../utils';
+import { CountryContext, LocationData } from '../../utils';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
 import {
   getLocationNameFromEvent,
   getLocationStyles,
   getProperLocationName,
-  renderTooltipByEvent,
+  renderTooltipFromEvent,
   TooltipEvent,
   flyToLocation,
   COLOURED_LAYER,
-  setZoomByContainerWidth
+  setZoomByContainerWidth,
+  renderTooltipFromLocation,
+  TooltipOptions
 } from './utils/mapbox';
-import { SpotlightMapProps, config } from './utils';
+import { SpotlightMapProps, config, LayerConfig } from './utils';
+
+const getTooltipOptions = (
+  popup: Popup,
+  data: LocationData[],
+  props: SpotlightMapProps,
+  configs: LayerConfig
+): TooltipOptions => ({
+  nameProperty: configs.nameProperty,
+  popup,
+  data,
+  dataPrefix: props.dataPrefix,
+  dataSuffix: props.dataSuffix,
+  formatter: configs.formatter
+});
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const { level, data, dataLoading, range, colours } = props;
@@ -25,29 +41,21 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const options = { ...(level && level <= layers.length ? layers[level] : layers[0]), ...props.layerConfig };
 
   const showPopup = (popup: Popup, map: Map, event: TooltipEvent): void => {
-    renderTooltipByEvent(map, event, {
-      nameProperty: options.nameProperty,
-      popup,
-      data: data ? data[0].data : [],
-      dataPrefix: props.dataPrefix,
-      dataSuffix: props.dataSuffix,
-      formatter: options.formatter
-    });
+    renderTooltipFromEvent(map, event, getTooltipOptions(popup, data ? data[0].data : [], props, options));
   };
 
   useEffect(() => {
     if (map) {
-      let popup = new Popup({
-        offset: 5,
-        closeButton: false
-      });
+      let popup = new Popup({ offset: 5 });
       const onHover = (event: TooltipEvent): void => {
         map.getCanvas().style.cursor = 'pointer';
         showPopup(popup, map, event);
       };
       const onBlur = (): void => {
         map.getCanvas().style.cursor = '';
-        popup.remove();
+        if (!props.location) {
+          popup.remove();
+        }
       };
 
       map.on('mousemove', COLOURED_LAYER, onHover);
@@ -64,7 +72,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           if (popup.isOpen()) {
             popup.remove();
           }
-          popup = new Popup({ offset: 5, closeButton: true });
+          popup = new Popup({ offset: 5 });
           showPopup(popup, map, event);
         }
       };
@@ -76,6 +84,15 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 
       map.on('click', COLOURED_LAYER, onClick);
       map.on('resize', onResize);
+
+      if (!loading && props.location && data) {
+        renderTooltipFromLocation(
+          map,
+          props.location.name as string,
+          options,
+          getTooltipOptions(popup, data ? data[0].data : [], props, options)
+        );
+      }
 
       return (): void => {
         map.off('mousemove', COLOURED_LAYER, onHover);

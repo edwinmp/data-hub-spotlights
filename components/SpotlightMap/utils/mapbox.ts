@@ -47,7 +47,7 @@ export const getLocationStyles = (
   return [];
 };
 
-interface TooltipOptions {
+export interface TooltipOptions {
   popup: Popup;
   nameProperty: string;
   data: LocationData[];
@@ -117,47 +117,73 @@ export const getPositionFromLocationName = (map: Map, locationName: string, opti
   return features && features.length ? getPosition(features[0]) : null;
 };
 
-// export const renderLocationTooltip = (map: Map, locationName: string, options: TooltipOptions): void => {
-//   //
-// };
+export const flyToLocation = (map: Map, locationName: string, options: LayerConfig, recenter = true): Promise<LngLat> =>
+  new Promise((resolve, reject) => {
+    const position = getPositionFromLocationName(map, locationName, options);
+    if (position) {
+      map.flyTo({
+        center: position,
+        zoom: 16
+      });
+      resolve(position);
+    } else if (recenter) {
+      // reset view before next flyTo, otherwise flying to locations not currently visible shall fail
+      map.flyTo({ center: options.center, zoom: options.zoom || 6.1 });
+      setTimeout(() => {
+        flyToLocation(map, locationName, options, false)
+          .then(position => resolve(position))
+          .catch(reject);
+      }, 500);
+    } else {
+      reject(`Location ${locationName} not found!`);
+    }
+  });
 
-export const flyToLocation = (map: Map, locationName: string, options: LayerConfig, recenter = true): void => {
-  const position = getPositionFromLocationName(map, locationName, options);
-  if (position) {
-    map.flyTo({
-      center: position,
-      zoom: 16
-    });
-  } else if (recenter) {
-    // reset view before next flyTo, otherwise flying to locations not currently visible shall fail
-    map.flyTo({ center: options.center, zoom: options.zoom || 6.1 });
-    setTimeout(() => {
-      flyToLocation(map, locationName, options, false);
-    }, 500);
-  }
-};
-
-export const renderTooltipByEvent = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
-  const { popup, nameProperty, data, formatter: format } = options;
-  const locationName = getLocationNameFromEvent(event, nameProperty);
-  if (locationName) {
-    const location = data.find(_location => {
-      const name = format ? format(_location.name) : _location.name;
-
-      return locationName === name;
-    });
-    popup
-      .setLngLat(event.lngLat)
-      .setHTML(
-        `
+export const renderPopup = (map: Map, popup: Popup, position: LngLat, locationName: string, value: string): Popup =>
+  popup
+    .setLngLat(position)
+    .setHTML(
+      `
         <div style="white-space: nowrap;">
           <div style="font-size:1.6rem;padding-bottom:5px;font-weight:700;text-align:center;text-transform:capitalize;">
             ${locationName.toLowerCase()}
           </div>
-          <em style="font-size:1.4rem;">${getTooltipValue(options, location)}</em>
+          <em style="font-size:1.4rem;">${value}</em>
         </div>
       `
-      )
-      .addTo(map);
+    )
+    .addTo(map);
+
+const findLocationData = (
+  locationName: string,
+  data: LocationData[],
+  formatter?: (value: string) => string | number
+): LocationData | undefined =>
+  data.find(location => {
+    const name = formatter ? formatter(location.name) : location.name;
+
+    return locationName.toLowerCase() === `${name}`.toLowerCase();
+  });
+
+export const renderTooltipFromEvent = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
+  const { popup, nameProperty, data, formatter } = options;
+  const locationName = getLocationNameFromEvent(event, nameProperty);
+  if (locationName) {
+    const location = findLocationData(locationName, data, formatter);
+    renderPopup(map, popup, event.lngLat, locationName, getTooltipValue(options, location));
+  }
+};
+
+export const renderTooltipFromLocation = (
+  map: Map,
+  locationName: string,
+  config: LayerConfig,
+  options: TooltipOptions
+): void => {
+  const { popup, data, formatter } = options;
+  const position = getPositionFromLocationName(map, locationName, config);
+  if (position) {
+    const location = findLocationData(locationName, data, formatter);
+    renderPopup(map, popup, position, locationName, getTooltipValue(options, location));
   }
 };
