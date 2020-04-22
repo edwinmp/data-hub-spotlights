@@ -37,7 +37,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       with:
-        ref: fix/docker-build
+        ref: fix/deploy
     - name: clear old build files
       run: |
         rm -rf build.zip build
