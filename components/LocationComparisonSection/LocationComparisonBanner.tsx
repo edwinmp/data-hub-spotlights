@@ -8,8 +8,6 @@ import { SpotlightBanner } from '../SpotlightBanner';
 import { TagList, TagListItem } from '../Tags';
 
 interface ComparisonWrapperProps {
-  countryName: string;
-  countryCode: string;
   onCompare?: (locations: SpotlightLocation[]) => void;
   locations?: SpotlightLocation[];
 }

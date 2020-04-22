@@ -8,8 +8,6 @@ import { LocationComparisonBanner } from './LocationComparisonBanner';
 import LocationComparisonChartSection from './LocationComparisonChartSection';
 
 interface ComponentProps {
-  countryCode: string;
-  countryName: string;
   themes: SpotlightTheme[];
   defaultLocations: SpotlightLocation[];
 }
@@ -31,7 +29,7 @@ const generateUniqueRandomID = (existing: string[]): string => {
   return existing.includes(randomID) ? generateUniqueRandomID(existing) : randomID;
 };
 
-const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryName, themes, ...props }) => {
+const LocationComparisonSection: FunctionComponent<P> = ({ themes, ...props }) => {
   const [locations, setLocations] = useState<SpotlightLocation[]>(getQueryLocation() || props.defaultLocations);
   const [chartIDs, setChartIDs] = useState<string[]>([generateUniqueRandomID([])]);
 
@@ -55,19 +53,13 @@ const LocationComparisonSection: FunctionComponent<P> = ({ countryCode, countryN
     <>
       <PageSection narrow>
         <PageSectionHeading>Location Comparison</PageSectionHeading>
-        <LocationComparisonBanner
-          countryName={countryName}
-          countryCode={countryCode}
-          onCompare={onCompare}
-          locations={locations}
-        />
+        <LocationComparisonBanner onCompare={onCompare} locations={locations} />
       </PageSection>
       {chartIDs.map(key => (
         <LocationComparisonChartSection
           key={key}
           themes={themes}
           locations={locations}
-          countryCode={countryCode}
           onRemove={chartIDs.length > 1 ? onRemove(key) : undefined}
         />
       ))}

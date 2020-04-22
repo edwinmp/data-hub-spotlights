@@ -32,12 +32,7 @@ const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
   if (page.themes && page.country_code) {
     return (
       <CountryContext.Provider value={countryInfo}>
-        <LocationComparisonSection
-          countryCode={page.country_code}
-          countryName={page.country_name}
-          themes={mapThemes}
-          defaultLocations={page.compare.default_locations}
-        />
+        <LocationComparisonSection themes={mapThemes} defaultLocations={page.compare.default_locations} />
       </CountryContext.Provider>
     );
   }
