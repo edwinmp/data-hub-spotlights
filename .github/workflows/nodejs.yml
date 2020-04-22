@@ -91,7 +91,7 @@ jobs:
     - name: executing remote ssh commands using ssh
       uses: appleboy/ssh-action@master
       env:
-        ASSETS_SOURCE_URL: ${{ secrets.ASSETS_SOURCE_URL }}
+        CMS_URL: ${{ secrets.CMS_URL }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
