@@ -18,7 +18,7 @@ if [ ! "$(docker ps -q -f name=nodejs)" ]; then
     fi
     # run container
     docker-compose build
-    docker-compose up 
+    docker-compose up -d
 fi
 #docker run -d -p 3000:3000 --name datahub-spotlights -e ASSETS_SOURCE_URL="$ASSETS_SOURCE_URL" datahub-spotlights-image:latest
 # clean up scripts
