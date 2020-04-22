@@ -9,20 +9,17 @@ unzip -o build.zip
 cd build || exit
 
 # Build the docker image
-if [ ! "$(docker ps -q -f name=nodejs)" ]; then
-    if [ "$(docker ps -aq -f status=exited -f name=nodejs)" ]; then
-        # cleanup
-        docker stop nodejs
-        docker rm nodejs
-        docker rmi build_nodejs
-    fi
-    # run container
-    docker-compose build
-    docker-compose up -d
+if [ ! "$(docker ps -q -f name=nodejs)" || "$(docker ps -aq -f status=exited -f name=nodejs)" ]; then
+    # cleanup
+    docker stop nodejs
+    docker rm nodejs
+    docker rmi build_nodejs
 fi
-#docker run -d -p 3000:3000 --name datahub-spotlights -e ASSETS_SOURCE_URL="$ASSETS_SOURCE_URL" datahub-spotlights-image:latest
+
+# run container
+docker-compose build
+docker-compose up -d
+
 # clean up scripts
-
-
 cd ~
 rm -rf deploy_spotlights
