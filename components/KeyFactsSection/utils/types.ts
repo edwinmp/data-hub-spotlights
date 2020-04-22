@@ -1,7 +1,6 @@
-import { SpotlightLocation, SpotlightTheme } from '../../../utils';
+import { SpotlightTheme } from '../../../utils';
 
 export interface KeyFactsSectionProps {
-  location?: SpotlightLocation;
   themes: SpotlightTheme[];
   countryCode: string;
   countryName: string;

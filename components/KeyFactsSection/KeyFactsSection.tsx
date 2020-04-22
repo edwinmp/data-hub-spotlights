@@ -1,11 +1,12 @@
-import React, { FunctionComponent, ReactNode, useState } from 'react';
-import { toCamelCase } from '../../utils';
+import React, { FunctionComponent, ReactNode, useContext, useState } from 'react';
+import { LocationContext, toCamelCase } from '../../utils';
 import { KeyFactTab } from '../KeyFactTab';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightTab } from '../SpotlightTab';
 import { KeyFactsSectionProps } from './utils';
 
-const KeyFactsSection: FunctionComponent<KeyFactsSectionProps> = ({ location, themes, currencyCode, ...props }) => {
+const KeyFactsSection: FunctionComponent<KeyFactsSectionProps> = ({ themes, currencyCode, ...props }) => {
+  const location = useContext(LocationContext);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const renderTabs = (): ReactNode =>

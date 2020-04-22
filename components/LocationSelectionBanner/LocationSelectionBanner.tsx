@@ -42,7 +42,6 @@ const LocationSelectionBanner: FunctionComponent<LocationSelectionBannerProps> =
           countryName={props.countryName}
           boundaries={props.boundaries}
           onSelectLocation={onSelectLocation}
-          location={props.location}
           canReset={props.canReset}
         />
       </SpotlightBannerAside>

@@ -12,9 +12,10 @@ import {
   fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
+  getSlugFromURL,
   SpotlightLocation,
   SpotlightPage,
-  getSlugFromURL
+  LocationContext
 } from '../../../utils';
 
 interface SpotlightProps {
@@ -24,6 +25,7 @@ interface SpotlightProps {
 }
 
 const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
+  const { country_code: countryCode, country_name: countryName } = page;
   const [location, setLocation] = useState<SpotlightLocation | undefined>();
   useEffect(() => {
     if (setData) {
@@ -35,26 +37,20 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
 
   if (page.themes && page.country_code) {
     return (
-      <>
+      <LocationContext.Provider value={location}>
         <MapSection
           themes={mapThemes}
-          countryCode={page.country_code}
-          countryName={page.country_name}
+          countryCode={countryCode}
+          countryName={countryName}
           onChangeLocation={onChangeLocation}
         />
         <KeyFactsSection
-          countryCode={page.country_code}
-          countryName={page.country_name}
-          currencyCode={page.currency_code || ''}
-          location={location}
+          countryCode={countryCode}
+          countryName={countryName}
+          currencyCode={countryCode || ''}
           themes={filterThemesBySection(page.themes, location ? 'facts' : 'country-facts')}
         />
-        <IndicatorComparisonSection
-          location={location}
-          themes={mapThemes}
-          countryCode={page.country_code}
-          countryName={page.country_name}
-        />
+        <IndicatorComparisonSection themes={mapThemes} countryCode={countryCode} countryName={countryName} />
         {filterThemesBySection(page.themes, 'revenue-expenditure').map(theme =>
           theme.indicators
             .filter(indicator => (!location ? indicator.slug.includes('country') : !indicator.slug.includes('country')))
@@ -62,16 +58,15 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
               <ErrorBoundary key={index}>
                 <RevenueExpenditureSection
                   indicator={indicator}
-                  countryCode={page.country_code}
-                  countryName={page.country_name}
+                  countryCode={countryCode}
+                  countryName={countryName}
                   currencyCode={page.currency_code || ''}
-                  location={location}
                 />
               </ErrorBoundary>
             ))
         )}
         <DataSourcesSection description={page.datasources_description} dataSourceLinks={page.datasource_links} />
-      </>
+      </LocationContext.Provider>
     );
   }
 

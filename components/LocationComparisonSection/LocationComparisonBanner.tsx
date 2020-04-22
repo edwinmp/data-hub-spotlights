@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { CSSProperties, default as React, FunctionComponent, useEffect, useState } from 'react';
 import { SpotlightLocation } from '../../utils';
-import { useBoundaries } from '../../utils/hooks';
+import { useBoundaries } from '../../utils';
 import { Button } from '../Button';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
 import { SpotlightBanner } from '../SpotlightBanner';

@@ -1,10 +1,11 @@
-import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 import {
   BudgetType,
   createYearOptionsFromRange,
+  LocationContext,
   processTemplateString,
   SpotlightIndicator,
-  SpotlightLocation
+  toCamelCase
 } from '../../utils';
 import { Alert } from '../Alert';
 import { CurrencySelector } from '../CurrencySelector';
@@ -32,7 +33,6 @@ interface RevenueSectionProps {
   countryName: string;
   currencyCode: string;
   indicator: SpotlightIndicator;
-  location?: SpotlightLocation;
   budgetTypeOptions?: SelectType[];
 }
 
@@ -50,7 +50,8 @@ const renderPaddedAlert = (message: string): ReactNode => (
   </div>
 );
 
-const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
+const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, ...props }) => {
+  const location = useContext(LocationContext);
   const [retryCount, setRetryCount] = useState(0);
   const [useLocalValue, setUseLocalValue] = useState(false);
   const [year, setYear] = useState<number | undefined>(indicator.end_year && indicator.end_year);
@@ -119,7 +120,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   return (
     <PageSection>
       <PageSectionHeading>
-        {processTemplateString(indicator.name, { location: location ? location.name : props.countryName })}
+        {processTemplateString(indicator.name, { location: location ? toCamelCase(location.name) : props.countryName })}
       </PageSectionHeading>
 
       <SpotlightBanner className="spotlight-banner--alt">

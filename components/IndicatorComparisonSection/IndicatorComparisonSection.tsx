@@ -1,19 +1,19 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { SpotlightIndicator, SpotlightLocation, SpotlightOptions, SpotlightTheme, toCamelCase } from '../../utils';
+import React, { FunctionComponent, useEffect, useState, useContext } from 'react';
+import { SpotlightIndicator, SpotlightOptions, SpotlightTheme, toCamelCase, LocationContext } from '../../utils';
 import { ComparisonChartDataHandler } from '../ComparisonChartDataHandler';
 import { IndicatorComparisonDataLoader } from '../IndicatorComparisonDataLoader';
 import { PageSection, PageSectionHeading } from '../PageSection';
 import { IndicatorSelectionBanner } from './IndicatorSelectionBanner';
 
 export interface IndicatorComparisonSectionProps {
-  location?: SpotlightLocation;
   themes: SpotlightTheme[];
   countryCode: string;
   countryName: string;
 }
 
 const IndicatorComparisonSection: FunctionComponent<IndicatorComparisonSectionProps> = props => {
-  const { location, themes, countryName, countryCode } = props;
+  const { themes, countryName, countryCode } = props;
+  const location = useContext(LocationContext);
   const [loading, setLoading] = useState(false);
   const [selections, setSelections] = useState<[SpotlightOptions, SpotlightOptions] | undefined>(undefined);
   const onCompare = (_selections: [SpotlightOptions, SpotlightOptions]): void => {

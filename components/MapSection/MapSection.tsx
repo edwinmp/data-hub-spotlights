@@ -2,7 +2,7 @@ import { NextRouter, useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { SpotlightLocation, SpotlightOptions, findBoundaryByName } from '../../utils';
-import { useBoundaries } from '../../utils/hooks';
+import { useBoundaries } from '../../utils';
 import { AnchorButton } from '../AnchorButton';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
