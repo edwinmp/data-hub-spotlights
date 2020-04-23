@@ -1,12 +1,6 @@
 name: Node CI
 
-on:
-  push:
-    branches:
-      - fix/deploy
-  pull_request:
-    branches:
-      - fix/deploy
+on: [push, pull_request]
 
 jobs:
   test:
@@ -34,6 +28,7 @@ jobs:
         CI: true
   build:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
     steps:
     - uses: actions/checkout@v1
       with:
@@ -67,6 +62,7 @@ jobs:
         echo "DONE!"
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/download-artifact@v1
