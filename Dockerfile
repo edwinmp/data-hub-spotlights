@@ -1,8 +1,9 @@
 FROM node:10
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/
 
 ARG CMS_URL
+ARG BITLY_API_KEY
 
 ENV CMS_URL=$CMS_URL
 ENV BITLY_API_KEY=$BITLY_API_KEY
@@ -17,4 +18,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "yarn", "start"]
+CMD ./node_modules/.bin/cross-env NODE_ENV=production node index.js
