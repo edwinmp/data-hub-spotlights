@@ -1,19 +1,19 @@
 import classNames from 'classnames';
 import { CSSProperties, default as React, FunctionComponent, useEffect, useState } from 'react';
 import { SpotlightLocation } from '../../utils';
+import { useBoundaries } from '../../utils';
 import { Button } from '../Button';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { TagList, TagListItem } from '../Tags';
 
 interface ComparisonWrapperProps {
-  countryName: string;
-  countryCode: string;
   onCompare?: (locations: SpotlightLocation[]) => void;
   locations?: SpotlightLocation[];
 }
 
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
+  const boundaries = useBoundaries();
   const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations ? props.locations : []);
   useEffect(() => {
     if (locations.length < 2 && props.onCompare) {
@@ -43,8 +43,7 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
   return (
     <>
       <LocationSelectionBanner
-        countryName={props.countryName}
-        countryCode={props.countryCode}
+        boundaries={boundaries}
         onSelectLocation={onSelectLocation}
         selectStyles={{
           container: (provided): CSSProperties => ({

@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { SpotlightLocation, toCamelCase } from '../../utils';
+import { CountryContext, LocationContext, toCamelCase } from '../../utils';
 import { Button } from '../Button';
 import { FormField } from '../FormField';
 import { FormFieldRadio, FormFieldRadioGroup } from '../FormFieldRadio';
@@ -10,11 +10,11 @@ import { getShortUrl } from './utils';
 
 interface SpotlightShareProps {
   buttonCaption?: string;
-  location?: SpotlightLocation;
-  countryName: string;
 }
 
-const SpotlightShare: FunctionComponent<SpotlightShareProps> = ({ buttonCaption, ...props }) => {
+const SpotlightShare: FunctionComponent<SpotlightShareProps> = ({ buttonCaption }) => {
+  const location = useContext(LocationContext);
+  const { countryName } = useContext(CountryContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [url, setUrl] = useState('');
   const [radioValue, setRadioValue] = useState('default');
@@ -23,7 +23,10 @@ const SpotlightShare: FunctionComponent<SpotlightShareProps> = ({ buttonCaption,
       setUrl('');
       getShortUrl(radioValue === 'default')
         .then(url => setUrl(url.link))
-        .catch(error => console.log('Error while generating short URL: ', error.message));
+        .catch(error => {
+          console.log('Error while generating short URL: ', error.message);
+          setUrl('Error');
+        });
     }
   }, [radioValue]);
 
@@ -32,7 +35,10 @@ const SpotlightShare: FunctionComponent<SpotlightShareProps> = ({ buttonCaption,
     if (!modalOpen) {
       getShortUrl(radioValue === 'default')
         .then(url => setUrl(url.link))
-        .catch(error => console.log('Error while generating short URL: ', error.message));
+        .catch(error => {
+          console.log('Error while generating short URL: ', error.message);
+          setUrl('Error');
+        });
     }
     setModalOpen(!modalOpen);
   };
@@ -92,9 +98,9 @@ const SpotlightShare: FunctionComponent<SpotlightShareProps> = ({ buttonCaption,
                   socialSource="email"
                   url={
                     'mailto:?subject=Development Initiatives: ' +
-                    toCamelCase(props.location ? props.location.name : props.countryName) +
+                    toCamelCase(location ? location.name : countryName) +
                     '&body=Development Initiatives:' +
-                    toCamelCase(props.location ? props.location.name : props.countryName) +
+                    toCamelCase(location ? location.name : countryName) +
                     '%0A%0A' +
                     url
                   }

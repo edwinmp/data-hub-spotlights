@@ -17,6 +17,12 @@ export interface SpotlightPage {
   compare: SpotlightCompareConfigs;
 }
 
+export interface CountryInfo {
+  countryCode: string;
+  countryName: string;
+  currencyCode: string;
+}
+
 export interface SpotlightTheme {
   name: string;
   slug: string;

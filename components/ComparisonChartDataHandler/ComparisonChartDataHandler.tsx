@@ -1,13 +1,14 @@
-import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useEffect, useState, useContext } from 'react';
 import {
-  getBoundariesByCountryCode,
   getBoundariesByDepth,
   hasData,
   LocationData,
   LocationIndicatorData,
   SpotlightIndicator,
   SpotlightLocation,
-  toCamelCase
+  toCamelCase,
+  useBoundaries,
+  CountryContext
 } from '../../utils';
 import { Alert } from '../Alert';
 import { Icon } from '../Icon';
@@ -23,8 +24,6 @@ interface ComponentProps {
   data?: LocationIndicatorData[];
   dataLoading?: boolean;
   location?: SpotlightLocation;
-  countryCode: string;
-  countryName: string;
   indicators: [SpotlightIndicator, SpotlightIndicator];
 }
 
@@ -53,22 +52,22 @@ const renderPaddedAlert = (message: string): ReactNode => (
 
 const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, location, ...props }) => {
   const [locations, setLocations] = useState<string[]>([]);
+  const boundaries = useBoundaries();
+  const { countryName } = useContext(CountryContext);
 
   useEffect(() => {
     if (!location) {
-      getBoundariesByCountryCode(props.countryCode).then(boundaries => {
-        const requiredBoundaries = getBoundariesByDepth(boundaries, 'd');
-        setLocations(
-          requiredBoundaries
-            .map(({ name }) => name)
-            .sort()
-            .reverse()
-        );
-      });
+      const requiredBoundaries = getBoundariesByDepth(boundaries, 'd');
+      setLocations(
+        requiredBoundaries
+          .map(({ name }) => name)
+          .sort()
+          .reverse()
+      );
     } else {
       setLocations([location.name]); // TODO: get sub-locations here e.g. sub-county/parish
     }
-  }, [location]);
+  }, [location, boundaries]);
 
   if (!data || !hasData(data)) {
     return <>{renderPaddedAlert('Unfortunately, we do not have data for this location.')}</>;
@@ -77,7 +76,7 @@ const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, l
   return (
     <VisualisationSection className="spotlight--leader">
       <SpotlightSidebar>
-        <SpotlightHeading>{toCamelCase(location ? location.name : props.countryName)}</SpotlightHeading>
+        <SpotlightHeading>{toCamelCase(location ? location.name : countryName)}</SpotlightHeading>
         <SpotlightInteractive background="#ffffff">
           {location ? (
             <Loading active={!!props.dataLoading}>
@@ -102,7 +101,7 @@ const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, l
 
       <VisualisationSectionMain>
         <SpotlightHeading>
-          Locations in {location ? toCamelCase(location.name) : toCamelCase(props.countryName)}
+          Locations in {location ? toCamelCase(location.name) : toCamelCase(countryName)}
         </SpotlightHeading>
         <SpotlightInteractive maxHeight="500px" background="#ffffff">
           {locations.length > 1 ? (

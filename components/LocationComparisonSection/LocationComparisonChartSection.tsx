@@ -13,7 +13,6 @@ import { VisualisationSectionMain } from '../VisualisationSection';
 
 interface ComponentProps {
   themes: SpotlightTheme[];
-  countryCode: string;
   locations: SpotlightLocation[];
   onRemove?: () => void;
 }
@@ -57,11 +56,7 @@ const LocationComparisonChartSection: FunctionComponent<ComponentProps> = props 
         </SpotlightBanner>
         {selections.indicator ? (
           <VisualisationSectionMain>
-            <LocationComparisonChartDataHandler
-              countryCode={props.countryCode}
-              locations={props.locations}
-              indicator={selections.indicator}
-            />
+            <LocationComparisonChartDataHandler locations={props.locations} indicator={selections.indicator} />
           </VisualisationSectionMain>
         ) : null}
       </Spotlight>

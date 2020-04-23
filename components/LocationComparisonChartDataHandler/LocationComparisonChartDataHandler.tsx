@@ -12,7 +12,6 @@ interface ComponentProps {
   data?: LocationIndicatorData; // TODO: remove
   indicator: SpotlightIndicator;
   locations: SpotlightLocation[];
-  countryCode: string;
 }
 
 const getYears = (data: LocationData[]): number[] =>

@@ -54,3 +54,26 @@ export const sortBoundariesByName = (boundaries: SpotlightBoundary[]): Spotlight
 
     return boundary;
   });
+
+export const findBoundaryByName = (
+  boundaries: SpotlightBoundary[],
+  boundaryName: string
+): SpotlightBoundary | undefined => {
+  let boundary: SpotlightBoundary | undefined = undefined;
+
+  for (let index = 0; index < boundaries.length && !boundary; index++) {
+    const currentBoundary = boundaries[index];
+    if (index === 0) {
+      boundary = boundaries.find(location => location.name.toLowerCase() === boundaryName);
+      if (!boundary && currentBoundary.children) {
+        boundary = findBoundaryByName(currentBoundary.children, boundaryName);
+      }
+    } else if (currentBoundary.name.toLowerCase() === boundaryName) {
+      boundary = currentBoundary;
+    } else if (currentBoundary.children) {
+      boundary = findBoundaryByName(currentBoundary.children, boundaryName);
+    }
+  }
+
+  return boundary;
+};
