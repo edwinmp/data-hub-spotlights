@@ -6,6 +6,7 @@ import { PageSection, PageSectionHeading } from '../PageSection';
 import { SpotlightShare } from '../SpotlightShare';
 import { LocationComparisonBanner } from './LocationComparisonBanner';
 import LocationComparisonChartSection from './LocationComparisonChartSection';
+import { addEvent } from '../../utils/gtm';
 
 interface ComponentProps {
   themes: SpotlightTheme[];
@@ -42,6 +43,14 @@ const LocationComparisonSection: FunctionComponent<P> = ({ themes, ...props }) =
     if (!chartIDs || chartIDs.length === 0) {
       setChartIDs(chartIDs.concat(generateUniqueRandomID([])));
     }
+    const locationString = locations
+      .map(item => {
+        return item.name;
+      })
+      .join(', ');
+    addEvent('locationsCompared', {
+      locations: locationString
+    });
   };
   const onRemove = (key: string) => (): void => {
     if (chartIDs.length > 1) {
@@ -55,12 +64,13 @@ const LocationComparisonSection: FunctionComponent<P> = ({ themes, ...props }) =
         <PageSectionHeading>Location Comparison</PageSectionHeading>
         <LocationComparisonBanner onCompare={onCompare} locations={locations} />
       </PageSection>
-      {chartIDs.map(key => (
+      {chartIDs.map((key, index) => (
         <LocationComparisonChartSection
           key={key}
           themes={themes}
           locations={locations}
           onRemove={chartIDs.length > 1 ? onRemove(key) : undefined}
+          chartNumber={index + 1}
         />
       ))}
       {chartIDs.length ? (

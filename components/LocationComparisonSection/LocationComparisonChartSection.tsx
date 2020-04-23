@@ -10,11 +10,13 @@ import { Spotlight } from '../Spotlight';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightFilters } from '../SpotlightFilters';
 import { VisualisationSectionMain } from '../VisualisationSection';
+import { addEvent } from '../../utils/gtm';
 
 interface ComponentProps {
   themes: SpotlightTheme[];
   locations: SpotlightLocation[];
   onRemove?: () => void;
+  chartNumber: number;
 }
 
 const LocationComparisonChartSection: FunctionComponent<ComponentProps> = props => {
@@ -28,6 +30,11 @@ const LocationComparisonChartSection: FunctionComponent<ComponentProps> = props 
     if (options.indicator) {
       setSelections(options);
       setQuery(options, props.locations);
+      addEvent('locationComparisonOptionsChanged', {
+        topic: options.theme?.name,
+        indicator: options.indicator.name,
+        chartNumber: props.chartNumber
+      });
     }
   };
 
