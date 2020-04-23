@@ -23,6 +23,7 @@ import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { getIndicatorContentOptions, parseBudgetType, useRevenueExpenditureData } from './utils';
+import { addEvent } from '../../utils/gtm';
 
 interface RevenueSectionProps {
   indicator: SpotlightIndicator;
@@ -41,6 +42,27 @@ const renderPaddedAlert = (message: string): ReactNode => (
     `}</style>
   </div>
 );
+
+const addGTMEvent = (
+  sectionHeading: string,
+  budgetType: BudgetType | undefined,
+  currency: string,
+  year: number | string | undefined
+): void => {
+  const eventName =
+    sectionHeading.indexOf('Revenue') !== -1
+      ? 'revenueAndGrantsChartOptionChanged'
+      : sectionHeading.indexOf('Expenditure') !== -1
+      ? 'expenditureChartOptionChanged'
+      : sectionHeading.indexOf('Financing') !== -1
+      ? 'financingChartOptionChanged'
+      : '';
+  addEvent(eventName, {
+    budgetType,
+    currency,
+    year
+  });
+};
 
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator }) => {
   const { countryCode, countryName, currencyCode } = useContext(CountryContext);
@@ -66,6 +88,9 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
     }
   };
 
+  const sectionHeading = processTemplateString(indicator.name, {
+    location: location ? toCamelCase(location.name) : countryName
+  });
   useEffect(() => {
     setOptions({
       ...options,
@@ -84,7 +109,10 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
     setYearBudgetTypes();
   }
 
-  const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
+  const onChangeCurrency = (isLocal: boolean): void => {
+    setUseLocalValue(isLocal);
+    addGTMEvent(sectionHeading, selectedBudgetType, isLocal ? 'UGX' : 'USD', year);
+  };
   const onSelectYear = (option?: SelectOption): void => {
     if (option) {
       setYear(parseInt(option.value));
@@ -92,6 +120,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         const _budgetTypes = Object.keys(data[option.value]) as BudgetType[];
         setBudgetTypes(_budgetTypes);
         setSelectedBudgetType(_budgetTypes[0]);
+        addGTMEvent(sectionHeading, _budgetTypes[0], useLocalValue ? 'UGX' : 'USD', option.value);
       }
     } else {
       setYear(undefined);
@@ -101,6 +130,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const onChangeBudgetType = (option?: SelectOption): void => {
     if (option) {
       setSelectedBudgetType(option.value as BudgetType);
+      addGTMEvent(sectionHeading, option.value as BudgetType, useLocalValue ? 'UGX' : 'USD', year);
     } else {
       setSelectedBudgetType(undefined);
     }
@@ -108,9 +138,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
   return (
     <PageSection>
-      <PageSectionHeading>
-        {processTemplateString(indicator.name, { location: location ? toCamelCase(location.name) : countryName })}
-      </PageSectionHeading>
+      <PageSectionHeading>{sectionHeading}</PageSectionHeading>
 
       <SpotlightBanner className="spotlight-banner--alt">
         <SpotlightBannerAside>
