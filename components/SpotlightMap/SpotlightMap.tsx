@@ -33,7 +33,7 @@ const getTooltipOptions = (
 });
 
 const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
-  const { level, data, dataLoading, range, colours } = props;
+  const { level, data, dataLoading, range, colours, location } = props;
   const { countryCode } = useContext(CountryContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [map, setMap] = useState<Map | undefined>(undefined);
@@ -46,6 +46,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 
   useEffect(() => {
     if (map) {
+      let timeoutID: number;
       let popup = new Popup({ offset: 5 });
       const onHover = (event: TooltipEvent): void => {
         map.getCanvas().style.cursor = 'pointer';
@@ -53,7 +54,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       };
       const onBlur = (): void => {
         map.getCanvas().style.cursor = '';
-        if (!props.location) {
+        if (!location) {
           popup.remove();
         }
       };
@@ -63,10 +64,19 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 
       const onClick = (event: TooltipEvent): void => {
         const locationName = getLocationNameFromEvent(event, options.nameProperty);
-        if (locationName) {
-          if (props.onClick) {
-            props.onClick(locationName, event);
-          } else {
+        if (!location) {
+          if (locationName) {
+            if (props.onClick) {
+              props.onClick(
+                options.formatter ? (options.formatter(locationName, 'boundary') as string) : locationName,
+                event
+              );
+            } else {
+              flyToLocation(map, locationName, options);
+            }
+          }
+        } else {
+          if (locationName) {
             flyToLocation(map, locationName, options);
           }
           if (popup.isOpen()) {
@@ -85,13 +95,15 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       map.on('click', COLOURED_LAYER, onClick);
       map.on('resize', onResize);
 
-      if (!loading && props.location && data) {
-        renderTooltipFromLocation(
-          map,
-          props.location.name as string,
-          options,
-          getTooltipOptions(popup, data ? data[0].data : [], props, options)
-        );
+      if (!loading && location && data) {
+        timeoutID = setTimeout(() => {
+          renderTooltipFromLocation(
+            map,
+            location?.name as string,
+            options,
+            getTooltipOptions(popup, data ? data[0].data : [], props, options)
+          );
+        }, 1000);
       }
 
       return (): void => {
@@ -100,16 +112,19 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
         map.off('click', COLOURED_LAYER, onClick);
         map.off('resize', onResize);
         popup.remove();
+        if (timeoutID) {
+          clearTimeout(timeoutID);
+        }
       };
     }
   }, [map, loading, data]);
   useEffect(() => {
     if (map) {
-      if (!props.location) {
+      if (!location) {
         map.setCenter(options.center).setZoom(options.zoom || 6.1);
       }
     }
-  }, [props.location]);
+  }, [location]);
   useEffect(() => {
     if (map && props.hideParentLayer && map.getLayer(options.layerName)) {
       map.setLayoutProperty(options.layerName, 'visibility', 'none');
@@ -125,15 +140,14 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
     }
   };
   const onAddLayer = (_map: Map, layerID: string): void => {
-    if (props.location) {
-      _map.setFilter(layerID, [
-        '==',
-        options.nameProperty,
-        getProperLocationName(props.location.name, options.formatter)
-      ]);
+    if (location) {
+      _map.setFilter(layerID, ['==', options.nameProperty, getProperLocationName(location.name, options.formatter)]);
       _map.setPaintProperty(options.layerName, 'fill-color', '#d1d1d1');
       if (props.locationHandling === 'flyto') {
-        setTimeout(() => flyToLocation(_map, props.location?.name as string, options), 500);
+        setTimeout(() => {
+          const locationName = options.formatter ? options.formatter(location?.name as string) : location?.name;
+          flyToLocation(_map, locationName as string, options);
+        }, 500);
       }
     }
   };

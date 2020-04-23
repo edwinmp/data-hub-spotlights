@@ -53,7 +53,7 @@ export interface TooltipOptions {
   data: LocationData[];
   dataPrefix?: string;
   dataSuffix?: string;
-  formatter?: (value: string) => string | number;
+  formatter?: (value: string, target?: 'map' | 'boundary') => string | number;
 }
 
 export type TooltipEvent = MapMouseEvent & { features?: MapboxGeoJSONFeature[] };
@@ -166,11 +166,12 @@ const findLocationData = (
   });
 
 export const renderTooltipFromEvent = (map: Map, event: TooltipEvent, options: TooltipOptions): void => {
-  const { popup, nameProperty, data, formatter } = options;
+  const { popup, nameProperty, formatter, data } = options;
   const locationName = getLocationNameFromEvent(event, nameProperty);
   if (locationName) {
-    const location = findLocationData(locationName, data, formatter);
-    renderPopup(map, popup, event.lngLat, locationName, getTooltipValue(options, location));
+    const boundaryName = formatter ? (formatter(locationName, 'boundary') as string) : locationName;
+    const location = findLocationData(boundaryName, data);
+    renderPopup(map, popup, event.lngLat, boundaryName, getTooltipValue(options, location));
   }
 };
 
@@ -180,10 +181,10 @@ export const renderTooltipFromLocation = (
   config: LayerConfig,
   options: TooltipOptions
 ): void => {
-  const { popup, data, formatter } = options;
+  const { popup, data } = options;
   const position = getPositionFromLocationName(map, locationName, config);
   if (position) {
-    const location = findLocationData(locationName, data, formatter);
+    const location = findLocationData(locationName, data);
     renderPopup(map, popup, position, locationName, getTooltipValue(options, location));
   }
 };
