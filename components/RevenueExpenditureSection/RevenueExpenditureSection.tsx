@@ -1,12 +1,12 @@
 import React, { FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 import {
   BudgetType,
+  CountryContext,
   createYearOptionsFromRange,
   LocationContext,
   processTemplateString,
   SpotlightIndicator,
-  toCamelCase,
-  CountryContext
+  toCamelCase
 } from '../../utils';
 import { Alert } from '../Alert';
 import { CurrencySelector } from '../CurrencySelector';
@@ -45,12 +45,11 @@ const renderPaddedAlert = (message: string): ReactNode => (
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator }) => {
   const { countryCode, countryName, currencyCode } = useContext(CountryContext);
   const location = useContext(LocationContext);
-  const [retryCount, setRetryCount] = useState(0);
   const [useLocalValue, setUseLocalValue] = useState(false);
   const [year, setYear] = useState<number | undefined>(indicator.end_year && indicator.end_year);
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
   const [selectedBudgetType, setSelectedBudgetType] = useState<BudgetType | undefined>(undefined);
-  const { data, dataLoading, options, setOptions, refetch, error } = useRevenueExpenditureData(
+  const { data, dataLoading, options, setOptions, error } = useRevenueExpenditureData(
     {
       indicators: [indicator.ddw_id],
       geocodes: location ? [location.geocode] : [countryCode],
@@ -58,6 +57,15 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
     },
     indicator
   );
+
+  const setYearBudgetTypes = (): void => {
+    if (year && data.hasOwnProperty(year)) {
+      const _budgetTypes = Object.keys(data[year]) as BudgetType[];
+      setBudgetTypes(_budgetTypes);
+      setSelectedBudgetType(_budgetTypes[0]);
+    }
+  };
+
   useEffect(() => {
     setOptions({
       ...options,
@@ -67,26 +75,14 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
     setYear(indicator.end_year);
   }, [location]);
   useEffect(() => {
-    if (!dataLoading && year && data.hasOwnProperty(year)) {
-      const _budgetTypes = Object.keys(data[year]) as BudgetType[];
-      setBudgetTypes(_budgetTypes);
-      setSelectedBudgetType(_budgetTypes[0]);
-    }
-    if (retryCount > 0 && !dataLoading) {
-      setRetryCount(0);
+    if (!dataLoading) {
+      setYearBudgetTypes();
     }
   }, [dataLoading]);
-  useEffect(() => {
-    if (error) {
-      const { message } = error;
-      if (message.includes('relation') && message.includes('does not exist') && retryCount === 0 && refetch) {
-        refetch();
-        setRetryCount(retryCount + 1);
-      }
-    } else if (retryCount > 0) {
-      setRetryCount(0);
-    }
-  }, [error]);
+
+  if (!dataLoading && !selectedBudgetType) {
+    setYearBudgetTypes();
+  }
 
   const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
   const onSelectYear = (option?: SelectOption): void => {
@@ -151,7 +147,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       <VisualisationSection>
         <SpotlightSidebar>
           <SpotlightInteractive background="#ffffff">
-            {error ? (
+            {error && !dataLoading ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (
               <Loading active={dataLoading}>
@@ -177,7 +173,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         </SpotlightSidebar>
         <VisualisationSectionMain>
           <SpotlightInteractive background="#ffffff">
-            {error ? (
+            {error && !dataLoading ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (
               <Loading active={dataLoading}>
