@@ -1,8 +1,7 @@
-import { NextRouter, useRouter } from 'next/dist/client/router';
+import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
-import { SpotlightLocation, SpotlightOptions, findBoundaryByName } from '../../utils';
-import { useBoundaries } from '../../utils';
+import { findBoundaryByName, SpotlightLocation, SpotlightOptions, useBoundaries } from '../../utils';
 import { AnchorButton } from '../AnchorButton';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
@@ -47,11 +46,11 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
   return null;
 };
 
-const getComparePath = (router: NextRouter): string => {
-  const pathname = router.asPath.split('?')[0].split('#')[0];
-  const queryString = router.asPath.split('?')[1];
+const getComparePath = (): string => {
+  const pathname = window.location.pathname.split('?')[0].split('#')[0];
+  const queryString = window.location.search;
 
-  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare${queryString ? '?' + queryString : ''}`;
+  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare${queryString}`;
 };
 
 const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...props }) => {
@@ -125,7 +124,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
           <SpotlightInteractive height="100%">
             {router ? (
               <div>
-                <AnchorButton className="button button--secondary--fill" href={getComparePath(router)}>
+                <AnchorButton className="button button--secondary--fill" href={getComparePath()}>
                   Compare this location to others
                 </AnchorButton>
                 <style jsx>{`
