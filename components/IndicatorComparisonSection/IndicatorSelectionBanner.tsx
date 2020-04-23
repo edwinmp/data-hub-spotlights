@@ -3,6 +3,7 @@ import { SpotlightOptions, SpotlightTheme, getDefaultsByIndex } from '../../util
 import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightComparison } from '../SpotlightComparison';
 import { SpotlightFilters } from '../SpotlightFilters';
+import { addEvent } from '../../utils/gtm';
 
 interface ComparisonWrapperProps {
   themes: SpotlightTheme[];
@@ -31,6 +32,14 @@ const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ t
   };
   const onClickCompare = (): void => {
     if (filterOne && filterTwo) {
+      addEvent('indicatorComparisonOptionsChanged', {
+        topic: filterOne.theme?.name,
+        indicator: filterOne.indicator?.name,
+        year: filterOne.year,
+        topicTwo: filterTwo.theme?.name,
+        indicatorTwo: filterTwo.indicator?.name,
+        yearTwo: filterTwo.year
+      });
       onCompare([filterOne, filterTwo]);
     }
   };
