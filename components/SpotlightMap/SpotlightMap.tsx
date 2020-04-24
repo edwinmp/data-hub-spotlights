@@ -1,7 +1,7 @@
 import { Map, MapboxEvent, Popup } from 'mapbox-gl';
 import React, { FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 import { debounce } from 'underscore';
-import { CountryContext, LocationData } from '../../utils';
+import { CountryContext, LocationData, extractRelevantDataByBudgetType } from '../../utils';
 import { BaseMap, BaseMapLayer } from '../BaseMap';
 import { Loading } from '../Loading';
 import {
@@ -39,9 +39,10 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   const [map, setMap] = useState<Map | undefined>(undefined);
   const { layers } = config[countryCode];
   const options = { ...(level && level <= layers.length ? layers[level] : layers[0]), ...props.layerConfig };
+  const locationData = data ? extractRelevantDataByBudgetType(data[0].data) : [];
 
   const showPopup = (popup: Popup, map: Map, event: TooltipEvent): void => {
-    renderTooltipFromEvent(map, event, getTooltipOptions(popup, data ? data[0].data : [], props, options));
+    renderTooltipFromEvent(map, event, getTooltipOptions(popup, locationData, props, options));
   };
 
   useEffect(() => {
@@ -101,7 +102,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
             map,
             location?.name as string,
             options,
-            getTooltipOptions(popup, data ? data[0].data : [], props, options)
+            getTooltipOptions(popup, locationData, props, options)
           );
         }, 1000);
       }
@@ -153,7 +154,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
   };
 
   const renderLayers = (): ReactNode => {
-    if (!dataLoading && data && data[0].data.length) {
+    if (!dataLoading && locationData.length) {
       return (
         <BaseMapLayer
           id={COLOURED_LAYER}
@@ -166,7 +167,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
               property: options.nameProperty,
               type: 'categorical',
               default: '#D1CBCF',
-              stops: getLocationStyles(data[0].data, range, colours, options.formatter)
+              stops: getLocationStyles(locationData, range, colours, options.formatter)
             },
             'fill-opacity': 0.75,
             'fill-outline-color': '#ffffff'
