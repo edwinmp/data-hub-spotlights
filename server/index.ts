@@ -16,7 +16,7 @@ app
   .prepare()
   .then(() => {
     const server = express();
-    server.get('/', (_req, res) => res.redirect('https://devinit.org/data/')); // TODO: change this to the country spotlights page
+    server.get('/', (_req, res) => res.redirect('https://devinit.org/data/spotlights-on-kenya-and-uganda')); // TODO: change this to the country spotlights page
     server.get('/bitly', (req, res) => {
       const longUrl = req.url.split('longUrl=')[1];
       if (longUrl) {
