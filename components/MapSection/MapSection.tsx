@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
-import { findBoundaryByName, SpotlightLocation, SpotlightOptions, useBoundaries } from '../../utils';
+import { findBoundaryByName, SpotlightLocation, SpotlightOptions, useBoundaries, useCountryContext } from '../../utils';
 import { AnchorButton } from '../AnchorButton';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
@@ -23,7 +23,7 @@ import {
   setQuery,
   splitByComma
 } from './utils';
-import { addEvent } from '../../utils/gtm';
+import { addEvent } from '../../utils/analytics';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
@@ -66,21 +66,24 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
       onChangeLocation(activeLocation);
     }
   }, []);
+  const countryContext = useCountryContext();
 
   const onOptionsChange = (optns: SpotlightOptions): void => {
     setQuery(optns, activeLocation && [activeLocation]);
     setOptions(optns);
-    addEvent('mapsectionOptionsChanged', {
+    addEvent('mapSectionOptionsChanged', {
       topic: optns.theme?.name,
       indicator: optns.indicator?.name,
-      year: optns.year
+      year: optns.year,
+      country: countryContext.countryName
     });
   };
   const onSelectLocation = (location?: SpotlightLocation): void => {
     setQuery(options, location && [location]);
     setActiveLocation(location);
-    addEvent('locationChanged', {
-      locationName: location?.name.toUpperCase()
+    addEvent('locationChangedUsingMenuOrSearch', {
+      locationName: location ? location.name.toUpperCase() : countryContext.countryName,
+      country: countryContext.countryName
     });
     if (onChangeLocation) {
       onChangeLocation(location);
@@ -88,6 +91,10 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
   };
   const onSelectLocationFromMap = (locationName?: string): void => {
     onSelectLocation(locationName ? findBoundaryByName(boundaries, locationName.toLowerCase()) : undefined);
+    addEvent('locationChangedUsingMapClick', {
+      locationName: locationName ? locationName.toUpperCase() : countryContext.countryName,
+      country: countryContext.countryName
+    });
   };
 
   const range = options.indicator && splitByComma(options.indicator.range);

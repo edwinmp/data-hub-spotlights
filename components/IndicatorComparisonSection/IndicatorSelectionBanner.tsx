@@ -1,9 +1,9 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { SpotlightOptions, SpotlightTheme, getDefaultsByIndex } from '../../utils';
+import { SpotlightOptions, SpotlightTheme, getDefaultsByIndex, useCountryContext } from '../../utils';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightComparison } from '../SpotlightComparison';
 import { SpotlightFilters } from '../SpotlightFilters';
-import { addEvent } from '../../utils/gtm';
+import { addEvent } from '../../utils/analytics';
 
 interface ComparisonWrapperProps {
   themes: SpotlightTheme[];
@@ -21,6 +21,7 @@ const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ t
       onCompare([getDefaultsByIndex(themes).selected, getDefaultsByIndex(themes, DEFAULT_INDEXES).selected]);
     }
   }, []);
+  const countryContext = useCountryContext();
   const onFilterChange = (index: number) => (options: SpotlightOptions): void => {
     if (options.indicator && options.year) {
       if (index === 0) {
@@ -38,7 +39,8 @@ const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ t
         year: filterOne.year,
         topicTwo: filterTwo.theme?.name,
         indicatorTwo: filterTwo.indicator?.name,
-        yearTwo: filterTwo.year
+        yearTwo: filterTwo.year,
+        country: countryContext.countryName
       });
       onCompare([filterOne, filterTwo]);
     }

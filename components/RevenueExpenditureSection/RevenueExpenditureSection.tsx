@@ -6,7 +6,8 @@ import {
   LocationContext,
   processTemplateString,
   SpotlightIndicator,
-  toCamelCase
+  toCamelCase,
+  useCountryContext
 } from '../../utils';
 import { Alert } from '../Alert';
 import { CurrencySelector } from '../CurrencySelector';
@@ -23,7 +24,7 @@ import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
 import { getIndicatorContentOptions, parseBudgetType, useRevenueExpenditureData } from './utils';
-import { addEvent } from '../../utils/gtm';
+import { addEvent } from '../../utils/analytics';
 
 interface RevenueSectionProps {
   indicator: SpotlightIndicator;
@@ -47,20 +48,22 @@ const addGTMEvent = (
   sectionHeading: string,
   budgetType: BudgetType | undefined,
   currency: string,
-  year: number | string | undefined
+  year: number | string | undefined,
+  country: string
 ): void => {
-  const eventName =
-    sectionHeading.indexOf('Revenue') !== -1
-      ? 'revenueAndGrantsChartOptionChanged'
-      : sectionHeading.indexOf('Expenditure') !== -1
-      ? 'expenditureChartOptionChanged'
-      : sectionHeading.indexOf('Financing') !== -1
-      ? 'financingChartOptionChanged'
-      : '';
+  let eventName = '';
+  if (sectionHeading.indexOf('Revenue') !== -1) {
+    eventName = 'revenueAndGrantsChartOptionChanged';
+  } else if (sectionHeading.indexOf('Expenditure') !== -1) {
+    eventName = 'expenditureChartOptionChanged';
+  } else if (sectionHeading.indexOf('Financing') !== -1) {
+    eventName = 'financingChartOptionChanged';
+  }
   addEvent(eventName, {
     budgetType,
     currency,
-    year
+    year,
+    country
   });
 };
 
@@ -87,10 +90,6 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setSelectedBudgetType(_budgetTypes[0]);
     }
   };
-
-  const sectionHeading = processTemplateString(indicator.name, {
-    location: location ? toCamelCase(location.name) : countryName
-  });
   useEffect(() => {
     setOptions({
       ...options,
@@ -104,6 +103,10 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setYearBudgetTypes();
     }
   }, [dataLoading]);
+  const countryContext = useCountryContext();
+  const sectionHeading = processTemplateString(indicator.name, {
+    location: location ? toCamelCase(location.name) : countryName
+  });
 
   if (!dataLoading && !selectedBudgetType) {
     setYearBudgetTypes();
@@ -111,7 +114,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
   const onChangeCurrency = (isLocal: boolean): void => {
     setUseLocalValue(isLocal);
-    addGTMEvent(sectionHeading, selectedBudgetType, isLocal ? 'UGX' : 'USD', year);
+    addGTMEvent(sectionHeading, selectedBudgetType, isLocal ? 'UGX' : 'USD', year, countryContext.countryName);
   };
   const onSelectYear = (option?: SelectOption): void => {
     if (option) {
@@ -120,7 +123,13 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         const _budgetTypes = Object.keys(data[option.value]) as BudgetType[];
         setBudgetTypes(_budgetTypes);
         setSelectedBudgetType(_budgetTypes[0]);
-        addGTMEvent(sectionHeading, _budgetTypes[0], useLocalValue ? 'UGX' : 'USD', option.value);
+        addGTMEvent(
+          sectionHeading,
+          _budgetTypes[0],
+          useLocalValue ? 'UGX' : 'USD',
+          option.value,
+          countryContext.countryName
+        );
       }
     } else {
       setYear(undefined);
@@ -130,7 +139,13 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const onChangeBudgetType = (option?: SelectOption): void => {
     if (option) {
       setSelectedBudgetType(option.value as BudgetType);
-      addGTMEvent(sectionHeading, option.value as BudgetType, useLocalValue ? 'UGX' : 'USD', year);
+      addGTMEvent(
+        sectionHeading,
+        option.value as BudgetType,
+        useLocalValue ? 'UGX' : 'USD',
+        year,
+        countryContext.countryName
+      );
     } else {
       setSelectedBudgetType(undefined);
     }
