@@ -23,9 +23,9 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
     location: toCamelCase(location.name)
   };
 
-  if (indicator.content_template) {
+  if (indicator.advanced_config) {
     try {
-      const contentOptions: SpotlightIndicatorContent[] = JSON.parse(indicator.content_template);
+      const contentOptions: SpotlightIndicatorContent[] = JSON.parse(indicator.advanced_config);
 
       return (
         <div className="l-2up-3up__col">

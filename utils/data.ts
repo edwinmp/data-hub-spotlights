@@ -45,7 +45,7 @@ export interface SpotlightIndicator {
   value_prefix?: string;
   value_suffix?: string;
   tooltip_template?: string;
-  content_template: string | null; // this is a JSON string in the format of SpotlightIndicatorContent
+  advanced_config: string | null; // this is a JSON string in the format of SpotlightIndicatorContent
   colour?: string;
   source?: string;
 }
@@ -196,6 +196,26 @@ export const extraValueFromMeta = (meta: string, field: string, defaultValue = '
 
 export const hasData = (data: LocationIndicatorData[]): boolean =>
   !!data.reduce((prev, curr) => prev + curr.data.length, 0);
+
+export const extractRelevantDataByBudgetType = (data: LocationData[]): LocationData[] => {
+  const budgetTypeOrderOfPrecedence = ['actual', 'approved', 'proposed', ''];
+
+  return data.reduce<LocationData[]>((prev, curr) => {
+    const matchingIndex = prev.findIndex(location => location.name === curr.name);
+    if (matchingIndex > -1) {
+      const matchingLocation = prev[matchingIndex];
+      const prevBudgetType = extraValueFromMeta(matchingLocation.meta, 'budgetType') as string;
+      const currBudgetType = extraValueFromMeta(curr.meta, 'budgetType') as string;
+      if (budgetTypeOrderOfPrecedence.indexOf(currBudgetType) < budgetTypeOrderOfPrecedence.indexOf(prevBudgetType)) {
+        prev.splice(matchingIndex, 1, curr);
+      }
+
+      return prev;
+    }
+
+    return prev.concat(curr);
+  }, []);
+};
 
 export const GET_INDICATOR_DATA = gql`
   query GetIndicatorData(
