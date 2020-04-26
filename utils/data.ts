@@ -45,7 +45,7 @@ export interface SpotlightIndicator {
   value_prefix?: string;
   value_suffix?: string;
   tooltip_template?: string;
-  content_template: string | null; // this is a JSON string in the format of SpotlightIndicatorContent
+  advanced_config: string | null; // this is a JSON string in the format of SpotlightIndicatorContent
   colour?: string;
   source?: string;
 }
