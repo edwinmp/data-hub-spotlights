@@ -17,7 +17,10 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+          <meta
+            httpEquiv="Content-Security-Policy"
+            content="connect-src 'self' http://212.111.41.68:8000/ https://api.mapbox.com/ https://events.mapbox.com/events/"
+          />
           <link href="/static/css/spotlights.min.css" rel="stylesheet" />
           <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700" rel="stylesheet" />
           <script dangerouslySetInnerHTML={{ __html: iconScript }} />
