@@ -19,7 +19,7 @@ class MyDocument extends Document {
         <Head>
           <meta
             httpEquiv="Content-Security-Policy"
-            content="connect-src 'self' http://212.111.41.68:8000/ https://api.mapbox.com/ https://events.mapbox.com/events/"
+            content="connect-src 'self' https://api.devinit.org/ https://api.mapbox.com/ https://events.mapbox.com/events/"
           />
           <link href="/static/css/spotlights.min.css" rel="stylesheet" />
           <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700" rel="stylesheet" />

@@ -1,6 +1,6 @@
 import { LocationIndicatorData, SpotlightLocation } from '../../../utils';
 import { FeatureCollection, Geometry, MultiPolygon } from 'geojson';
-import { Map, MapMouseEvent } from 'mapbox-gl';
+import { Map } from 'mapbox-gl';
 import { LayerConfig } from './config';
 
 export interface SpotlightMapProps {
@@ -18,7 +18,7 @@ export interface SpotlightMapProps {
   hideParentLayer?: boolean;
   locationHandling?: 'flyto' | 'highlight-only'; // highlight-only is the default
   onLoad?: (map: Map) => void;
-  onClick?: (locationName: string, event: MapMouseEvent) => void;
+  onClick?: (locationName?: string) => void;
 }
 
 export interface SpotlightMapGeoJSON {

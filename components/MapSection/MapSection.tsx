@@ -77,8 +77,8 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
       onChangeLocation(location);
     }
   };
-  const onSelectLocationFromMap = (locationName: string): void => {
-    onSelectLocation(findBoundaryByName(boundaries, locationName.toLowerCase()));
+  const onSelectLocationFromMap = (locationName?: string): void => {
+    onSelectLocation(locationName ? findBoundaryByName(boundaries, locationName.toLowerCase()) : undefined);
   };
 
   const range = options.indicator && splitByComma(options.indicator.range);
