@@ -17,6 +17,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
           <link href="/static/css/spotlights.min.css" rel="stylesheet" />
           <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700" rel="stylesheet" />
           <script dangerouslySetInnerHTML={{ __html: iconScript }} />
