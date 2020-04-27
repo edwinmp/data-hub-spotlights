@@ -68,10 +68,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
         if (!location) {
           if (locationName) {
             if (props.onClick) {
-              props.onClick(
-                options.formatter ? (options.formatter(locationName, 'boundary') as string) : locationName,
-                event
-              );
+              props.onClick(options.formatter ? (options.formatter(locationName, 'boundary') as string) : locationName);
             } else {
               flyToLocation(map, locationName, options);
             }
@@ -87,6 +84,11 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           showPopup(popup, map, event);
         }
       };
+      const onDoubleClick = (): void => {
+        if (props.onClick) {
+          props.onClick();
+        }
+      };
       const onResize = debounce((event: MapboxEvent) => {
         const container = event.target.getContainer();
         setZoomByContainerWidth(map, container, options);
@@ -94,6 +96,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
       }, 300);
 
       map.on('click', COLOURED_LAYER, onClick);
+      map.on('dblclick', COLOURED_LAYER, onDoubleClick);
       map.on('resize', onResize);
 
       if (!loading && location && data) {
@@ -111,6 +114,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
         map.off('mousemove', COLOURED_LAYER, onHover);
         map.off('mouseleave', COLOURED_LAYER, onBlur);
         map.off('click', COLOURED_LAYER, onClick);
+        map.off('dblclick', COLOURED_LAYER, onDoubleClick);
         map.off('resize', onResize);
         popup.remove();
         if (timeoutID) {
