@@ -1,15 +1,16 @@
 import { NextPage } from 'next';
+import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { PageScaffoldData } from '../../../components/DefaultLayout';
 import { LocationComparisonSection } from '../../../components/LocationComparisonSection';
 import { PageSection } from '../../../components/PageSection';
 import {
+  CountryContext,
   fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
   getSlugFromURL,
-  SpotlightPage,
-  CountryContext
+  SpotlightPage
 } from '../../../utils';
 
 interface CompareProps {
@@ -32,6 +33,9 @@ const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
   if (page.themes && page.country_code) {
     return (
       <CountryContext.Provider value={countryInfo}>
+        <Head>
+          <title>{`${page.title} | Compare`}</title>
+        </Head>
         <LocationComparisonSection themes={mapThemes} defaultLocations={page.compare.default_locations} />
       </CountryContext.Provider>
     );

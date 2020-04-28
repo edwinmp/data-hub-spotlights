@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { DataSourcesSection } from '../../../components/DataSourcesSection';
 import { PageScaffoldData } from '../../../components/DefaultLayout';
@@ -41,6 +42,9 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
     return (
       <LocationContext.Provider value={location}>
         <CountryContext.Provider value={countryInfo}>
+          <Head>
+            <title>{page.title}</title>
+          </Head>
           <MapSection themes={mapThemes} onChangeLocation={onChangeLocation} />
           <KeyFactsSection themes={filterThemesBySection(page.themes, location ? 'facts' : 'country-facts')} />
           <IndicatorComparisonSection themes={mapThemes} />
