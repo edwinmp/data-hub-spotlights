@@ -1,7 +1,14 @@
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
-import { findBoundaryByName, SpotlightLocation, SpotlightOptions, useBoundaries } from '../../utils';
+import {
+  findBoundaryByName,
+  SpotlightLocation,
+  SpotlightOptions,
+  useBoundaries,
+  useCountryContext,
+  toCamelCase
+} from '../../utils';
 import { AnchorButton } from '../AnchorButton';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
@@ -23,6 +30,7 @@ import {
   setQuery,
   splitByComma
 } from './utils';
+import { addEvent } from '../../utils/analytics';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
@@ -56,6 +64,7 @@ const getComparePath = (): string => {
 const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...props }) => {
   const router = useRouter();
   const boundaries = useBoundaries();
+  const { countryName } = useCountryContext();
   const [options, setOptions] = useState<SpotlightOptions>({});
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(
     router ? getDefaultLocationFromQuery(router.query) : undefined
@@ -69,16 +78,28 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
   const onOptionsChange = (optns: SpotlightOptions): void => {
     setQuery(optns, activeLocation && [activeLocation]);
     setOptions(optns);
+    addEvent('mapSectionOptionsChanged', {
+      topic: optns.theme?.name,
+      indicator: optns.indicator?.name,
+      year: optns.year,
+      country: countryName
+    });
   };
   const onSelectLocation = (location?: SpotlightLocation): void => {
     setQuery(options, location && [location]);
     setActiveLocation(location);
+    addEvent('locationChangedUsingMenuOrSearch', {
+      locationName: location ? toCamelCase(location.name) : countryName
+    });
     if (onChangeLocation) {
       onChangeLocation(location);
     }
   };
   const onSelectLocationFromMap = (locationName?: string): void => {
     onSelectLocation(locationName ? findBoundaryByName(boundaries, locationName.toLowerCase()) : undefined);
+    addEvent('locationChangedUsingMapClick', {
+      locationName: locationName ? toCamelCase(locationName) : countryName
+    });
   };
 
   const range = options.indicator && splitByComma(options.indicator.range);

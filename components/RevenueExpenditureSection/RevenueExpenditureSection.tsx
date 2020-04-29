@@ -22,7 +22,7 @@ import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBa
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { getIndicatorContentOptions, parseBudgetType, useRevenueExpenditureData } from './utils';
+import { addGTMEvent, getIndicatorContentOptions, parseBudgetType, useRevenueExpenditureData } from './utils';
 
 interface RevenueSectionProps {
   indicator: SpotlightIndicator;
@@ -65,7 +65,6 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setSelectedBudgetType(_budgetTypes[0]);
     }
   };
-
   useEffect(() => {
     setOptions({
       ...options,
@@ -79,12 +78,19 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setYearBudgetTypes();
     }
   }, [dataLoading]);
+  const sectionHeading = processTemplateString(indicator.name, {
+    location: location ? toCamelCase(location.name) : countryName
+  });
 
   if (!dataLoading && !selectedBudgetType) {
     setYearBudgetTypes();
   }
 
-  const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
+  const onChangeCurrency = (isLocal: boolean): void => {
+    setUseLocalValue(isLocal);
+    const currency = isLocal ? currencyCode : 'US$';
+    addGTMEvent(sectionHeading, countryName, currency, year, parseBudgetType(selectedBudgetType || ''));
+  };
   const onSelectYear = (option?: SelectOption): void => {
     if (option) {
       setYear(parseInt(option.value));
@@ -92,6 +98,8 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         const _budgetTypes = Object.keys(data[option.value]) as BudgetType[];
         setBudgetTypes(_budgetTypes);
         setSelectedBudgetType(_budgetTypes[0]);
+        const currency = useLocalValue ? currencyCode : 'US$';
+        addGTMEvent(sectionHeading, countryName, currency, option.value, parseBudgetType(_budgetTypes[0]));
       }
     } else {
       setYear(undefined);
@@ -101,6 +109,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const onChangeBudgetType = (option?: SelectOption): void => {
     if (option) {
       setSelectedBudgetType(option.value as BudgetType);
+      addGTMEvent(sectionHeading, option.value as BudgetType, useLocalValue ? 'UGX' : 'USD', year, countryName);
     } else {
       setSelectedBudgetType(undefined);
     }
@@ -108,9 +117,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
   return (
     <PageSection>
-      <PageSectionHeading>
-        {processTemplateString(indicator.name, { location: location ? toCamelCase(location.name) : countryName })}
-      </PageSectionHeading>
+      <PageSectionHeading>{sectionHeading}</PageSectionHeading>
 
       <SpotlightBanner className="spotlight-banner--alt">
         <SpotlightBannerAside>

@@ -1,5 +1,6 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
-import { SpotlightOptions, SpotlightTheme, getDefaultsByIndex } from '../../utils';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { getDefaultsByIndex, SpotlightOptions, SpotlightTheme, useCountryContext } from '../../utils';
+import { addEvent } from '../../utils/analytics';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { SpotlightComparison } from '../SpotlightComparison';
 import { SpotlightFilters } from '../SpotlightFilters';
@@ -13,6 +14,7 @@ interface ComparisonWrapperProps {
 const DEFAULT_INDEXES: [number, number] = [1, 2];
 
 const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ themes, onCompare, ...props }) => {
+  const { countryName } = useCountryContext();
   const [filterOne, setFilterOne] = useState<SpotlightOptions | undefined>(undefined);
   const [filterTwo, setFilterTwo] = useState<SpotlightOptions | undefined>(undefined);
   useEffect(() => {
@@ -31,6 +33,15 @@ const IndicatorSelectionBanner: FunctionComponent<ComparisonWrapperProps> = ({ t
   };
   const onClickCompare = (): void => {
     if (filterOne && filterTwo) {
+      addEvent('indicatorComparisonOptionsChanged', {
+        topic: filterOne.theme?.name,
+        indicator: filterOne.indicator?.name,
+        year: filterOne.year,
+        topicTwo: filterTwo.theme?.name,
+        indicatorTwo: filterTwo.indicator?.name,
+        yearTwo: filterTwo.year,
+        country: countryName
+      });
       onCompare([filterOne, filterTwo]);
     }
   };
