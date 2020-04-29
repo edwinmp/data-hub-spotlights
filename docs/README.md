@@ -2,16 +2,16 @@
 This documentation details all that one needs to know to properly configure and populate the [DI spotlights](https://devinit.org/data/spotlights-on-kenya-and-uganda/)
 
 ## Table of Contents
-1. [Introduction](/#introduction)
+1. [Introduction](#1-introduction)
 
-    1.1 [Dependencies](/#dependencies)
+    1.1 [Dependencies](#11-dependencies)
 
-    1.2 [The Wagtail CMS](/#the-wagtail-cms)
+    1.2 [The Wagtail CMS](#12-the-wagtail-cms)
 
-    1.3 [The DDW API](/#the-ddw-api)
+    1.3 [The DDW API](#12-the-ddw-api)
 
-    1.4 [The Data Warehouse](/#the-data-warehouse)
-2. [The Map Section](/#the-map-section)
+    1.4 [The Data Warehouse](#14-the-data-warehouse)
+2. [The Map Section](#the-map-section)
 
 
 ## 1. Introduction
