@@ -6,8 +6,7 @@ import {
   LocationContext,
   processTemplateString,
   SpotlightIndicator,
-  toCamelCase,
-  useCountryContext
+  toCamelCase
 } from '../../utils';
 import { Alert } from '../Alert';
 import { CurrencySelector } from '../CurrencySelector';
@@ -103,7 +102,6 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       setYearBudgetTypes();
     }
   }, [dataLoading]);
-  const countryContext = useCountryContext();
   const sectionHeading = processTemplateString(indicator.name, {
     location: location ? toCamelCase(location.name) : countryName
   });
@@ -114,7 +112,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
   const onChangeCurrency = (isLocal: boolean): void => {
     setUseLocalValue(isLocal);
-    addGTMEvent(sectionHeading, selectedBudgetType, isLocal ? 'UGX' : 'USD', year, countryContext.countryName);
+    addGTMEvent(sectionHeading, selectedBudgetType, isLocal ? 'UGX' : 'USD', year, countryName);
   };
   const onSelectYear = (option?: SelectOption): void => {
     if (option) {
@@ -123,13 +121,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         const _budgetTypes = Object.keys(data[option.value]) as BudgetType[];
         setBudgetTypes(_budgetTypes);
         setSelectedBudgetType(_budgetTypes[0]);
-        addGTMEvent(
-          sectionHeading,
-          _budgetTypes[0],
-          useLocalValue ? 'UGX' : 'USD',
-          option.value,
-          countryContext.countryName
-        );
+        addGTMEvent(sectionHeading, _budgetTypes[0], useLocalValue ? 'UGX' : 'USD', option.value, countryName);
       }
     } else {
       setYear(undefined);
@@ -139,13 +131,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const onChangeBudgetType = (option?: SelectOption): void => {
     if (option) {
       setSelectedBudgetType(option.value as BudgetType);
-      addGTMEvent(
-        sectionHeading,
-        option.value as BudgetType,
-        useLocalValue ? 'UGX' : 'USD',
-        year,
-        countryContext.countryName
-      );
+      addGTMEvent(sectionHeading, option.value as BudgetType, useLocalValue ? 'UGX' : 'USD', year, countryName);
     } else {
       setSelectedBudgetType(undefined);
     }

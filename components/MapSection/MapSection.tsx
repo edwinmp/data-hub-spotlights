@@ -1,7 +1,14 @@
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
-import { findBoundaryByName, SpotlightLocation, SpotlightOptions, useBoundaries, useCountryContext } from '../../utils';
+import {
+  findBoundaryByName,
+  SpotlightLocation,
+  SpotlightOptions,
+  useBoundaries,
+  useCountryContext,
+  toCamelCase
+} from '../../utils';
 import { AnchorButton } from '../AnchorButton';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
@@ -82,8 +89,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
     setQuery(options, location && [location]);
     setActiveLocation(location);
     addEvent('locationChangedUsingMenuOrSearch', {
-      locationName: location ? location.name.toUpperCase() : countryContext.countryName,
-      country: countryContext.countryName
+      locationName: location ? toCamelCase(location.name) : countryContext.countryName
     });
     if (onChangeLocation) {
       onChangeLocation(location);
@@ -92,8 +98,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
   const onSelectLocationFromMap = (locationName?: string): void => {
     onSelectLocation(locationName ? findBoundaryByName(boundaries, locationName.toLowerCase()) : undefined);
     addEvent('locationChangedUsingMapClick', {
-      locationName: locationName ? locationName.toUpperCase() : countryContext.countryName,
-      country: countryContext.countryName
+      locationName: locationName ? toCamelCase(locationName) : countryContext.countryName
     });
   };
 

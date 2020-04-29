@@ -43,8 +43,7 @@ const LocationComparisonSection: FunctionComponent<P> = ({ themes, ...props }) =
     if (!chartIDs || chartIDs.length === 0) {
       setChartIDs(chartIDs.concat(generateUniqueRandomID([])));
     }
-    const locationString = locations.map(item => item.name).join(', ');
-    addEvent('locationsCompared', { locations: locationString });
+    addEvent('locationsCompared', { locations: locations.map(item => item.name).join(', ') });
   };
   const onRemove = (key: string) => (): void => {
     if (chartIDs.length > 1) {
