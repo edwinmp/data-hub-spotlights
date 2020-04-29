@@ -64,6 +64,7 @@ const getComparePath = (): string => {
 const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...props }) => {
   const router = useRouter();
   const boundaries = useBoundaries();
+  const { countryName } = useCountryContext();
   const [options, setOptions] = useState<SpotlightOptions>({});
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(
     router ? getDefaultLocationFromQuery(router.query) : undefined
@@ -73,7 +74,6 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
       onChangeLocation(activeLocation);
     }
   }, []);
-  const countryContext = useCountryContext();
 
   const onOptionsChange = (optns: SpotlightOptions): void => {
     setQuery(optns, activeLocation && [activeLocation]);
@@ -82,14 +82,14 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
       topic: optns.theme?.name,
       indicator: optns.indicator?.name,
       year: optns.year,
-      country: countryContext.countryName
+      country: countryName
     });
   };
   const onSelectLocation = (location?: SpotlightLocation): void => {
     setQuery(options, location && [location]);
     setActiveLocation(location);
     addEvent('locationChangedUsingMenuOrSearch', {
-      locationName: location ? toCamelCase(location.name) : countryContext.countryName
+      locationName: location ? toCamelCase(location.name) : countryName
     });
     if (onChangeLocation) {
       onChangeLocation(location);
@@ -98,7 +98,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...p
   const onSelectLocationFromMap = (locationName?: string): void => {
     onSelectLocation(locationName ? findBoundaryByName(boundaries, locationName.toLowerCase()) : undefined);
     addEvent('locationChangedUsingMapClick', {
-      locationName: locationName ? toCamelCase(locationName) : countryContext.countryName
+      locationName: locationName ? toCamelCase(locationName) : countryName
     });
   };
 
