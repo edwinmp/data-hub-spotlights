@@ -10,7 +10,7 @@ export const sectionLinks: SectionLink[] = [
 ];
 export const socialLinks: SocialLink[] = [
   {
-    image_url: 'http://localhost:3000/assets/images/image.svg',
+    image_url: 'http://localhost:3000/static/images/image.svg',
     link_url: 'http://localhost:3000/contact-us',
     social_platform: 'facebook'
   }

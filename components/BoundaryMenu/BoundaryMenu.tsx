@@ -1,38 +1,42 @@
-import React, { FunctionComponent, useState, ReactNode } from 'react';
+import React, { FunctionComponent, ReactNode, useContext, useState, useEffect } from 'react';
+import { LocationContext, SpotlightBoundary, CountryContext } from '../../utils';
 import {
+  MenuListItem,
   SpotlightMenu,
-  SpotlightMenuToggle,
   SpotlightMenuList,
   SpotlightMenuListItem,
-  MenuListItem
+  SpotlightMenuToggle
 } from '../SpotlightMenu';
 import SpotlightMenuNav from '../SpotlightMenu/SpotlightMenuNav';
-import { SpotlightBoundary, SpotlightLocation } from '../../utils';
 
 interface BoundaryMenuProps {
   boundaries: SpotlightBoundary[];
-  countryName: string;
-  defaultLocation?: SpotlightLocation;
   onSelectLocation?: (location?: MenuListItem) => void;
+  canReset?: boolean;
 }
 
-const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ countryName, onSelectLocation, ...props }) => {
+const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ onSelectLocation, ...props }) => {
+  const location = useContext(LocationContext);
+  const { countryName } = useContext(CountryContext);
   const [showMenu, setShowMenu] = useState(false);
-  const [activeItem, setActiveItem] = useState(props.defaultLocation ? props.defaultLocation.name : countryName);
+  const [activeItem, setActiveItem] = useState(location ? location.name : countryName);
+  useEffect(() => setActiveItem(location ? location.name : countryName), [location]);
 
   const onShowMenu = (): void => setShowMenu(!showMenu);
   const onShowAll = (): void => {
     onShowMenu();
-    setActiveItem(countryName);
     if (onSelectLocation) {
       onSelectLocation();
+    } else {
+      setActiveItem(countryName);
     }
   };
   const onView = (_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, location: MenuListItem): void => {
-    setActiveItem(location.label);
     setShowMenu(false);
     if (onSelectLocation) {
       onSelectLocation(location);
+    } else {
+      setActiveItem(location.label);
     }
   };
 
@@ -55,7 +59,12 @@ const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ countryName, onSel
   return (
     <SpotlightMenu>
       <SpotlightMenuToggle caption={activeItem.toLowerCase()} show={!showMenu} onClick={onShowMenu} />
-      <SpotlightMenuNav caption={countryName} active={showMenu} onClick={onShowMenu} onShowAll={onShowAll}>
+      <SpotlightMenuNav
+        caption={countryName}
+        active={showMenu}
+        onClick={onShowMenu}
+        onShowAll={props.canReset ? onShowAll : undefined}
+      >
         <SpotlightMenuList classNames="countries-menu-list__content">
           {renderMenuItems(props.boundaries, 1, (item: string) => setActiveItem(item))}
         </SpotlightMenuList>
@@ -63,5 +72,7 @@ const BoundaryMenu: FunctionComponent<BoundaryMenuProps> = ({ countryName, onSel
     </SpotlightMenu>
   );
 };
+
+BoundaryMenu.defaultProps = { canReset: true };
 
 export { BoundaryMenu };

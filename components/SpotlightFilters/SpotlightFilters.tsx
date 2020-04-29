@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
@@ -9,9 +10,11 @@ import {
   SpotlightOptions
 } from '../../utils';
 import { FormField } from '../FormField';
-import { Select, SelectOption } from '../Select';
+import { SelectOption } from '../Select';
 import IndicatorFilterForm from './IndicatorFilterForm';
 import { defaultSelectOptions, FilterSelectOptions, SpotlightFilterProps } from './utils';
+
+const DynamicSelect = dynamic(() => import('../Select').then(mod => mod.Select), { ssr: false });
 
 const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultIndexes, ...props }) => {
   const router = useRouter();
@@ -69,7 +72,7 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultInde
     <form className="form">
       <FormField className={props.topicClassName}>
         <label className="form-label">{props.topicLabel}</label>
-        <Select
+        <DynamicSelect
           options={themes}
           onChange={onSelectTheme}
           placeholder="Select Topic"
@@ -97,6 +100,7 @@ const SpotlightFilters: FunctionComponent<SpotlightFilterProps> = ({ defaultInde
         indicatorClassName={props.indicatorClassName}
         yearClassName={props.yearClassName}
       />
+      {props.children}
     </form>
   );
 };

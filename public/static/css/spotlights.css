@@ -780,7 +780,7 @@ input[type="file"] {
   color: #41b38e; }
 
 .branding {
-  background-image: url(/assets/img/logo-red.png);
+  background-image: url(/static/img/logo-red.png);
   background-size: contain;
   background-repeat: no-repeat;
   width: 194px;

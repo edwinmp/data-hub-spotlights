@@ -11,7 +11,8 @@ exports[`SpotlightMenuNav renders children correctly 1`] = `
   </a>
   <a
     aria-hidden="true"
-    className="countries-menu__profile countries-menu__link js-profile-item"
+    className="countries-menu__profile countries-menu__link js-profile-item hide"
+    data-testid="spotlight-nav-view"
     title="View Uganda"
   >
     View
@@ -40,7 +41,8 @@ exports[`SpotlightMenuNav renders correctly 1`] = `
   </a>
   <a
     aria-hidden="true"
-    className="countries-menu__profile countries-menu__link js-profile-item"
+    className="countries-menu__profile countries-menu__link js-profile-item hide"
+    data-testid="spotlight-nav-view"
     title="View Uganda"
   >
     View

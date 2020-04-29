@@ -1,7 +1,14 @@
-import { useRouter, NextRouter } from 'next/dist/client/router';
+import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
-import React, { FunctionComponent, ReactNode, useState, useEffect } from 'react';
-import { SpotlightLocation, SpotlightOptions } from '../../utils';
+import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import {
+  findBoundaryByName,
+  SpotlightLocation,
+  SpotlightOptions,
+  useBoundaries,
+  useCountryContext,
+  toCamelCase
+} from '../../utils';
 import { AnchorButton } from '../AnchorButton';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { Legend, LegendItem } from '../Legend';
@@ -16,13 +23,14 @@ import { VisualisationSection, VisualisationSectionMain } from '../Visualisation
 import {
   getDataPrefix,
   getDataSuffix,
+  getDefaultLocationFromQuery,
   getIndicatorColours,
   MapSectionProps,
   parseIndicator,
-  splitByComma,
   setQuery,
-  getDefaultLocationFromQuery
+  splitByComma
 } from './utils';
+import { addEvent } from '../../utils/analytics';
 
 const DynamicMap = dynamic(() => import('../SpotlightMap').then(mod => mod.SpotlightMap), { ssr: false });
 const DynamicMapDataLoader = dynamic(() => import('../DDWDataLoader').then(mod => mod.DDWDataLoader), { ssr: false });
@@ -46,15 +54,17 @@ const renderLegendItems = (range?: string[], colours?: string[]): ReactNode => {
   return null;
 };
 
-const getComparePath = (router: NextRouter): string => {
-  const pathname = router.asPath.split('?')[0].split('#')[0];
-  const queryString = router.asPath.split('?')[1];
+const getComparePath = (): string => {
+  const pathname = window.location.pathname.split('?')[0].split('#')[0];
+  const queryString = window.location.search;
 
-  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare${queryString ? '?' + queryString : ''}`;
+  return `${pathname}${pathname.endsWith('/') ? '' : '/'}compare${queryString}`;
 };
 
-const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeLocation, ...props }) => {
+const MapSection: FunctionComponent<MapSectionProps> = ({ onChangeLocation, ...props }) => {
   const router = useRouter();
+  const boundaries = useBoundaries();
+  const { countryName } = useCountryContext();
   const [options, setOptions] = useState<SpotlightOptions>({});
   const [activeLocation, setActiveLocation] = useState<SpotlightLocation | undefined>(
     router ? getDefaultLocationFromQuery(router.query) : undefined
@@ -66,15 +76,30 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
   }, []);
 
   const onOptionsChange = (optns: SpotlightOptions): void => {
-    setQuery(router, optns, activeLocation);
+    setQuery(optns, activeLocation && [activeLocation]);
     setOptions(optns);
+    addEvent('mapSectionOptionsChanged', {
+      topic: optns.theme?.name,
+      indicator: optns.indicator?.name,
+      year: optns.year,
+      country: countryName
+    });
   };
   const onSelectLocation = (location?: SpotlightLocation): void => {
-    setQuery(router, options, location);
+    setQuery(options, location && [location]);
     setActiveLocation(location);
+    addEvent('locationChangedUsingMenuOrSearch', {
+      locationName: location ? toCamelCase(location.name) : countryName
+    });
     if (onChangeLocation) {
       onChangeLocation(location);
     }
+  };
+  const onSelectLocationFromMap = (locationName?: string): void => {
+    onSelectLocation(locationName ? findBoundaryByName(boundaries, locationName.toLowerCase()) : undefined);
+    addEvent('locationChangedUsingMapClick', {
+      locationName: locationName ? toCamelCase(locationName) : countryName
+    });
   };
 
   const range = options.indicator && splitByComma(options.indicator.range);
@@ -85,10 +110,9 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
     <PageSection>
       <LocationSelectionBanner
         className="spotlight-banner--header"
+        boundaries={boundaries}
         onSelectLocation={onSelectLocation}
-        countryCode={countryCode}
-        countryName={props.countryName}
-        defaultLocation={activeLocation}
+        location={activeLocation}
       />
 
       <VisualisationSection>
@@ -111,11 +135,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 <LegendItem>no data / not applicable</LegendItem>
               </Legend>
               <SpotlightButtons>
-                <SpotlightShare
-                  countryName={props.countryName}
-                  location={activeLocation}
-                  buttonCaption="Share this visualisation"
-                />
+                <SpotlightShare buttonCaption="Share this visualisation" />
               </SpotlightButtons>
             </SpotlightHide>
           </SidebarContent>
@@ -125,7 +145,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
           <SpotlightInteractive height="100%">
             {router ? (
               <div>
-                <AnchorButton className="button button--secondary--fill" href={getComparePath(router)}>
+                <AnchorButton className="button button--secondary--fill" href={getComparePath()}>
                   Compare this location to others
                 </AnchorButton>
                 <style jsx>{`
@@ -144,13 +164,13 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
                 limit={10000}
               >
                 <DynamicMap
-                  countryCode={countryCode}
                   range={range}
                   colours={colours}
                   dataPrefix={getDataPrefix(options)}
                   dataSuffix={getDataSuffix(options)}
                   location={activeLocation}
                   locationHandling="flyto"
+                  onClick={onSelectLocationFromMap}
                 />
               </DynamicMapDataLoader>
             </ErrorBoundary>
@@ -168,11 +188,7 @@ const MapSection: FunctionComponent<MapSectionProps> = ({ countryCode, onChangeL
               <LegendItem>no data / not applicable</LegendItem>
             </Legend>
             <SpotlightButtons>
-              <SpotlightShare
-                countryName={props.countryName}
-                location={activeLocation}
-                buttonCaption="Share this visualisation"
-              />
+              <SpotlightShare />
             </SpotlightButtons>
           </SidebarContent>
         </SpotlightSidebar>

@@ -6,6 +6,17 @@ export const getShortUrl = async (rootOnly = false): Promise<BitlyLink> => {
   const longUrl = rootOnly ? origin + pathname : href;
 
   return await fetch(`${origin}/bitly?longUrl=${longUrl.replace('localhost', '127.0.0.1')}`)
-    .then(response => response.json())
-    .then(({ shortUrl }) => shortUrl);
+    .then(response => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      throw new Error(response.statusText);
+    })
+    .then(({ shortUrl, error }) => {
+      if (error) {
+        throw new Error(error);
+      }
+
+      return shortUrl;
+    });
 };

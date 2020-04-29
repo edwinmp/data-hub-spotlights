@@ -1,26 +1,18 @@
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useState } from 'react';
-import { times as _times } from 'underscore';
-import { getDefaultsByIndex, SpotlightLocation, SpotlightOptions, SpotlightTheme } from '../../utils';
+import { SpotlightLocation, SpotlightTheme } from '../../utils';
 import { ButtonBanner } from '../ButtonBanner';
 import { PageSection, PageSectionHeading } from '../PageSection';
-import { Spotlight } from '../Spotlight';
-import { LocationComparisonBanner } from './LocationComparisonBanner';
-import { LocationComparisonWrapper } from './LocationComparisonWrapper';
 import { SpotlightShare } from '../SpotlightShare';
+import { LocationComparisonBanner } from './LocationComparisonBanner';
+import LocationComparisonChartSection from './LocationComparisonChartSection';
+import { addEvent } from '../../utils/analytics';
 
 interface ComponentProps {
-  countryCode: string;
-  countryName: string;
   themes: SpotlightTheme[];
+  defaultLocations: SpotlightLocation[];
 }
-
-export interface LocationTagProps {
-  name: string;
-  geocode: string;
-}
-
-export type LocationTagType = LocationTagProps[];
+type P = ComponentProps;
 
 const getQueryLocation = (): SpotlightLocation[] | undefined => {
   const router = useRouter();
@@ -32,24 +24,30 @@ const getQueryLocation = (): SpotlightLocation[] | undefined => {
   }
 };
 
-const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryCode, countryName, themes }) => {
-  const { selected: defaultSelected } = getDefaultsByIndex(themes);
-  const [selections, setSelections] = useState<SpotlightOptions>(defaultSelected);
-  const [chartCount, setChartCount] = useState<number>(1);
-  const [selectedLocations, setSelectedLocations] = useState<SpotlightLocation[]>(getQueryLocation() || []);
+const generateUniqueRandomID = (existing: string[]): string => {
+  const randomID = `${Math.random()}`;
 
-  const onFilterChanged = (options: SpotlightOptions): void => {
-    setSelections(options);
-  };
+  return existing.includes(randomID) ? generateUniqueRandomID(existing) : randomID;
+};
 
-  const onAddComparison = (): void => {
-    setChartCount(chartCount + 1);
+const LocationComparisonSection: FunctionComponent<P> = ({ themes, ...props }) => {
+  const [locations, setLocations] = useState<SpotlightLocation[]>(getQueryLocation() || props.defaultLocations);
+  const [chartIDs, setChartIDs] = useState<string[]>([generateUniqueRandomID([])]);
+
+  const addChartID = (): void => {
+    setChartIDs(chartIDs.concat(generateUniqueRandomID(chartIDs)));
   };
 
   const onCompare = (locations: SpotlightLocation[]): void => {
-    setSelectedLocations(locations);
-    if (!chartCount) {
-      setChartCount(1);
+    setLocations(locations);
+    if (!chartIDs || chartIDs.length === 0) {
+      setChartIDs(chartIDs.concat(generateUniqueRandomID([])));
+    }
+    addEvent('locationsCompared', { locations: locations.map(item => item.name).join(', ') });
+  };
+  const onRemove = (key: string) => (): void => {
+    if (chartIDs.length > 1) {
+      setChartIDs(chartIDs.slice().filter(_key => _key !== key));
     }
   };
 
@@ -57,38 +55,27 @@ const LocationComparisonSection: FunctionComponent<ComponentProps> = ({ countryC
     <>
       <PageSection narrow>
         <PageSectionHeading>Location Comparison</PageSectionHeading>
-        <LocationComparisonBanner
-          countryName={countryName}
-          countryCode={countryCode}
-          onCompare={onCompare}
-          locations={selectedLocations}
-          options={selections}
-        />
+        <LocationComparisonBanner onCompare={onCompare} locations={locations} />
       </PageSection>
-      {_times(chartCount, (index: number) => (
-        <PageSection narrow key={index}>
-          <Spotlight className="spotlight--full">
-            <LocationComparisonWrapper
-              themes={themes}
-              locations={selectedLocations}
-              countryCode={countryCode}
-              onFilterChanged={onFilterChanged}
-              options={selections}
-            />
-          </Spotlight>
-        </PageSection>
+      {chartIDs.map(key => (
+        <LocationComparisonChartSection
+          key={key}
+          themes={themes}
+          locations={locations}
+          onRemove={chartIDs.length > 1 ? onRemove(key) : undefined}
+        />
       ))}
-      {chartCount ? (
+      {chartIDs.length ? (
         <PageSection narrow>
-          <ButtonBanner onClick={onAddComparison} className="m-text-link add-location-link">
+          <ButtonBanner onClick={addChartID} className="m-text-link add-location-link">
             <i role="presentation" aria-hidden="true" className="ico ico--16 ico-plus-poppy"></i>
-            <span>Add another comparison</span>
+            <span>Add another comparison chart</span>
           </ButtonBanner>
         </PageSection>
       ) : null}
-      {chartCount ? (
+      {chartIDs.length ? (
         <PageSection narrow>
-          <SpotlightShare countryName={countryName} />
+          <SpotlightShare />
         </PageSection>
       ) : null}
     </>

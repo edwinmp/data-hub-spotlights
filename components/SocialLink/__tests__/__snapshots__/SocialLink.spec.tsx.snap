@@ -7,7 +7,7 @@ exports[`SocialLink renders children correctly 1`] = `
 >
   <img
     alt="facebook"
-    src="/assets/svg/source/facebook.svg"
+    src="/static/svg/source/facebook.svg"
   />
   <style
     jsx={true}
@@ -31,7 +31,7 @@ exports[`SocialLink renders correctly 1`] = `
 >
   <img
     alt="twitter"
-    src="/assets/svg/source/twitter.svg"
+    src="/static/svg/source/twitter.svg"
   />
   <style
     jsx={true}

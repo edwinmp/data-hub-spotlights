@@ -6,7 +6,6 @@ import { LayerConfig } from './config';
 export interface SpotlightMapProps {
   center?: number[];
   zoom?: number;
-  countryCode: string;
   location?: SpotlightLocation;
   level?: number;
   dataLoading?: boolean;
@@ -19,6 +18,7 @@ export interface SpotlightMapProps {
   hideParentLayer?: boolean;
   locationHandling?: 'flyto' | 'highlight-only'; // highlight-only is the default
   onLoad?: (map: Map) => void;
+  onClick?: (locationName?: string) => void;
 }
 
 export interface SpotlightMapGeoJSON {

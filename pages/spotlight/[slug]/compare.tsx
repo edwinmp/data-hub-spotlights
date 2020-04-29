@@ -1,9 +1,11 @@
 import { NextPage } from 'next';
-import React, { useEffect } from 'react';
+import Head from 'next/head';
+import React, { useEffect, useState } from 'react';
 import { PageScaffoldData } from '../../../components/DefaultLayout';
 import { LocationComparisonSection } from '../../../components/LocationComparisonSection';
 import { PageSection } from '../../../components/PageSection';
 import {
+  CountryContext,
   fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
@@ -18,6 +20,8 @@ interface CompareProps {
 }
 
 const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
+  const { country_code: countryCode, country_name: countryName, currency_code: currencyCode } = page;
+  const [countryInfo] = useState({ countryCode, countryName, currencyCode });
   useEffect(() => {
     if (setData) {
       setData({ ...scaffold, title: page.title, slug: getSlugFromURL(page.relative_url) });
@@ -28,7 +32,12 @@ const Compare: NextPage<CompareProps> = ({ setData, scaffold, page }) => {
 
   if (page.themes && page.country_code) {
     return (
-      <LocationComparisonSection countryCode={page.country_code} countryName={page.country_name} themes={mapThemes} />
+      <CountryContext.Provider value={countryInfo}>
+        <Head>
+          <title>{`${page.title} | Compare`}</title>
+        </Head>
+        <LocationComparisonSection themes={mapThemes} defaultLocations={page.compare.default_locations} />
+      </CountryContext.Provider>
     );
   }
 

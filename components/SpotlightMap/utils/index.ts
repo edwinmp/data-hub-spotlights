@@ -1,6 +1,5 @@
 export * from './config';
 export * from './leaflet';
-export * from './mapbox';
 export * from './types';
 
 export const getLocationIDFromGeoCode = (geocode: string, divider: string): string => {

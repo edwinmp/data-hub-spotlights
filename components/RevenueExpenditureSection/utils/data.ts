@@ -57,9 +57,9 @@ export const fetchRootData = (data?: RevenueExpenditureData[], useLocalCurrency 
 };
 
 export const getIndicatorContentOptions = (indicator: SpotlightIndicator): REConfig | undefined => {
-  if (indicator.content_template) {
+  if (indicator.advanced_config) {
     try {
-      const contentOptions: SpotlightIndicatorContent = JSON.parse(indicator.content_template);
+      const contentOptions: SpotlightIndicatorContent = JSON.parse(indicator.advanced_config);
 
       return contentOptions.revenue || contentOptions.expenditure;
     } catch (error) {

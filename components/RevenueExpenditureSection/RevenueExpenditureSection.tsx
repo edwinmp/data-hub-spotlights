@@ -1,10 +1,12 @@
-import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 import {
   BudgetType,
+  CountryContext,
   createYearOptionsFromRange,
+  LocationContext,
   processTemplateString,
   SpotlightIndicator,
-  SpotlightLocation
+  toCamelCase
 } from '../../utils';
 import { Alert } from '../Alert';
 import { CurrencySelector } from '../CurrencySelector';
@@ -20,20 +22,10 @@ import { SpotlightBanner, SpotlightBannerAside, SpotlightBannerForm, SpotlightBa
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { getIndicatorContentOptions, parseBudgetType, useRevenueExpenditureData } from './utils';
-
-interface SelectType {
-  label: string;
-  value: string;
-}
+import { addGTMEvent, getIndicatorContentOptions, parseBudgetType, useRevenueExpenditureData } from './utils';
 
 interface RevenueSectionProps {
-  countryCode: string;
-  countryName: string;
-  currencyCode: string;
   indicator: SpotlightIndicator;
-  location?: SpotlightLocation;
-  budgetTypeOptions?: SelectType[];
 }
 
 const renderPaddedAlert = (message: string): ReactNode => (
@@ -50,51 +42,55 @@ const renderPaddedAlert = (message: string): ReactNode => (
   </div>
 );
 
-const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator, location, ...props }) => {
-  const [retryCount, setRetryCount] = useState(0);
+const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator }) => {
+  const { countryCode, countryName, currencyCode } = useContext(CountryContext);
+  const location = useContext(LocationContext);
   const [useLocalValue, setUseLocalValue] = useState(false);
   const [year, setYear] = useState<number | undefined>(indicator.end_year && indicator.end_year);
   const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
   const [selectedBudgetType, setSelectedBudgetType] = useState<BudgetType | undefined>(undefined);
-  const { data, dataLoading, options, setOptions, refetch, error } = useRevenueExpenditureData(
+  const { data, dataLoading, options, setOptions, error } = useRevenueExpenditureData(
     {
       indicators: [indicator.ddw_id],
-      geocodes: location ? [location.geocode] : [props.countryCode],
+      geocodes: location ? [location.geocode] : [countryCode],
       limit: 10000
     },
     indicator
   );
+
+  const setYearBudgetTypes = (): void => {
+    if (year && data.hasOwnProperty(year)) {
+      const _budgetTypes = Object.keys(data[year]) as BudgetType[];
+      setBudgetTypes(_budgetTypes);
+      setSelectedBudgetType(_budgetTypes[0]);
+    }
+  };
   useEffect(() => {
     setOptions({
       ...options,
-      geocodes: location ? [location.geocode] : [props.countryCode],
+      geocodes: location ? [location.geocode] : [countryCode],
       indicators: [indicator.ddw_id]
     });
     setYear(indicator.end_year);
   }, [location]);
   useEffect(() => {
-    if (!dataLoading && year && data.hasOwnProperty(year)) {
-      const _budgetTypes = Object.keys(data[year]) as BudgetType[];
-      setBudgetTypes(_budgetTypes);
-      setSelectedBudgetType(_budgetTypes[0]);
-    }
-    if (retryCount > 0 && !dataLoading) {
-      setRetryCount(0);
+    if (!dataLoading) {
+      setYearBudgetTypes();
     }
   }, [dataLoading]);
-  useEffect(() => {
-    if (error) {
-      const { message } = error;
-      if (message.includes('relation') && message.includes('does not exist') && retryCount === 0 && refetch) {
-        refetch();
-        setRetryCount(retryCount + 1);
-      }
-    } else if (retryCount > 0) {
-      setRetryCount(0);
-    }
-  }, [error]);
+  const sectionHeading = processTemplateString(indicator.name, {
+    location: location ? toCamelCase(location.name) : countryName
+  });
 
-  const onChangeCurrency = (isLocal: boolean): void => setUseLocalValue(isLocal);
+  if (!dataLoading && !selectedBudgetType) {
+    setYearBudgetTypes();
+  }
+
+  const onChangeCurrency = (isLocal: boolean): void => {
+    setUseLocalValue(isLocal);
+    const currency = isLocal ? currencyCode : 'US$';
+    addGTMEvent(sectionHeading, countryName, currency, year, parseBudgetType(selectedBudgetType || ''));
+  };
   const onSelectYear = (option?: SelectOption): void => {
     if (option) {
       setYear(parseInt(option.value));
@@ -102,6 +98,8 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         const _budgetTypes = Object.keys(data[option.value]) as BudgetType[];
         setBudgetTypes(_budgetTypes);
         setSelectedBudgetType(_budgetTypes[0]);
+        const currency = useLocalValue ? currencyCode : 'US$';
+        addGTMEvent(sectionHeading, countryName, currency, option.value, parseBudgetType(_budgetTypes[0]));
       }
     } else {
       setYear(undefined);
@@ -111,6 +109,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const onChangeBudgetType = (option?: SelectOption): void => {
     if (option) {
       setSelectedBudgetType(option.value as BudgetType);
+      addGTMEvent(sectionHeading, option.value as BudgetType, useLocalValue ? 'UGX' : 'USD', year, countryName);
     } else {
       setSelectedBudgetType(undefined);
     }
@@ -118,9 +117,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
 
   return (
     <PageSection>
-      <PageSectionHeading>
-        {processTemplateString(indicator.name, { location: location ? location.name : props.countryName })}
-      </PageSectionHeading>
+      <PageSectionHeading>{sectionHeading}</PageSectionHeading>
 
       <SpotlightBanner className="spotlight-banner--alt">
         <SpotlightBannerAside>
@@ -148,7 +145,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         <SpotlightBannerMain>
           <SpotlightBannerForm>
             <FormField className="form-field--inline">
-              <CurrencySelector currencyCode={props.currencyCode} width="100%" onChange={onChangeCurrency} />
+              <CurrencySelector currencyCode={currencyCode} width="100%" onChange={onChangeCurrency} />
             </FormField>
           </SpotlightBannerForm>
         </SpotlightBannerMain>
@@ -157,7 +154,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
       <VisualisationSection>
         <SpotlightSidebar>
           <SpotlightInteractive background="#ffffff">
-            {error ? (
+            {error && !dataLoading ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (
               <Loading active={dataLoading}>
@@ -168,7 +165,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                     valueOptions={{
                       dataFormat: 'currency',
                       useLocalValue,
-                      prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                      prefix: useLocalValue ? currencyCode : indicator.value_prefix,
                       suffix: indicator.value_suffix
                     }}
                     selectedYear={year}
@@ -183,7 +180,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
         </SpotlightSidebar>
         <VisualisationSectionMain>
           <SpotlightInteractive background="#ffffff">
-            {error ? (
+            {error && !dataLoading ? (
               renderPaddedAlert('Something went wrong while loading this widget')
             ) : (
               <Loading active={dataLoading}>
@@ -198,7 +195,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                   valueOptions={{
                     dataFormat: 'currency',
                     useLocalValue,
-                    prefix: useLocalValue ? props.currencyCode : indicator.value_prefix,
+                    prefix: useLocalValue ? currencyCode : indicator.value_prefix,
                     suffix: indicator.value_suffix
                   }}
                 />

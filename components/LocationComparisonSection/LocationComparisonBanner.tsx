@@ -1,23 +1,20 @@
-import { useRouter } from 'next/router';
-import React, { CSSProperties, FunctionComponent, useState, useEffect } from 'react';
-import { SpotlightLocation, SpotlightOptions } from '../../utils';
+import classNames from 'classnames';
+import { CSSProperties, default as React, FunctionComponent, useEffect, useState } from 'react';
+import { SpotlightLocation } from '../../utils';
+import { useBoundaries } from '../../utils';
 import { Button } from '../Button';
 import { LocationSelectionBanner } from '../LocationSelectionBanner';
-import { setLocationsQuery } from '../MapSection/utils';
 import { SpotlightBanner } from '../SpotlightBanner';
 import { TagList, TagListItem } from '../Tags';
 
 interface ComparisonWrapperProps {
-  countryName: string;
-  countryCode: string;
   onCompare?: (locations: SpotlightLocation[]) => void;
   locations?: SpotlightLocation[];
-  options: SpotlightOptions;
 }
 
 const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = props => {
+  const boundaries = useBoundaries();
   const [locations, setLocations] = useState<SpotlightLocation[]>(props.locations ? props.locations : []);
-  const router = useRouter();
   useEffect(() => {
     if (locations.length < 2 && props.onCompare) {
       props.onCompare(locations);
@@ -31,13 +28,11 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
     ) {
       const updatedLocations = locations.concat(location);
       setLocations(updatedLocations);
-      setLocationsQuery(router, props.options, updatedLocations);
     }
   };
   const onCloseTag = (tagName: string): void => {
     const updatedLocations = locations.filter(location => location.name.toLowerCase() !== tagName.toLowerCase());
     setLocations(updatedLocations);
-    setLocationsQuery(router, props.options, updatedLocations);
   };
   const onClickCompare = (): void => {
     if (props.onCompare) {
@@ -48,8 +43,7 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
   return (
     <>
       <LocationSelectionBanner
-        countryName={props.countryName}
-        countryCode={props.countryCode}
+        boundaries={boundaries}
         onSelectLocation={onSelectLocation}
         selectStyles={{
           container: (provided): CSSProperties => ({
@@ -60,7 +54,8 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
           })
         }}
         heading="Add Location"
-      ></LocationSelectionBanner>
+        canReset={false}
+      />
       {locations.length ? (
         <SpotlightBanner>
           <TagList>
@@ -68,11 +63,12 @@ const LocationComparisonBanner: FunctionComponent<ComparisonWrapperProps> = prop
               <TagListItem key={location.geocode} label={location.name} onRemove={onCloseTag} />
             ))}
           </TagList>
-          {locations.length >= 2 ? (
-            <Button className="button button--compare" onClick={onClickCompare}>
-              Compare
-            </Button>
-          ) : null}
+          <Button
+            className={classNames('button button--compare', { 'button--disabled': locations.length < 2 })}
+            onClick={onClickCompare}
+          >
+            Compare
+          </Button>
         </SpotlightBanner>
       ) : null}
     </>

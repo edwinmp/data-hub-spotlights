@@ -1,3 +1,5 @@
+import { toCamelCase } from '../../../utils';
+
 export interface LayerConfig {
   type: 'shapefile' | 'geojson'; // can be shapefile or geojson - controls how the layer is handled
   style: string; // mapbox style url
@@ -9,7 +11,7 @@ export interface LayerConfig {
   maxZoom?: number;
   nameProperty: string; // the data property on the layer that corresponds to the location's name
   codeProperty: string; // the data property on the layer that corresponds to the location's code,
-  formatter?: (value: string) => string | number; // when there's a mismatch between API data & map data, this aligns them
+  formatter?: (value: string, target?: 'map' | 'boundary') => string | number; // when there's a mismatch between API data & map data, this aligns them
 }
 
 interface MapConfig {
@@ -47,15 +49,25 @@ export const config: { [key: string]: MapConfig } = {
         maxZoom: 6.5,
         nameProperty: 'ADM1_EN',
         codeProperty: 'ADM1_PCODE',
-        formatter: (value: string): string => {
-          if (value === 'Trans-Nzoia') {
-            return 'Trans Nzoia';
+        formatter: (value, target = 'map'): string => {
+          if (target === 'map') {
+            if (value.toLowerCase() === 'trans-nzoia') {
+              return 'Trans Nzoia';
+            }
+            if (value.toLowerCase() === 'nithi') {
+              return 'Tharaka-Nithi';
+            }
           }
-          if (value === 'Nithi') {
-            return 'Tharaka-Nithi';
+          if (target === 'boundary') {
+            if (value.toLowerCase() === 'trans nzoia') {
+              return 'Trans-Nzoia';
+            }
+            if (value.toLowerCase() === 'tharaka-nithi') {
+              return 'Nithi';
+            }
           }
 
-          return value;
+          return toCamelCase(value);
         }
       }
     ]
