@@ -45,3 +45,25 @@ Holds the colours that are used on the maps and their legends, determining the m
 Below are the config pages in order of heirarchy
 
 ### Pages
+
+#### Spotlight Page
+
+Each Spotlight page represents a unique country spotlight e.g Spotlight on Uganda or Spotlight on Kenya
+
+**Hierarchy**
+
+`Home Page` -> `Data Section Page` -> `Country Spotlight` -> `Spotlight Page`
+
+**Core Fields**
+| Field | Description                             |
+| ----- | --------------------------------------- |
+| title  | The title of the page  |
+| slug  | The sub-path that'll appear in the URL |
+| Country Code  | This must match the code in the DDW and is used to fetch country-level data e.g for populating the country-level `Key Facts` & `Revenue/Expenditure` sections |
+| Country Name  | This will appear in various sections throughout the spotlights |
+| Currency Code  | The code used to identify the country's currency e.g USD, GBP, UGX  |
+
+**Data Sources Section**
+
+The content here is used to populate the `Data Sources` section at the bottom of the page.
+Links to data sources and meta data are added here, as well as a description of what this section is about
