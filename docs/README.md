@@ -52,7 +52,7 @@ Each Spotlight page represents a unique country spotlight e.g Spotlight on Ugand
 
 **Hierarchy**
 
-`Home Page` -> `Data Section Page` -> `Country Spotlight` -> `Spotlight Page`
+`Home Page` -> `Data Section Page` -> `Spotlight Page`
 
 **Core Fields**
 | Field | Description                             |
