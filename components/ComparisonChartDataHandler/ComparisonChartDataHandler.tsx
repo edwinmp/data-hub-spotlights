@@ -1,6 +1,6 @@
-import React, { FunctionComponent, ReactNode, useEffect, useState, useContext } from 'react';
+import React, { FunctionComponent, ReactNode, useContext, useEffect, useState } from 'react';
 import {
-  getBoundariesByDepth,
+  CountryContext,
   hasData,
   LocationData,
   LocationIndicatorData,
@@ -8,17 +8,17 @@ import {
   SpotlightLocation,
   toCamelCase,
   useBoundaries,
-  CountryContext
+  useBoundaryDepthContext,
 } from '../../utils';
 import { Alert } from '../Alert';
 import { Icon } from '../Icon';
 import { IndicatorComparisonColumnChart } from '../IndicatorComparisonColumnChart';
+import { Loading } from '../Loading';
 import { LocationComparisonBarChart } from '../LocationComparisonBarChart';
 import { SpotlightHeading } from '../SpotlightHeading';
 import { SpotlightInteractive } from '../SpotlightInteractive';
 import { SpotlightSidebar } from '../SpotlightSidebar';
 import { VisualisationSection, VisualisationSectionMain } from '../VisualisationSection';
-import { Loading } from '../Loading';
 
 interface ComponentProps {
   data?: LocationIndicatorData[];
@@ -28,8 +28,8 @@ interface ComponentProps {
 }
 
 const getLocationData = (locations: string[], data: LocationData[]): number[] =>
-  locations.map(location => {
-    const match = data.find(_data => _data.name.toLowerCase() === location.toLowerCase());
+  locations.map((location) => {
+    const match = data.find((_data) => _data.name.toLowerCase() === location.toLowerCase());
 
     return match && match.value > 0 ? match.value : 0; // FIXME: how do we handle -ve values?
   });
@@ -52,14 +52,13 @@ const renderPaddedAlert = (message: string): ReactNode => (
 
 const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, location, ...props }) => {
   const [locations, setLocations] = useState<string[]>([]);
-  const boundaries = useBoundaries();
+  const [boundaries, depthBoundaries] = useBoundaries(useBoundaryDepthContext());
   const { countryName } = useContext(CountryContext);
 
   useEffect(() => {
     if (!location) {
-      const requiredBoundaries = getBoundariesByDepth(boundaries, 'd');
       setLocations(
-        requiredBoundaries
+        depthBoundaries
           .map(({ name }) => name)
           .sort()
           .reverse()
@@ -84,12 +83,12 @@ const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, l
                 height="500px"
                 series={{
                   names: [props.indicators[0].name, props.indicators[1].name],
-                  data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
+                  data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)],
                 }}
-                valueOptions={props.indicators.map(indicator => ({
+                valueOptions={props.indicators.map((indicator) => ({
                   dataFormat: indicator.data_format,
                   prefix: indicator.value_prefix,
-                  suffix: indicator.value_suffix
+                  suffix: indicator.value_suffix,
                 }))}
               />
             </Loading>
@@ -110,13 +109,13 @@ const ComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({ data, l
                 labels={locations}
                 series={{
                   names: [props.indicators[0].name, props.indicators[1].name],
-                  data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)]
+                  data: [getLocationData(locations, data[0].data), getLocationData(locations, data[1].data)],
                 }}
                 height={getHeightFromCount(locations.length)}
-                valueOptions={props.indicators.map(indicator => ({
+                valueOptions={props.indicators.map((indicator) => ({
                   dataFormat: indicator.data_format,
                   prefix: indicator.value_prefix,
-                  suffix: indicator.value_suffix
+                  suffix: indicator.value_suffix,
                 }))}
               />
             </Loading>

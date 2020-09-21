@@ -1,7 +1,7 @@
 import { ApolloError, useQuery } from '@apollo/client';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { DataLoaderProps } from '..';
-import { GET_INDICATOR_DATA, LocationIndicatorData, DataFilter } from '../../../utils';
+import { DataFilter, GET_INDICATOR_DATA, LocationIndicatorData } from '../../../utils';
 
 interface DDWData {
   data?: LocationIndicatorData[];
@@ -26,9 +26,9 @@ export const useDDWData = (_options: DataLoaderProps): DDWData => {
           startYear: typeof startYear === 'number' ? startYear : undefined,
           endYear: typeof endYear === 'number' ? endYear : undefined,
           filter,
-          limit
+          limit,
         },
-        notifyOnNetworkStatusChange: true
+        notifyOnNetworkStatusChange: true,
       }
     );
 

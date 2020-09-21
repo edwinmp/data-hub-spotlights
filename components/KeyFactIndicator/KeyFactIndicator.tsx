@@ -5,7 +5,9 @@ import {
   SpotlightIndicatorContent,
   SpotlightLocation,
   TemplateOptions,
-  toCamelCase
+  toCamelCase,
+  useBoundaries,
+  useBoundaryDepthContext,
 } from '../../utils';
 import { IndicatorChartDataHandler, IndicatorStat, IndicatorStatDataHandler } from '../IndicatorStat';
 import { setDecimalCount } from '../IndicatorStat/utils';
@@ -19,8 +21,9 @@ interface KeyFactIndicatorProps {
 }
 
 const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator, location, ...props }) => {
+  const boundaries = useBoundaries(useBoundaryDepthContext());
   const templateOptions: TemplateOptions = {
-    location: toCamelCase(location.name)
+    location: toCamelCase(location.name),
   };
 
   if (indicator.advanced_config) {
@@ -42,11 +45,12 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                   <ErrorBoundary>
                     <IndicatorStatDataHandler
                       dataOptions={{
+                        boundaries: boundaries[1],
                         indicators: stat.indicators,
                         geocodes: !stat.fetchAll ? [location.geocode] : undefined,
                         startYear: stat.startYear || stat.endYear || indicator.start_year || indicator.end_year,
                         endYear: stat.endYear || stat.startYear || indicator.end_year || indicator.start_year,
-                        filter: stat.filter
+                        filter: stat.filter,
                       }}
                       valueOptions={{
                         location,
@@ -58,7 +62,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                         suffix: suffix,
                         dataFormat: stat.dataFormat || indicator.data_format,
                         aggregation: stat.aggregation,
-                        decimalCount: setDecimalCount(suffix, stat.decimalCount)
+                        decimalCount: setDecimalCount(suffix, stat.decimalCount),
                       }}
                       note={stat.note}
                     />
@@ -75,10 +79,11 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
                 >
                   <IndicatorChartDataHandler
                     dataOptions={{
+                      boundaries: boundaries[1],
                       indicators: chart.indicators,
                       geocodes: !chart.fetchAll ? [location.geocode] : undefined,
                       startYear: chart.startYear || chart.endYear || indicator.start_year || indicator.end_year,
-                      endYear: chart.endYear || chart.startYear || indicator.end_year || indicator.start_year
+                      endYear: chart.endYear || chart.startYear || indicator.end_year || indicator.start_year,
                     }}
                     {...chart}
                   />
@@ -105,9 +110,11 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
       >
         <IndicatorStatDataHandler
           dataOptions={{
+            boundaries: boundaries[1],
             indicators: [indicator.ddw_id],
             geocodes: [location.geocode],
-            startYear: indicator.start_year || indicator.end_year
+            startYear: indicator.start_year || indicator.end_year,
+            endYear: indicator.end_year || indicator.start_year,
           }}
           valueOptions={{
             location,
@@ -116,7 +123,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
             prefix:
               indicator.data_format === 'currency' && props.useLocalValue ? props.currencyCode : indicator.value_prefix,
             suffix: indicator.value_suffix,
-            decimalCount: setDecimalCount(indicator.value_suffix, undefined)
+            decimalCount: setDecimalCount(indicator.value_suffix, undefined),
           }}
         />
       </IndicatorStat>
@@ -125,7 +132,7 @@ const KeyFactIndicator: FunctionComponent<KeyFactIndicatorProps> = ({ indicator,
 };
 
 KeyFactIndicator.defaultProps = {
-  useLocalValue: false
+  useLocalValue: false,
 };
 
 export { KeyFactIndicator };

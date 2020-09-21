@@ -1,23 +1,27 @@
+import { sortBy as _sortBy } from 'underscore';
 import { SelectOption, SelectOptions } from '../components/Select';
 import { getLocationIDFromGeoCode } from '../components/SpotlightMap/utils';
 import { SpotlightLocation } from './data';
 import { toCamelCase } from './strings';
-import { sortBy as _sortBy } from 'underscore';
 
 export interface SpotlightBoundary extends SpotlightLocation {
   code: string;
   geocode: string;
   name: string;
+  created?: string;
   children: SpotlightBoundary[];
+  parent?: string;
 }
+
+export type BoundaryDepth = 'd' | 'sc';
 
 export const getBoundariesByCountryCode = async (countryCode: string): Promise<SpotlightBoundary[]> =>
   await import(`../boundaries/${countryCode}`).then(({ default: boundaries }) => boundaries);
 
-export const getBoundariesByDepth = (locations: SpotlightBoundary[], depth: 'd' | 'sc'): SpotlightBoundary[] => {
+export const getBoundariesByDepth = (locations: SpotlightBoundary[], depth: BoundaryDepth): SpotlightBoundary[] => {
   let districts: SpotlightBoundary[] = [];
   if (depth === 'd') {
-    locations.forEach(location => {
+    locations.forEach((location) => {
       const code = getLocationIDFromGeoCode(location.geocode, '.');
       if (code.indexOf('d') > -1) {
         districts = districts.concat([location]);
@@ -33,21 +37,21 @@ export const getBoundariesByDepth = (locations: SpotlightBoundary[], depth: 'd' 
 // TODO: this is temporary - replace with correct location handler
 export const createLocationOptions = (
   locations: SpotlightBoundary[],
-  depth: 'd' | 'sc',
-  _group = false // TODO: use when grouping by region/district
+  depth: 'd' | 'sc'
+  // _group = false // TODO: use when grouping by region/district
 ): SelectOptions => {
   const districts: SpotlightBoundary[] = getBoundariesByDepth(locations, depth);
   // up to district level
-  const options: SelectOption[] = districts.map(content => ({
+  const options: SelectOption[] = districts.map((content) => ({
     label: toCamelCase(content.name),
-    value: content.geocode
+    value: content.geocode,
   }));
 
   return options;
 };
 
 export const sortBoundariesByName = (boundaries: SpotlightBoundary[]): SpotlightBoundary[] =>
-  _sortBy(boundaries, 'name').map(boundary => {
+  _sortBy(boundaries, 'name').map((boundary) => {
     if (boundary.children) {
       boundary.children = sortBoundariesByName(boundary.children);
     }
@@ -64,7 +68,7 @@ export const findBoundaryByName = (
   for (let index = 0; index < boundaries.length && !boundary; index++) {
     const currentBoundary = boundaries[index];
     if (index === 0) {
-      boundary = boundaries.find(location => location.name.toLowerCase() === boundaryName);
+      boundary = boundaries.find((location) => location.name.toLowerCase() === boundaryName);
       if (!boundary && currentBoundary.children) {
         boundary = findBoundaryByName(currentBoundary.children, boundaryName);
       }
@@ -76,4 +80,21 @@ export const findBoundaryByName = (
   }
 
   return boundary;
+};
+
+export const getBasePathFromContext = (): string =>
+  process.env.NODE_ENV === 'production' ? '/data/spotlights-on-kenya-and-uganda/' : '/spotlight/';
+
+export const getLocationGeoCodes = (
+  boundaries: SpotlightBoundary[],
+  location?: SpotlightLocation
+): string[] | undefined => {
+  if (location) {
+    const locationBoundary = boundaries.find((boundary) => boundary.geocode.includes(location?.geocode));
+    if (locationBoundary && locationBoundary.parent) {
+      return [location.geocode, locationBoundary.parent];
+    }
+
+    return [location.geocode];
+  }
 };

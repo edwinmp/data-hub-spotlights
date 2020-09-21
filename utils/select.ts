@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { ParsedUrlQuery } from 'querystring';
 import { SpotlightIndicator, SpotlightTheme } from '.';
 import { SelectOption, SelectOptions } from '../components/Select';
@@ -12,16 +12,16 @@ export interface SpotlightOptions {
 }
 
 const createThemeOptions = (themes: SpotlightTheme[]): SelectOptions =>
-  themes.map(theme => ({
+  themes.map((theme) => ({
     label: theme.name,
-    value: theme.slug
+    value: theme.slug,
   }));
 
 const createIndicatorOptionsFromTheme = (theme: SpotlightTheme): SelectOptions => {
   if (theme) {
-    return theme.indicators.map(indicator => ({
+    return theme.indicators.map((indicator) => ({
       label: indicator.name,
-      value: indicator.ddw_id
+      value: indicator.ddw_id,
     }));
   }
 
@@ -41,13 +41,13 @@ export const createYearOptionsFromRange = (startYear = 0, endYear = 0, excludedY
     }
   }
 
-  return options;
+  return options.reverse();
 };
 
 export const createYearOptionsFromIndicator = ({
   start_year,
   end_year,
-  excluded_years
+  excluded_years,
 }: SpotlightIndicator): SelectOptions => {
   const startYear = start_year || end_year || 0;
   const endYear = end_year || start_year || 0;
@@ -57,7 +57,7 @@ export const createYearOptionsFromIndicator = ({
 
 export const parseIndicatorToOption = (indicator: SpotlightIndicator): SelectOption => ({
   label: indicator.name,
-  value: indicator.ddw_id
+  value: indicator.ddw_id,
 });
 
 export const getThemeDefaultsByIndex = (
@@ -83,7 +83,7 @@ export const getThemeDefaultsBySlug = (
   currentOptions: FilterSelectOptions,
   indicatorDBId: string
 ): FilterDefaults => {
-  const indicatorIndex = theme.indicators.findIndex(_indicator => _indicator.ddw_id === indicatorDBId);
+  const indicatorIndex = theme.indicators.findIndex((_indicator) => _indicator.ddw_id === indicatorDBId);
 
   return getThemeDefaultsByIndex(theme, currentOptions, indicatorIndex !== -1 ? indicatorIndex : 0);
 };
@@ -94,7 +94,7 @@ export const getDefaultsByIndex = (
 ): FilterDefaults => {
   const defaultOptions: FilterSelectOptions = {
     ...defaultSelectOptions,
-    themes: createThemeOptions(themes)
+    themes: createThemeOptions(themes),
   };
   const defaultTheme = themes[defaultIndexes[0]];
   const defaultSelected: SpotlightOptions = { theme: defaultTheme };
@@ -108,17 +108,18 @@ export const getDefaultsByIndex = (
 export const getDefaultsFromQuery = (themes: SpotlightTheme[], query: ParsedUrlQuery): FilterDefaults => {
   const defaultOptions: FilterSelectOptions = {
     ...defaultSelectOptions,
-    themes: createThemeOptions(themes)
+    themes: createThemeOptions(themes),
   };
-  const themeSlug = Array.isArray(query[THEME_QUERY]) ? query[THEME_QUERY][0] : (query[THEME_QUERY] as string);
-  const defaultTheme = themes.find(theme => theme.slug === themeSlug);
+  const themeQuery = query[THEME_QUERY];
+  const themeSlug = Array.isArray(themeQuery) ? themeQuery[0] : (themeQuery as string);
+  const defaultTheme = themes.find((theme) => theme.slug === themeSlug);
   if (defaultTheme) {
-    const indicatorSlug = Array.isArray(query[INDICATOR_QUERY])
-      ? query[INDICATOR_QUERY][0]
-      : (query[INDICATOR_QUERY] as string);
+    const indicatorQuery = query[INDICATOR_QUERY];
+    const indicatorSlug = Array.isArray(indicatorQuery) ? indicatorQuery[0] : (indicatorQuery as string);
 
+    const yearQuery = query[YEAR_QUERY];
     const themeDefaults = getThemeDefaultsBySlug(defaultTheme, defaultOptions, indicatorSlug);
-    const year = Array.isArray(query[YEAR_QUERY]) ? query[YEAR_QUERY][0] : (query[YEAR_QUERY] as string);
+    const year = Array.isArray(yearQuery) ? yearQuery[0] : (yearQuery as string);
     themeDefaults.selected.year = year ? parseInt(year) : themeDefaults.selected.year;
 
     return themeDefaults;
@@ -145,5 +146,5 @@ export const getOptionByIndexOrValue = (
     return undefined;
   }
 
-  return value ? options.find(option => option.value === value) : options[index];
+  return value ? options.find((option) => option.value === value) : options[index];
 };

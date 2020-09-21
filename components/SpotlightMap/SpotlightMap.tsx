@@ -14,7 +14,7 @@ import {
   COLOURED_LAYER,
   setZoomByContainerWidth,
   renderTooltipFromLocation,
-  TooltipOptions
+  TooltipOptions,
 } from './utils/mapbox';
 import { SpotlightMapProps, config, LayerConfig } from './utils';
 
@@ -29,10 +29,10 @@ const getTooltipOptions = (
   data,
   dataPrefix: props.dataPrefix,
   dataSuffix: props.dataSuffix,
-  formatter: configs.formatter
+  formatter: configs.formatter,
 });
 
-const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
+const SpotlightMap: FunctionComponent<SpotlightMapProps> = (props) => {
   const { level, data, dataLoading, range, colours, location } = props;
   const { countryCode } = useContext(CountryContext);
   const [loading, setLoading] = useState<boolean>(true);
@@ -101,12 +101,10 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 
       if (!loading && location && data) {
         timeoutID = setTimeout(() => {
-          renderTooltipFromLocation(
-            map,
-            location?.name as string,
-            options,
-            getTooltipOptions(popup, locationData, props, options)
-          );
+          const locationName = options.formatter
+            ? (options.formatter(location?.name as string, 'tooltip') as string)
+            : (location?.name as string);
+          renderTooltipFromLocation(map, locationName, options, getTooltipOptions(popup, locationData, props, options));
         }, 1000);
       }
 
@@ -136,31 +134,44 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
     }
   });
 
-  const onLoad = (_map: Map): void => {
+  const onLoad = (map: Map): void => {
     setLoading(false);
-    setMap(_map);
-    setZoomByContainerWidth(_map, _map.getContainer(), options);
+    setMap(map);
+    setZoomByContainerWidth(map, map.getContainer(), options);
     if (props.onLoad) {
-      props.onLoad(_map);
+      props.onLoad(map);
     }
   };
-  const onAddLayer = (_map: Map, layerID: string): void => {
+  const onAddLayer = (map: Map, layerID: string): void => {
     if (location) {
-      _map.setFilter(layerID, ['==', options.nameProperty, getProperLocationName(location.name, options.formatter)]);
-      _map.setPaintProperty(options.layerName, 'fill-color', '#d1d1d1');
+      map.setFilter(layerID, ['==', options.nameProperty, getProperLocationName(location.name, options.formatter)]);
+      map.setPaintProperty(options.layerName, 'fill-color', '#d1d1d1');
       if (props.locationHandling === 'flyto') {
         setTimeout(() => {
           const locationName = options.formatter ? options.formatter(location?.name as string) : location?.name;
-          flyToLocation(_map, locationName as string, options);
+          flyToLocation(map, locationName as string, options);
         }, 500);
       }
     }
   };
 
   const renderLayers = (): ReactNode => {
-    if (!dataLoading && locationData.length) {
-      return (
+    const hiddenLayers = layers
+      .filter((layer) => layer.sourceLayer !== options.sourceLayer)
+      .map((layer, index) => (
         <BaseMapLayer
+          key={`${COLOURED_LAYER}-${index}`}
+          id={layer.layerName}
+          source="composite"
+          source-layer={layer.sourceLayer}
+          show={false}
+        />
+      ));
+
+    if (!dataLoading && locationData.length) {
+      return hiddenLayers.concat(
+        <BaseMapLayer
+          key={COLOURED_LAYER}
           id={COLOURED_LAYER}
           source="composite"
           source-layer={options.sourceLayer}
@@ -171,18 +182,19 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
               property: options.nameProperty,
               type: 'categorical',
               default: '#D1CBCF',
-              stops: getLocationStyles(locationData, range, colours, options.formatter)
+              stops: getLocationStyles(locationData, range, colours, options.formatter),
             },
             'fill-opacity': 0.75,
-            'fill-outline-color': '#ffffff'
+            'fill-outline-color': '#ffffff',
           }}
           onAdd={onAddLayer}
         />
       );
     }
 
-    return (
+    return hiddenLayers.concat(
       <BaseMapLayer
+        key={COLOURED_LAYER}
         id={COLOURED_LAYER}
         source="composite"
         source-layer={options.sourceLayer}
@@ -191,7 +203,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
         paint={{
           'fill-color': '#D1CBCF',
           'fill-opacity': 0.75,
-          'fill-outline-color': '#ffffff'
+          'fill-outline-color': '#ffffff',
         }}
         onAdd={onAddLayer}
       />
@@ -208,7 +220,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
           minZoom: options.minZoom || 6,
           zoom: options.zoom || 6.1,
           maxZoom: options.maxZoom || 7,
-          scrollZoom: false
+          scrollZoom: false,
         }}
         style={{ width: '100%', background: '#ffffff' }}
         onLoad={onLoad}
@@ -222,7 +234,7 @@ const SpotlightMap: FunctionComponent<SpotlightMapProps> = props => {
 SpotlightMap.defaultProps = {
   level: 0,
   dataLoading: false,
-  locationHandling: 'highlight-only'
+  locationHandling: 'highlight-only',
 };
 
 export { SpotlightMap };

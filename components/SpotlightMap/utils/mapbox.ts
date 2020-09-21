@@ -2,7 +2,7 @@ import center from '@turf/center';
 import { Feature, featureCollection, point, Point, Position, Properties } from '@turf/helpers';
 import { LngLat, Map, MapboxGeoJSONFeature, MapMouseEvent, Popup } from 'mapbox-gl';
 import { formatNumber, LocationData } from '../../../utils';
-import { LayerConfig } from './config';
+import { FormatterTarget, LayerConfig } from './config';
 
 type LocationStyle = [string | number, string];
 
@@ -30,9 +30,9 @@ export const getLocationStyles = (
   format?: (value: string) => string | number
 ): LocationStyle[] => {
   if (data && range && colours) {
-    return data.map<LocationStyle>(location => {
+    return data.map<LocationStyle>((location) => {
       const locationID = getProperLocationName(location.name, format);
-      const matchingRange = range.find(rng => location.value !== null && location.value <= parseFloat(rng));
+      const matchingRange = range.find((rng) => location.value !== null && location.value <= parseFloat(rng));
 
       if (matchingRange) {
         return [locationID, colours[range.indexOf(matchingRange)]];
@@ -53,13 +53,13 @@ export interface TooltipOptions {
   data: LocationData[];
   dataPrefix?: string;
   dataSuffix?: string;
-  formatter?: (value: string, target?: 'map' | 'boundary') => string | number;
+  formatter?: (value: string, target?: FormatterTarget) => string | number;
 }
 
 export type TooltipEvent = MapMouseEvent & { features?: MapboxGeoJSONFeature[] };
 
 const getTooltipValue = (options: TooltipOptions, location?: LocationData): string =>
-  location && location.value
+  location && typeof location.value === 'number'
     ? `${options.dataPrefix || ''}<span style="font-size: 1em; font-weight: 700; color:#EA7600">${formatNumber(
         location.value
       )}</span>${options.dataSuffix || ''}`
@@ -79,7 +79,7 @@ export const getLocationNameFromEvent = (event: TooltipEvent, nameProperty: stri
 };
 
 const getCoordinatesCenter = (coordinates: Position[]): Feature<Point, Properties> => {
-  const features = featureCollection(coordinates.map(position => point(position)));
+  const features = featureCollection(coordinates.map((position) => point(position)));
 
   return center(features);
 };
@@ -111,7 +111,7 @@ const getPosition = ({ geometry }: MapboxGeoJSONFeature): LngLat | null => {
 export const getPositionFromLocationName = (map: Map, locationName: string, options: LayerConfig): LngLat | null => {
   const features = map.querySourceFeatures('composite', {
     sourceLayer: options.sourceLayer,
-    filter: ['in', options.nameProperty, getProperLocationName(locationName, options.formatter)]
+    filter: ['in', options.nameProperty, getProperLocationName(locationName, options.formatter)],
   });
 
   return features && features.length ? getPosition(features[0]) : null;
@@ -123,7 +123,7 @@ export const flyToLocation = (map: Map, locationName: string, options: LayerConf
     if (position) {
       map.flyTo({
         center: position,
-        zoom: 16
+        zoom: 16,
       });
       resolve(position);
     } else if (recenter) {
@@ -131,7 +131,7 @@ export const flyToLocation = (map: Map, locationName: string, options: LayerConf
       map.flyTo({ center: options.center, zoom: options.zoom || 6.1 });
       setTimeout(() => {
         flyToLocation(map, locationName, options, false)
-          .then(position => resolve(position))
+          .then((position) => resolve(position))
           .catch(reject);
       }, 500);
     } else {
@@ -159,7 +159,7 @@ const findLocationData = (
   data: LocationData[],
   formatter?: (value: string) => string | number
 ): LocationData | undefined =>
-  data.find(location => {
+  data.find((location) => {
     const name = formatter ? formatter(location.name) : location.name;
 
     return locationName.toLowerCase() === `${name}`.toLowerCase();
@@ -169,7 +169,7 @@ export const renderTooltipFromEvent = (map: Map, event: TooltipEvent, options: T
   const { popup, nameProperty, formatter, data } = options;
   const locationName = getLocationNameFromEvent(event, nameProperty);
   if (locationName) {
-    const boundaryName = formatter ? (formatter(locationName, 'boundary') as string) : locationName;
+    const boundaryName = formatter ? (formatter(locationName, 'tooltip') as string) : locationName;
     const location = findLocationData(boundaryName, data);
     renderPopup(map, popup, event.lngLat, boundaryName, getTooltipValue(options, location));
   }

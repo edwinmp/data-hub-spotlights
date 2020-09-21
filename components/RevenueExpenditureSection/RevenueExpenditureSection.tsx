@@ -6,7 +6,10 @@ import {
   LocationContext,
   processTemplateString,
   SpotlightIndicator,
-  toCamelCase
+  toCamelCase,
+  sortBudgetTypeByPriority,
+  useBoundaries,
+  useBoundaryDepthContext,
 } from '../../utils';
 import { Alert } from '../Alert';
 import { CurrencySelector } from '../CurrencySelector';
@@ -43,6 +46,7 @@ const renderPaddedAlert = (message: string): ReactNode => (
 );
 
 const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ indicator }) => {
+  const boundaries = useBoundaries(useBoundaryDepthContext());
   const { countryCode, countryName, currencyCode } = useContext(CountryContext);
   const location = useContext(LocationContext);
   const [useLocalValue, setUseLocalValue] = useState(false);
@@ -51,39 +55,42 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
   const [selectedBudgetType, setSelectedBudgetType] = useState<BudgetType | undefined>(undefined);
   const { data, dataLoading, options, setOptions, error } = useRevenueExpenditureData(
     {
+      boundaries: boundaries[1],
       indicators: [indicator.ddw_id],
       geocodes: location ? [location.geocode] : [countryCode],
-      limit: 10000
+      limit: 10000,
     },
     indicator
   );
 
-  const setYearBudgetTypes = (): void => {
+  const setYearBudgetTypes = (year?: number | string): void => {
     if (year && data.hasOwnProperty(year)) {
-      const _budgetTypes = Object.keys(data[year]) as BudgetType[];
-      setBudgetTypes(_budgetTypes);
-      setSelectedBudgetType(_budgetTypes[0]);
+      const budgetTypes = sortBudgetTypeByPriority(Object.keys(data[year]) as BudgetType[]);
+      setBudgetTypes(budgetTypes);
+      setSelectedBudgetType(budgetTypes[0]);
     }
   };
   useEffect(() => {
     setOptions({
       ...options,
       geocodes: location ? [location.geocode] : [countryCode],
-      indicators: [indicator.ddw_id]
+      indicators: [indicator.ddw_id],
     });
     setYear(indicator.end_year);
+    setBudgetTypes([]);
+    setSelectedBudgetType(undefined);
   }, [location]);
   useEffect(() => {
     if (!dataLoading) {
-      setYearBudgetTypes();
+      setYearBudgetTypes(year);
     }
   }, [dataLoading]);
   const sectionHeading = processTemplateString(indicator.name, {
-    location: location ? toCamelCase(location.name) : countryName
+    location: location ? toCamelCase(location.name) : countryName,
   });
 
   if (!dataLoading && !selectedBudgetType) {
-    setYearBudgetTypes();
+    setYearBudgetTypes(year);
   }
 
   const onChangeCurrency = (isLocal: boolean): void => {
@@ -95,11 +102,9 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
     if (option) {
       setYear(parseInt(option.value));
       if (data && data[option.value]) {
-        const _budgetTypes = Object.keys(data[option.value]) as BudgetType[];
-        setBudgetTypes(_budgetTypes);
-        setSelectedBudgetType(_budgetTypes[0]);
+        setYearBudgetTypes(option.value);
         const currency = useLocalValue ? currencyCode : 'US$';
-        addGTMEvent(sectionHeading, countryName, currency, option.value, parseBudgetType(_budgetTypes[0]));
+        addGTMEvent(sectionHeading, countryName, currency, option.value, parseBudgetType(budgetTypes[0]));
       }
     } else {
       setYear(undefined);
@@ -132,7 +137,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
           <FormField className="form-field--inline">
             <FormFieldSelect
               label="Budget Type"
-              options={budgetTypes.map(type => ({ label: parseBudgetType(type), value: type }))}
+              options={budgetTypes.map((type) => ({ label: parseBudgetType(type), value: type }))}
               value={
                 selectedBudgetType ? { label: parseBudgetType(selectedBudgetType), value: selectedBudgetType } : null
               }
@@ -166,7 +171,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                       dataFormat: 'currency',
                       useLocalValue,
                       prefix: useLocalValue ? currencyCode : indicator.value_prefix,
-                      suffix: indicator.value_suffix
+                      suffix: indicator.value_suffix,
                     }}
                     selectedYear={year}
                   />
@@ -196,7 +201,7 @@ const RevenueExpenditureSection: FunctionComponent<RevenueSectionProps> = ({ ind
                     dataFormat: 'currency',
                     useLocalValue,
                     prefix: useLocalValue ? currencyCode : indicator.value_prefix,
-                    suffix: indicator.value_suffix
+                    suffix: indicator.value_suffix,
                   }}
                 />
               </Loading>

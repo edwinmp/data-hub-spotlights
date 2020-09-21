@@ -8,7 +8,7 @@ import {
   SpotlightLocation,
   SpotlightOptions,
   THEME_QUERY,
-  YEAR_QUERY
+  YEAR_QUERY,
 } from '../../../utils';
 
 export * from './types';
@@ -16,7 +16,7 @@ export * from './types';
 export const parseIndicator = (indicator: SpotlightIndicator): string | undefined => {
   const split = indicator.ddw_id.split('.');
 
-  return split.length ? split[1] : split[0];
+  return split.length > 1 ? split[1] : split[0];
 };
 export const splitByComma = (text?: string): string[] => (text ? text.split(',') : []);
 export const generateColours = (colours: string[], range: string[]): string[] => {
@@ -41,8 +41,8 @@ export const setQuery = (options: SpotlightOptions, locations?: SpotlightLocatio
   const { pathname } = window.location;
   const as = `${pathname}?${THEME_QUERY}=${options.theme?.slug}&${INDICATOR_QUERY}=${options.indicator?.ddw_id}&${YEAR_QUERY}=${options.year}`;
   if (locations && locations.length > 0) {
-    const lc = locations.map(location => location.geocode).join();
-    const ln = locations.map(location => location.name.toLowerCase()).join();
+    const lc = locations.map((location) => location.geocode).join();
+    const ln = locations.map((location) => location.name.toLowerCase()).join();
     window.history.pushState({}, '', `${as}&${LOCATION_CODE_QUERY}=${lc}&${LOCATION_NAME_QUERY}=${ln}`);
   } else {
     window.history.pushState({}, '', as);

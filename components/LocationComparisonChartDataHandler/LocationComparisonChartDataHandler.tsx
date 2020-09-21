@@ -1,6 +1,15 @@
 import React, { FunctionComponent, ReactNode, useEffect } from 'react';
 import { groupBy } from 'underscore';
-import { LocationData, LocationIndicatorData, SpotlightIndicator, SpotlightLocation, toCamelCase } from '../../utils';
+import {
+  LocationData,
+  LocationIndicatorData,
+  SpotlightIndicator,
+  SpotlightLocation,
+  toCamelCase,
+  SpotlightBoundary,
+  useBoundaries,
+  useBoundaryDepthContext,
+} from '../../utils';
 import { Alert } from '../Alert';
 import { DataLoaderProps, useDDWData } from '../DDWDataLoader';
 import { Loading } from '../Loading';
@@ -17,19 +26,24 @@ interface ComponentProps {
 const getYears = (data: LocationData[]): number[] =>
   data.reduce((prev: number[], curr) => (prev.indexOf(curr.year) === -1 ? prev.concat(curr.year) : prev), []).sort();
 
-const getDataLoaderOptions = (indicator: SpotlightIndicator, locations: SpotlightLocation[]): DataLoaderProps => ({
+const getDataLoaderOptions = (
+  indicator: SpotlightIndicator,
+  locations: SpotlightLocation[],
+  boundaries: SpotlightBoundary[]
+): DataLoaderProps => ({
+  boundaries,
   indicators: [parseIndicator(indicator) as string],
-  geocodes: locations.map(location => location.geocode),
+  geocodes: locations.map((location) => location.geocode),
   startYear: indicator.start_year,
   endYear: indicator.end_year,
-  limit: 10000
+  limit: 10000,
 });
 
 const processData = (data: LocationData[]): FormattedData => {
-  const groupedByLocation: { [location: string]: LocationData[] } = groupBy(data, _data => _data.name);
+  const groupedByLocation: { [location: string]: LocationData[] } = groupBy(data, (_data) => _data.name);
   const groupedByYear: { [location: string]: { [year: string]: LocationData[] } } = {};
-  Object.keys(groupedByLocation).forEach(location => {
-    const groupedByBudgetType = groupBy(groupedByLocation[location], processedData => processedData.year);
+  Object.keys(groupedByLocation).forEach((location) => {
+    const groupedByBudgetType = groupBy(groupedByLocation[location], (processedData) => processedData.year);
     groupedByYear[location] = groupedByBudgetType;
   });
 
@@ -38,8 +52,8 @@ const processData = (data: LocationData[]): FormattedData => {
 
 const renderMissingDataAlert = (data: LocationData[], locations: SpotlightLocation[]): ReactNode => {
   const noDataLocations = locations
-    .filter(location => !data.find(_data => _data.geocode === location.geocode))
-    .map(location => toCamelCase(location.name));
+    .filter((location) => !data.find((_data) => _data.geocode === location.geocode))
+    .map((location) => toCamelCase(location.name));
 
   return noDataLocations.length ? (
     <div>
@@ -56,7 +70,7 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
   const valueOptions = {
     dataFormat: indicator.data_format,
     prefix: indicator.value_prefix,
-    suffix: indicator.value_suffix
+    suffix: indicator.value_suffix,
   };
 
   if (!locations || locations.length === 0) {
@@ -66,10 +80,11 @@ const LocationComparisonChartDataHandler: FunctionComponent<ComponentProps> = ({
       </SpotlightInteractive>
     );
   }
+  const boundaries = useBoundaries(useBoundaryDepthContext());
 
-  const { data, dataLoading, setOptions } = useDDWData(getDataLoaderOptions(indicator, locations));
+  const { data, dataLoading, setOptions } = useDDWData(getDataLoaderOptions(indicator, locations, boundaries[1]));
   useEffect(() => {
-    setOptions(getDataLoaderOptions(indicator, locations));
+    setOptions(getDataLoaderOptions(indicator, locations, boundaries[1]));
   }, [locations, indicator]);
 
   if (!data) {

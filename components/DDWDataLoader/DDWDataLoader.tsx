@@ -1,9 +1,25 @@
 import { useQuery } from '@apollo/client';
-import React, { Children, cloneElement, FunctionComponent, isValidElement, ReactNode } from 'react';
-import { DataFilter, GET_INDICATOR_DATA, LocationIndicatorData } from '../../utils';
+import React, {
+  Children,
+  cloneElement,
+  FunctionComponent,
+  isValidElement,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
+import {
+  DataFilter,
+  getBoundariesByDepth,
+  GET_INDICATOR_DATA,
+  LocationIndicatorData,
+  SpotlightBoundary,
+} from '../../utils';
 import { Alert } from '../Alert';
+import { alignDataToBoundaries } from './utils';
 
 export interface DataLoaderProps {
+  boundaries: SpotlightBoundary[];
   indicators?: string[];
   geocodes?: string[];
   startYear?: number;
@@ -14,12 +30,19 @@ export interface DataLoaderProps {
 }
 
 const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocodes, startYear, limit, ...props }) => {
+  const [boundaries, setBoundaries] = useState(props.boundaries);
   const renderChildren = (dataLoading: boolean, data?: LocationIndicatorData[]): ReactNode =>
-    Children.map(props.children, child => (isValidElement(child) ? cloneElement(child, { data, dataLoading }) : null));
+    Children.map(props.children, (child) =>
+      isValidElement(child) ? cloneElement(child, { data, dataLoading }) : null
+    );
 
   if (!indicators || !indicators.length) {
     return <>{renderChildren(false)}</>;
   }
+  useEffect(() => {
+    const districts = getBoundariesByDepth(props.boundaries, 'd');
+    setBoundaries(districts);
+  }, [props.boundaries]);
 
   const { data, loading, error } = useQuery<{ data: LocationIndicatorData[] }>(GET_INDICATOR_DATA, {
     variables: {
@@ -28,8 +51,8 @@ const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode
       startYear,
       endYear: props.endYear || startYear,
       filter: props.filter || [],
-      limit
-    }
+      limit,
+    },
   });
   if (error) {
     console.log('DDWDataLoader:', error.message);
@@ -38,6 +61,11 @@ const DDWDataLoader: FunctionComponent<DataLoaderProps> = ({ indicators, geocode
   }
   if (props.onLoad && !loading && data) {
     props.onLoad(data.data);
+  }
+  if (data && boundaries) {
+    const updatedData = alignDataToBoundaries(data.data, boundaries, startYear || props.endYear);
+
+    return <>{renderChildren(loading, updatedData)}</>;
   }
 
   return <>{renderChildren(loading, data && data.data)}</>;
