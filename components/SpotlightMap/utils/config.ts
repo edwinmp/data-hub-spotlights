@@ -39,10 +39,16 @@ export const config: { [key: string]: MapConfig } = {
             if (value.toLowerCase() === 'sembabule') {
               return 'SSEMBABULE';
             }
+            if (value.toLowerCase() === 'kasanda') {
+              return 'KASSANDA';
+            }
           }
           if (target === 'tooltip') {
             if (value.toLowerCase() === 'ssembabule') {
               return 'SEMBABULE';
+            }
+            if (value.toLowerCase() === 'kassanda') {
+              return 'KASANDA';
             }
           }
 
