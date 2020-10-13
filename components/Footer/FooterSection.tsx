@@ -24,7 +24,7 @@ const FooterSection: FunctionComponent<FooterSectionProps> = (props) => {
     <div className="l-footer__col">
       <h4 className="footer__title">{props.title}</h4>
       <ul className="footer__list">
-        {props.primaryNavigation.map(({ full_url, title }, index) => (
+        {props.show_navigation_links && props.primaryNavigation.map(({ full_url, title }, index) => (
           <FooterSectionLink key={`${title} ${index}`} url={full_url} label={title} />
         ))}
         {props.section_links.map(({ link_url, page_url, label }, index) => (
