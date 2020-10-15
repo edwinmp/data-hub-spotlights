@@ -39,20 +39,6 @@ exports[`Footer renders correctly 1`] = `
         >
           <li>
             <a
-              href="https://localhost:3000/nav-1"
-            >
-              Nav 1
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://localhost:3000/nav-2"
-            >
-              Nav 2
-            </a>
-          </li>
-          <li>
-            <a
               href="http://localhost:3000/contact-us"
             >
               Contact us
