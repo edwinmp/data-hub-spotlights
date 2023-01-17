@@ -12,6 +12,7 @@ concurrency: nodejs
 
 jobs:
   test:
+    name: Lint & Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,6 +34,7 @@ jobs:
         env:
           CI: true
   build:
+    name: Build
     needs: test
     runs-on: ubuntu-latest
     steps:
