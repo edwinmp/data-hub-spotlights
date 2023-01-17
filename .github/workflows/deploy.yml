@@ -1,6 +1,8 @@
 name: Deploy
 
-tags:
+on:
+  push:
+    tags:
       - v*
     branches:
       - 'develop'
