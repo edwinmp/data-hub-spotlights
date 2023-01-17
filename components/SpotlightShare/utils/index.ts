@@ -1,7 +1,7 @@
 import { BitlyLink } from 'bitly/dist/types';
 import fetch from 'isomorphic-unfetch';
 
-export const getShortUrl = async (rootOnly = false): Promise<BitlyLink> => {
+export const getShortUrl = async (rootOnly = false): Promise<string> => {
   const { href, origin, pathname } = window.location;
   const longUrl = rootOnly ? origin + pathname : href;
 

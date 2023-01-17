@@ -1,7 +1,6 @@
 /** eslint-disable no-console **/
 import { config } from 'dotenv';
 config();
-import { BitlyClient } from 'bitly';
 import express from 'express';
 import { parse } from 'url';
 import next from 'next';
@@ -22,11 +21,16 @@ app
       const longUrl = req.url.split('longUrl=')[1];
       if (longUrl) {
         if (process.env.BITLY_API_KEY) {
-          const bitly = new BitlyClient(process.env.BITLY_API_KEY);
-
-          return bitly
-            .shorten(longUrl.replace('localhost', '127.0.0.1'))
-            .then((shortUrl) => res.json({ code: 200, shortUrl }))
+          return fetch('https://api-ssl.bitly.com/v4/shorten', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${process.env.BITLY_API_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ long_url: longUrl.replace('localhost', '127.0.0.1') }),
+          })
+            .then((response) => response.json())
+            .then((data) => res.json({ code: 200, shortUrl: data.link }))
             .catch((error) => res.json({ code: 401, error: error.message }));
         } else {
           return res.json({ code: 401, error: 'BITLY_API_KEY is missing' });
