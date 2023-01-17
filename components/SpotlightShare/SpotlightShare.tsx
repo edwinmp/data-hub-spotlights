@@ -22,7 +22,7 @@ const SpotlightShare: FunctionComponent<SpotlightShareProps> = ({ buttonCaption 
     if (modalOpen) {
       setUrl('');
       getShortUrl(radioValue === 'default')
-        .then((url) => setUrl(url.link))
+        .then((url) => setUrl(url))
         .catch((error) => {
           console.log('Error while generating short URL: ', error.message);
           setUrl('Error');
@@ -34,7 +34,7 @@ const SpotlightShare: FunctionComponent<SpotlightShareProps> = ({ buttonCaption 
     setUrl('');
     if (!modalOpen) {
       getShortUrl(radioValue === 'default')
-        .then((url) => setUrl(url.link))
+        .then((url) => setUrl(url))
         .catch((error) => {
           console.log('Error while generating short URL: ', error.message);
           setUrl('Error');
