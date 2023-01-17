@@ -1,4 +1,3 @@
-import { BitlyLink } from 'bitly/dist/types';
 import fetch from 'isomorphic-unfetch';
 
 export const getShortUrl = async (rootOnly = false): Promise<string> => {
