@@ -16,6 +16,7 @@ app
   .prepare()
   .then(() => {
     const server = express();
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     server.get('/', (_req, res) => res.redirect(ROOT)); // TODO: change this to the country spotlights page
     server.get('/bitly', (req, res) => {
       const longUrl = req.url.split('longUrl=')[1];
