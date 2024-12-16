@@ -1,8 +1,8 @@
 #!/bin/bash
 rm -rf build.zip build
 
-yarn install
-yarn build
+pnpm install
+pnpm build
 
 echo "build complete... bundling"
 
