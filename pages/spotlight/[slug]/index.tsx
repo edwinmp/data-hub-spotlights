@@ -1,8 +1,9 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { DataSourcesSection } from '../../../components/DataSourcesSection';
-import { PageScaffoldData } from '../../../components/DefaultLayout';
+import { Navigation, PageScaffoldData } from '../../../components/DefaultLayout';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { IndicatorComparisonSection } from '../../../components/IndicatorComparisonSection';
 import { KeyFactsSection } from '../../../components/KeyFactsSection';
@@ -12,7 +13,6 @@ import { RevenueExpenditureSection } from '../../../components/RevenueExpenditur
 import {
   BoundaryDepthContext,
   CountryContext,
-  fetchScaffoldData,
   fetchSpotlightPage,
   filterThemesBySection,
   getSlugFromURL,
@@ -23,19 +23,36 @@ import {
 
 interface SpotlightProps {
   setData?: (data: PageScaffoldData) => void;
-  scaffold: PageScaffoldData;
   page: SpotlightPage;
 }
 
-const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
+const getNavigation = (baseURL: string): Navigation => ({
+  primary: [
+    {
+      title: 'Compare',
+      full_url: `${baseURL}/compare`,
+      relative_url: `${baseURL}/compare`,
+      active: false,
+    },
+  ],
+  secondary: [],
+});
+
+const Spotlight: NextPage<SpotlightProps> = ({ setData, page }) => {
   const { country_code: countryCode, country_name: countryName, currency_code: currencyCode } = page;
   const [countryInfo] = useState({ countryCode, countryName, currencyCode });
   const [location, setLocation] = useState<SpotlightLocation | undefined>();
+  const router = useRouter();
+
   useEffect(() => {
     if (setData) {
-      setData({ ...scaffold, title: page.title, slug: getSlugFromURL(page.relative_url) });
+      setData({
+        navigation: router ? getNavigation(router.asPath.split('?')[0]) : undefined,
+        title: page.title,
+        slug: getSlugFromURL(page.relative_url),
+      });
     }
-  }, [setData, scaffold]);
+  }, [setData]);
   const onChangeLocation = (location?: SpotlightLocation): void => setLocation(location);
   const mapThemes = filterThemesBySection(page.themes, 'map');
 
@@ -77,10 +94,9 @@ const Spotlight: NextPage<SpotlightProps> = ({ setData, scaffold, page }) => {
 
 Spotlight.getInitialProps = async (context): Promise<SpotlightProps> => {
   const { slug } = context.query;
-  const scaffold = await fetchScaffoldData();
   const page = await fetchSpotlightPage(slug as string);
 
-  return { scaffold, page };
+  return { page };
 };
 
 export default Spotlight;

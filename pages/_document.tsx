@@ -19,7 +19,7 @@ class MyDocument extends Document {
         <Head>
           <meta
             httpEquiv="Content-Security-Policy"
-            content="connect-src 'self' https://api.devinit.org/ https://api.mapbox.com/ https://events.mapbox.com/events/"
+            content="connect-src 'self' https://devinit.org/ https://dev.devinit.org/ https://api.devinit.org/ https://api.mapbox.com/ https://events.mapbox.com/events/"
           />
           <link href="/static/css/spotlights.min.css" rel="stylesheet" />
           <script
